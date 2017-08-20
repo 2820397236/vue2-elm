@@ -26,7 +26,7 @@
             </svg>
             <span>预警</span>
         </section> -->
-        <section @click = "gotoAddress({path: '/shop?id=2'})" class="guide_item">
+        <section @click = "gotoAddress({path: '/shop'})" class="guide_item">
             <svg class="icon_style">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('order') !== -1? '#orderActive' : '#order'"></use>
             </svg>
@@ -40,7 +40,7 @@
             <span>统计</span>
         </section>
         
-        <section @click = "gotoAddress('/shop?id=2')" class="guide_item" :class="$route.path.indexOf('shop') !== -1? 'active' : ''">
+        <section @click = "gotoAddress('/shop')" class="guide_item" :class="$route.path.indexOf('shop') !== -1? 'active' : ''">
         	<svg class="icon_style">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('shop') !== -1? '#profileActive' : '#profile'"></use>
             </svg>

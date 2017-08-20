@@ -5,6 +5,7 @@ import store from './store/'
 import {routerMode} from './config/env'
 import './config/rem'
 import FastClick from 'fastclick'
+import Vue2Filters from 'vue2-filters'
 
 if ('addEventListener' in document) {
     document.addEventListener('DOMContentLoaded', function() {
@@ -12,6 +13,7 @@ if ('addEventListener' in document) {
     }, false);
 }
 
+Vue.use(Vue2Filters)
 Vue.use(VueRouter)
 const router = new VueRouter({
 	routes,

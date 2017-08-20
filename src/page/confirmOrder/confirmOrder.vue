@@ -37,41 +37,20 @@
                 <section class="menu_container">
                     <section class="menu_right" ref="menuFoodList">
                         <ul>
-                            <li>
+                            <li v-for="store in storeList">
                                 <section class="menu_detail_list">
                                     <div class="menu_detail_link">
                                         <section class="menu_food_img">
-                                            <img src="http://images.cangdu.org/15d318e796a7.png">
+                                            <img :src="store.defaultPic">
                                         </section>
                                         <section class="menu_food_description">
                                             <h3 class="food_description_head">
-                                                <span class="description_foodname">西贝莜面村（上海百联川沙店）</span>
+                                                <span class="description_foodname">{{store.name}}({{store.branchName}})</span>
                                             </h3>
-                                            <p class="food_description_content">川沙路5398号百联川沙购物...</p>
+                                            <p class="food_description_content">{{store.regionName}} {{store.priceText}}</p>
                                         </section>
                                         <section class="menu_action">
-                                        <svg class="address_empty_right">
-                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-minus"></use>
-                                        </svg>
-                                        </section>
-                                    </div>
-                                </section>
-                            </li>
-
-                            <li>
-                                <section class="menu_detail_list">
-                                    <div class="menu_detail_link">
-                                        <section class="menu_food_img">
-                                            <img src="http://images.cangdu.org/15d318e796a7.png">
-                                        </section>
-                                        <section class="menu_food_description">
-                                            <h3 class="food_description_head">
-                                                <span class="description_foodname">西贝莜面村（上海保乐汇店）</span>
-                                            </h3>
-                                            <p class="food_description_content">宝杨路1569号宝乐汇生活时...</p>
-                                        </section>
-                                        <section class="menu_action">
-                                        <svg class="address_empty_right">
+                                        <svg class="address_empty_right"  @click="deleteFromCart(store.id)">
                                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-minus"></use>
                                         </svg>
                                         </section>
@@ -97,7 +76,7 @@
                 <div class="choose_type_Container">
                     <header>会员测试期，购买<span class="highlight">5折起</span></header>
                     <ul>
-                        <li v-for="item in checkoutData.payments" :key="item.id" :class="{choose: payWayId == item.id}" 
+                      <!--  <li v-for="item in payments" :key="item.id" :class="{choose: payWayId == item.id}" 
                         @click="choosePayWay(item.is_online_payment, item.id)">
                             <span class="pay_way">
                                 {{item.name}}<br/>
@@ -105,6 +84,19 @@
                             </span>
                             <span class="price_rrp">￥{{item.select_state*2}}/店</span>
                             <span class="price_now">￥{{item.select_state}}/店</span>
+                            <div class="tri"></div>
+                            <svg class="address_empty_right" >
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select"></use>
+                            </svg>
+                        </li> -->
+                        <li  v-for="item in payments" :key="item.id" :class="{choose: payWayId == item.id}"
+                        @click="choosePayWay(item.id)">
+                            <span class="pay_way">
+                                {{item.title}}<br/>
+                                <span class="pay_way_subtitle" v-if="item.subtitle">{{item.subTitle}}</span>
+                            </span>
+                            <span class="price_rrp">￥{{item.rrpPrice}}/店</span>
+                            <span class="price_now">￥{{item.price}}/店</span>
                             <div class="tri"></div>
                             <svg class="address_empty_right" >
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select"></use>
@@ -173,7 +165,7 @@
                 </router-link>
             </section> -->
             <section class="confrim_order" @click="confrimOrder">
-                <p>总计 2 家门店，共计 ¥{{checkoutData.cart.total}}</p>
+                <p>总计 {{storeList.length}} 家门店，共计 ¥{{storeList.length * payments[payWayId].price}}</p>
                 <p>确认订单</p>
             </section>
             <!-- <transition name="fade">
@@ -195,7 +187,8 @@
     import headTop from 'src/components/header/head'
     import alertTip from 'src/components/common/alertTip'
     import loading from 'src/components/common/loading'
-    import {checkout, getAddress, placeOrders, getAddressList} from 'src/service/getData'
+    import {getStoreInfo, getAddress, placeOrders, getAddressList} from 'src/service/getData'
+    import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import {imgBaseUrl} from 'src/config/env'
 
     export default {
@@ -208,26 +201,52 @@
                 shopCart: null,//购物车数据
                 imgBaseUrl, //图片域名
                 showPayWay: false,//显示付款方式
-                payWayId: 1, //付款方式
+                payWayId: 0, //付款方式
                 showAlert: false, //弹出框
                 alertText: null, //弹出框内容
+                storeList:null,
+                payments:[
+                    {
+                        id:0,
+                        title:"连续包月",
+                        subTitle:"自动续费，可随时取消",
+                        rrpPrice:4,
+                        price:2
+                    },
+                    {
+                        id:1,
+                        title:"1个月",
+                        subTitle:"",
+                        rrpPrice:4,
+                        price:3
+                    },
+                    {
+                        id:2,
+                        title:"3个月",
+                        subTitle:"",
+                        rrpPrice:16,
+                        price:8
+                    }
+                ]
             }
         },
         created(){
-            //获取上个页面传递过来的geohash值
-            this.geohash = this.$route.query.geohash;
-            //获取上个页面传递过来的shopid值
-            this.shopId = this.$route.query.shopId;
-            this.INIT_BUYCART();
-            this.SAVE_SHOPID(this.shopId);
-            //获取当前商铺购物车信息
-            this.shopCart = this.cartList[this.shopId];
+            console.log(this.$route.query.ids);
+            this.storeIds = this.$route.query.ids.map(item => parseInt(item));
+            // //获取上个页面传递过来的geohash值
+            // this.geohash = this.$route.query.geohash;
+            // //获取上个页面传递过来的shopid值
+            // this.shopId = this.$route.query.shopId;
+            // this.INIT_BUYCART();
+            // this.SAVE_SHOPID(this.shopId);
+            // //获取当前商铺购物车信息
+            // this.shopCart = this.cartList[this.shopId];
         },
         mounted(){
-            if (this.geohash) {
+            // if (this.geohash) {
                 this.initData();
-                this.SAVE_GEOHASH(this.geohash);
-            }
+            //     this.SAVE_GEOHASH(this.geohash);
+            // }
             // if (!(this.userInfo && this.userInfo.user_id)) {
             //     this.showAlert = true;
             //     this.alertText = '您还没有登录';
@@ -240,71 +259,95 @@
         },
         computed: {
             ...mapState([
-                'cartList', 'remarkText', 'inputText', 'invoice', 'choosedAddress', 'userInfo'
+                // 'cartList', 'remarkText', 'inputText', 'invoice', 'choosedAddress', 'userInfo'
             ]),
             //备注页返回的信息进行处理
             remarklist: function (){
-                let str = new String;
-                if (this.remarkText) {
-                    Object.values(this.remarkText).forEach(item => {
-                        str += item[1] + '，';
-                    })
-                }
-                //是否有自定义备注，分开处理
-                if (this.inputText) {
-                    return str + this.inputText;
-                }else{
-                    return str.substr(0, str.lastIndexOf('，')) ;
-                }
+                // let str = new String;
+                // if (this.remarkText) {
+                //     Object.values(this.remarkText).forEach(item => {
+                //         str += item[1] + '，';
+                //     })
+                // }
+                // //是否有自定义备注，分开处理
+                // if (this.inputText) {
+                //     return str + this.inputText;
+                // }else{
+                //     return str.substr(0, str.lastIndexOf('，')) ;
+                // }
             },
         },
         methods: {
             ...mapMutations([
-                'INIT_BUYCART', 'SAVE_GEOHASH', 'CHOOSE_ADDRESS', 'NEED_VALIDATION', 'SAVE_CART_ID_SIG', 'SAVE_ORDER_PARAM', 'ORDER_SUCCESS', 'SAVE_SHOPID'
+                // 'INIT_BUYCART', 'SAVE_GEOHASH', 'CHOOSE_ADDRESS', 'NEED_VALIDATION', 'SAVE_CART_ID_SIG', 'SAVE_ORDER_PARAM', 'ORDER_SUCCESS', 'SAVE_SHOPID'
             ]),
             //初始化数据
             async initData(){
-                let newArr = new Array;
-                Object.values(this.shopCart).forEach(categoryItem => {
-                    Object.values(categoryItem).forEach(itemValue=> {
-                        Object.values(itemValue).forEach(item => {
-                            newArr.push({
-                                attrs: [],
-                                extra: {},
-                                id: item.id,
-                                name: item.name,
-                                packing_fee: item.packing_fee,
-                                price: item.price,
-                                quantity: item.num,
-                                sku_id: item.sku_id,
-                                specs: [item.specs],
-                                stock: item.stock,
-                            })
-                        })
-                    })
-                })
-                console.log(newArr);
-                //检验订单是否满足条件
-                this.checkoutData = await checkout(this.geohash, [newArr], this.shopId);
-                this.SAVE_CART_ID_SIG({cart_id: this.checkoutData.cart.id, sig:  this.checkoutData.sig})
-                this.initAddress();
+                // let newArr = new Array;
+                // Object.values(this.shopCart).forEach(categoryItem => {
+                //     Object.values(categoryItem).forEach(itemValue=> {
+                //         Object.values(itemValue).forEach(item => {
+                //             newArr.push({
+                //                 attrs: [],
+                //                 extra: {},
+                //                 id: item.id,
+                //                 name: item.name,
+                //                 packing_fee: item.packing_fee,
+                //                 price: item.price,
+                //                 quantity: item.num,
+                //                 sku_id: item.sku_id,
+                //                 specs: [item.specs],
+                //                 stock: item.stock,
+                //             })
+                //         })
+                //     })
+                // })
+                // console.log(newArr);
+                // //检验订单是否满足条件
+                let user = JSON.parse(getStore('user'));
+
+                let response = await getStoreInfo(user.id,this.storeIds);
+                if(response.status == 0 ){
+                    this.storeList = response.stores;
+                    if(this.storeList.length > 0){
+                        this.storeIds = [];
+                        for(var i=0;i<this.storeList.length;i++){
+                            this.storeIds.push(this.storeList[i].id);
+                        }
+                    }
+                    
+                }
+                
+
+                // this.SAVE_CART_ID_SIG({cart_id: this.checkoutData.cart.id, sig:  this.checkoutData.sig})
+                // this.initAddress();
                 this.showLoading = false;
             },
             //获取地址信息，第一个地址为默认选择地址
             async initAddress(){
-                if (this.userInfo && this.userInfo.user_id) {
-                    const addressRes = await getAddressList(this.userInfo.user_id);
-                    if (addressRes instanceof Array && addressRes.length) {
-                        this.CHOOSE_ADDRESS({address: addressRes[0], index: 0});
-                    }
+                // if (this.userInfo && this.userInfo.user_id) {
+                //     const addressRes = await getAddressList(this.userInfo.user_id);
+                //     if (addressRes instanceof Array && addressRes.length) {
+                //         this.CHOOSE_ADDRESS({address: addressRes[0], index: 0});
+                //     }
+                // }
+            },
+            deleteFromCart(storeId){
+                if(this.storeIds.length == 1 || this.storeList.length == 1){
+                    return;
                 }
+
+                let index = this.storeIds.indexOf(storeId);
+                this.storeIds.splice(index,1);
+                this.storeList.splice(index,1);
+
             },
             //显示付款方式
             showPayWayFun(){
                 this.showPayWay = !this.showPayWay;
             },
             //选择付款方式
-            choosePayWay(is_online_payment, id){
+            choosePayWay(id){
                 // if (is_online_payment) {
                     // this.showPayWay = !this.showPayWay;
                     this.payWayId = id;
@@ -332,35 +375,34 @@
                 // }
                 //保存订单
                 let param = {
-                    user_id: 2,//this.userInfo.user_id,
-                    cart_id: this.checkoutData.cart.id,
-                    address_id: 1,//this.choosedAddress.id || 1,
-                    description: this.remarklist,
-                    entities: this.checkoutData.cart.groups,
-                    geohash: this.geohash,
-                    sig: this.checkoutData.sig,
+                    userId: 13788997536,//this.userInfo.user_id,
+                    cartId: 1,
+                    description: 'test',
+                    ids: this.storeIds,
+                    payment: this.payWayId
                 };
-                // window.alert(JSON.stringify(param));
+                // // window.alert(JSON.stringify(param));
 
-                this.SAVE_ORDER_PARAM(param);
-                //发送订单信息
-                // let orderRes = await placeOrders(this.userInfo.user_id, this.checkoutData.cart.id, this.choosedAddress.id, this.remarklist, this.checkoutData.cart.groups, this.geohash, this.checkoutData.sig);
-                let orderRes = await placeOrders(2, this.checkoutData.cart.id, 1, this.remarklist, this.checkoutData.cart.groups, this.geohash, this.checkoutData.sig);
-                //第一次下单的手机号需要进行验证，否则直接下单成功
-                if (orderRes.need_validation) {
-                    this.NEED_VALIDATION(orderRes);
-                    this.$router.push('/confirmOrder/userValidation');
-                }else{
-                    this.ORDER_SUCCESS(orderRes);
-                    this.$router.push('/confirmOrder/payment');
-                }
+                // this.SAVE_ORDER_PARAM(param);
+                // //发送订单信息
+                // // let orderRes = await placeOrders(this.userInfo.user_id, this.checkoutData.cart.id, this.choosedAddress.id, this.remarklist, this.checkoutData.cart.groups, this.geohash, this.checkoutData.sig);
+                // let orderRes = await placeOrders(2, this.checkoutData.cart.id, 1, this.remarklist, this.checkoutData.cart.groups, this.geohash, this.checkoutData.sig);
+                // //第一次下单的手机号需要进行验证，否则直接下单成功
+                // if (orderRes.need_validation) {
+                //     this.NEED_VALIDATION(orderRes);
+                //     this.$router.push('/confirmOrder/userValidation');
+                // }else{
+                //     this.ORDER_SUCCESS(orderRes);
+                //     this.$router.push('/confirmOrder/payment');
+                // }
+                 this.$router.push({path:'/confirmOrder/payment',query:param});
             },
         },
         watch: {
             userInfo: function (value) {
-                if (value && value.user_id) {
-                    this.initAddress();
-                }
+                // if (value && value.user_id) {
+                //     this.initAddress();
+                // }
             },
         }
     }

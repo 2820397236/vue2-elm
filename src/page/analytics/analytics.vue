@@ -95,18 +95,18 @@
                 </div>
             </section>
             <section class="shoplist_container" v-show="changeShowType =='shop'">
-                <ul>
-                    <li>
+                <ul v-if="storeList.length > 0">
+                    <router-link v-for="(item,index) in storeList" :key="index" :to="{path: 'shop/shopDetail', query:{storeId:item.id,storeName:item.name+'('+ item.branchName+')'}}" tag="li">
                         <section class="menu_detail_list">
                             <div class="menu_detail_link">
                                 <section class="menu_food_img">
-                                    <img src="http://images.cangdu.org/15d318e796a7.png">
+                                    <img :src="item.defaultPic">
                                 </section>
                                 <section class="menu_food_description">
                                     <h3 class="food_description_head">
-                                        <strong class="description_foodname">西贝莜面村(上海正大店)</strong>
+                                        <strong class="description_foodname">{{item.name}}({{item.branchName}})</strong>
                                     </h3>
-                                    <p class="food_description_content">中山南二路699号正大乐城...</p>
+                                    <p class="food_description_content">{{item.regionName}}&nbsp;&nbsp;{{item.priceText}}</p>
                                 </section>
                             </div>
                         </section>
@@ -124,96 +124,8 @@
                                 <div class="reply_count red">23</div>
                             </li>
                         </ul>
-                    </li>
+                    </router-link>
 
-                    <li>
-                        <section class="menu_detail_list">
-                            <div class="menu_detail_link">
-                                <section class="menu_food_img">
-                                    <img src="http://images.cangdu.org/15d318e796a7.png">
-                                </section>
-                                <section class="menu_food_description">
-                                    <h3 class="food_description_head">
-                                        <strong class="description_foodname">西贝莜面村(上海正大店)</strong>
-                                    </h3>
-                                    <p class="food_description_content">中山南二路699号正大乐城...</p>
-                                </section>
-                            </div>
-                        </section>
-                        <ul class="menu_detail_reply">
-                            <li>
-                                <div class="reply_content">正面评论</div>
-                                <div class="reply_count green">12</div>
-                            </li>
-                            <li>
-                                <div class="reply_content">中性评论</div>
-                                <div class="reply_count yellow">09</div>
-                            </li>
-                            <li>
-                                <div class="reply_content">负面评论</div>
-                                <div class="reply_count red">23</div>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li>
-                        <section class="menu_detail_list">
-                            <div class="menu_detail_link">
-                                <section class="menu_food_img">
-                                    <img src="http://images.cangdu.org/15d318e796a7.png">
-                                </section>
-                                <section class="menu_food_description">
-                                    <h3 class="food_description_head">
-                                        <strong class="description_foodname">西贝莜面村(上海正大店)</strong>
-                                    </h3>
-                                    <p class="food_description_content">中山南二路699号正大乐城...</p>
-                                </section>
-                            </div>
-                        </section>
-                        <ul class="menu_detail_reply">
-                            <li>
-                                <div class="reply_content">正面评论</div>
-                                <div class="reply_count green">12</div>
-                            </li>
-                            <li>
-                                <div class="reply_content">中性评论</div>
-                                <div class="reply_count yellow">09</div>
-                            </li>
-                            <li>
-                                <div class="reply_content">负面评论</div>
-                                <div class="reply_count red">23</div>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <section class="menu_detail_list">
-                            <div class="menu_detail_link">
-                                <section class="menu_food_img">
-                                    <img src="http://images.cangdu.org/15d318e796a7.png">
-                                </section>
-                                <section class="menu_food_description">
-                                    <h3 class="food_description_head">
-                                        <strong class="description_foodname">西贝莜面村(上海正大店)</strong>
-                                    </h3>
-                                    <p class="food_description_content">中山南二路699号正大乐城...</p>
-                                </section>
-                            </div>
-                        </section>
-                        <ul class="menu_detail_reply">
-                            <li>
-                                <div class="reply_content">正面评论</div>
-                                <div class="reply_count green">12</div>
-                            </li>
-                            <li>
-                                <div class="reply_content">中性评论</div>
-                                <div class="reply_count yellow">09</div>
-                            </li>
-                            <li>
-                                <div class="reply_content">负面评论</div>
-                                <div class="reply_count red">23</div>
-                            </li>
-                        </ul>
-                    </li>
                 </ul>
             </section>
             
@@ -232,7 +144,8 @@
 
 <script>
     import {mapState, mapMutations} from 'vuex'
-    import {msiteAdress, shopDetails, foodMenu, getRatingList, ratingScores, ratingTags} from 'src/service/getData'
+    import {userHome} from 'src/service/getData'
+    import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import loading from 'src/components/common/loading'
 
     import {loadMore, getImgPath} from 'src/components/common/mixin'
@@ -251,7 +164,7 @@
                 changeShowType: 'full',//切换显示商品或者评价
                 shopDetailData: null, //商铺详情
                 showActivities: false, //是否显示活动详情
-                menuList: [], //食品列表
+                storeList: [], //食品列表
                 menuIndex: 0, //已选菜单索引值，默认为0
                 menuIndexChange: true,//解决选中index时，scroll监听事件重复判断设置index的bug
                 shopListTop: [], //商品列表的高度集合
@@ -353,8 +266,8 @@
             }
         },
         created(){
-            this.geohash = this.$route.query.geohash;
-            this.shopId = this.$route.query.id;
+            // this.geohash = this.$route.query.geohash;
+            // this.shopId = this.$route.query.id;
         },
         mounted(){
             this.initData();
@@ -366,7 +279,6 @@
         mixins: [loadMore, getImgPath],
         components: {
             loading,
-
             footGuide,
             IEcharts,
         },
@@ -412,16 +324,16 @@
             ]),
             //初始化时获取基本数据
             async initData(){
-                if (!this.latitude) {
-                    //获取位置信息
-                    let res = await msiteAdress(this.geohash);
-                    // 记录当前经度纬度进入vuex
-                    this.RECORD_ADDRESS(res);
-                }
+                // if (!this.latitude) {
+                    // //获取位置信息
+                    // let res = await msiteAdress(this.geohash);
+                    // // 记录当前经度纬度进入vuex
+                    // this.RECORD_ADDRESS(res);
+                // }
                 // //获取商铺信息
                 // this.shopDetailData = await shopDetails(this.shopId, this.latitude, this.longitude);
                 // //获取商铺食品列表
-                // this.menuList = await foodMenu(this.shopId);
+                // this.storeList = await foodMenu(this.shopId);
                 // //评论列表
                 // this.ratingList = await getRatingList(this.shopId, this.ratingOffset);
                 // //商铺评论详情
@@ -429,6 +341,13 @@
                 // //评论Tag列表
                 // this.ratingTagsList = await ratingTags(this.shopId);
                 // this.RECORD_SHOPDETAIL(this.shopDetailData)
+                this.user =  JSON.parse(getStore('user'));
+                let response = await userHome(this.user.id);
+                if(response.status == 0){
+                    this.storeList = response.stores;
+                }
+                console.log(this.storeList.length);
+
                 //隐藏加载动画
                 this.hideLoading();
             },
@@ -833,19 +752,19 @@
     .shoplist_container{
         overflow-y: auto;
         flex:1;
-        display: flex;
+        display: block;
         flex-direction:column;
         padding-bottom: 2rem;
         align-items: center;
         align-content:center;
         background-color:#fff;
         ul{
-            width: 90%;
+            width: 100%;
             overflow: hidden;
             .menu_detail_list{
                 flex:1;
                 background-color: #fff;
-                padding: .6rem .4rem;
+                padding: .6rem .4rem .6rem 1.2rem ;
                 border-bottom: 1px solid #f8f8f8;
                 position: relative;
                 overflow: hidden;

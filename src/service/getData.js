@@ -39,10 +39,18 @@ export const currentcity = number => fetch('/v1/cities/' + number);
  * 获取搜索地址
  */
 
-export const searchplace = (cityid, value) => fetch('/v1/pois', {
-	type: 'search',
-	city_id: cityid,
-	keyword: value
+// export const searchplace = (cityid, value) => fetch('/v1/pois', {
+// 	type: 'search',
+// 	city_id: cityid,
+// 	keyword: value
+// });
+
+export const searchplace = (cityName, keywords, pageNo=0, pageSize=10) => fetch('/searchDpStore', {
+
+	cityName: cityName,
+	keywords: keywords,
+	pageNo:pageNo,
+	pageSize:pageSize
 });
 
 
@@ -154,6 +162,15 @@ export const foodMenu = restaurant_id => fetch('/shopping/v2/menu', {
 	restaurant_id
 });
 
+export const userHome = userId => fetch('/v1/user/home', {
+	userId
+});
+
+export const addToCart = (userId,storeIds) => fetch('/v1/user/addToCart', {
+	userId,
+	storeIds
+}, 'POST');
+
 
 /**
  * 获取商铺评价列表
@@ -227,11 +244,33 @@ export const sendMobile = (sendData, captcha_code, type, password) => fetch('/v1
  * 确认订单
  */
 
-export const checkout = (geohash, entities, shopid) => fetch('/v1/carts/checkout', {
-	come_from: "web",
-	geohash,
-	entities,
-	restaurant_id: shopid,
+// export const checkout = (geohash, entities, shopid) => fetch('/v1/carts/checkout', {
+// 	come_from: "web",
+// 	geohash,
+// 	entities,
+// 	restaurant_id: shopid,
+// }, 'POST');
+
+/**
+ * 获取门店列表
+ */
+
+export const getStoreInfo = (userId,storeId) => fetch('/v1/store/getInfo', {
+	
+	userId: userId,
+	storeId: storeId
+
+}, 'POST');
+
+
+/**
+ * 获取订阅列表
+ */
+
+export const getStoreRate = (userId,storeId) => fetch('/v1/store/getRate', {
+	userId,
+	storeId
+
 }, 'POST');
 
 
@@ -399,7 +438,9 @@ export const exChangeHongbao = (id, exchange_code, captcha_code) => fetch('/v1/u
  * 获取用户信息
  */
 
-export const getUser = () => fetch('/v1/user', {user_id: getStore('user_id')});
+export const getUser = (userId) => fetch('/v1/user', {
+	userId
+},'POST');
 
 
 /**
@@ -456,7 +497,9 @@ export const deleteAddress = (userid, addressid) => fetch( '/v1/users/' + userid
 /**
  * 账号密码登录
  */
-export const accountLogin = (username, password, captcha_code) => fetch('/v2/login', {username, password, captcha_code}, 'POST');
+export const accountLogin = (phone, code) => fetch('/v1/user/signin', { phone }, 'POST');
+
+export const accountRegister = (phone, code) => fetch('/v1/user/signin', { phone , code }, 'POST');
 
 
 /**

@@ -1,84 +1,93 @@
  <template>
-	<div class="rating_page">
-        <head-top head-title="商家详情" go-back='true'></head-top>
-        <section class="activities_container">
-            <header>活动与属性</header>
-            <ul class="actibities_ul">
-                <li v-for="item in shopDetail.activities" :key="item.id">
-                    <span :style='{backgroundColor: "#" + item.icon_color}'>{{item.icon_name}}</span>
-                    <span>{{item.description}}(APP专享)</span>
-                </li>
-            </ul>
-            <ul class="actibities_ul">
-                <li v-for="item in shopDetail.supports" :key="item.id">
-                    <span :style='{backgroundColor: "#" + item.icon_color}'>{{item.icon_name}}</span>
-                    <span>{{item.description}}(APP专享)</span>
-                </li>
-            </ul>
+	<div>
+        <header id='head_top'>
+        <section class="head_goback" @click="$router.go(-1)">
+            
+            取消
         </section>
-        <section class="shop_status_container">
-            <router-link to="/shop/shopDetail/shopSafe" class="shop_status_header">
-                <span class="shop_detail_title">食品监督安全公示</span>
-                <div>
-                    <span class="identification_detail">企业认证详情</span>
-                    <svg width="14" height="14" xmlns="http://www.w3.org/2000/svg" version="1.1" class="description_arrow" >
-                        <path d="M0 0 L8 7 L0 14"  stroke="#bbb" stroke-width="1.5" fill="none"/>
-                    </svg>
-                </div>
-            </router-link>
-            <section class="shop_statu_detail">
-                <div>
-                    <svg class="shop_status" v-if="shopDetail.status == 1">
-                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#res-well"></use>
-                    </svg>
-                    <svg class="res-well" v-else>
-                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#res-bad"></use>
-                    </svg>
-                </div>
-                <div class="check_date">
-                    <p>
-                        <span>监督检查结果：</span>
-                        <span class="shop_status_well" v-if="shopDetail.status == 1">良好</span>
-                        <span class="shop_status_bad" v-else>差</span>
-                    </p>
-                    <p>
-                        <span>检查日期：</span>
-                        <span>{{shopDetail.identification.identificate_date && shopDetail.identification.identificate_date.split('T')[0]}}</span>
-                    </p>
-                </div>
-            </section>
+        <section class="title_head ellipsis">
+            <span class="title_text" >{{storeName}}</span>
         </section>
-        <section class="shop_status_info">
-            <header>商家信息</header>
-            <p>{{shopDetail.name}}</p>
-            <p>地址：{{shopDetail.address}}</p>
-            <p>营业时间：[{{shopDetail.opening_hours[0]}}]</p>
-            <p @click="showLicenseImg(shopDetail.license.business_license_image)">
-                <span>营业执照</span>
-                <svg width="14" height="14" xmlns="http://www.w3.org/2000/svg" version="1.1" class="description_arrow" >
-                    <path d="M0 0 L8 7 L0 14"  stroke="#bbb" stroke-width="1.5" fill="none"/>
-                </svg></p>
-            <p @click="showLicenseImg(shopDetail.license.catering_service_license_image)">
-                <span>餐饮服务许可证</span>
-                <svg width="14" height="14" xmlns="http://www.w3.org/2000/svg" version="1.1" class="description_arrow" >
-                    <path d="M0 0 L8 7 L0 14"  stroke="#bbb" stroke-width="1.5" fill="none"/>
+        </header>
+        <section class="shop_container main_container">
+            <!-- <nav class="goback" @click="goback">
+                <svg width="4rem" height="100%" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                    <polyline points="12,18 4,9 12,0" style="fill:none;stroke:rgb(255,255,255);stroke-width:3"/>
                 </svg>
-            </p>
-        </section>
-        <transition name="fade">
-            <section class="license_container" v-if="showlicenseImg" @click="showlicenseImg = false">
-                <img :src="imgBaseUrl + licenseImg">
+            </nav> -->
+            
+           
+            <section class="sort_container" >
+                <div class="sort_item">
+                    <div class="sort_item_container" @click="chooseType('shop')">
+                        <div class="sort_item_border">
+                            <span>按周排列</span>
+                            <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
+                                <polygon points="0,3 10,3 5,8"/>
+                            </svg>
+                        </div>
+                    </div>
+                     
+                </div>
+                <div class="sort_item" >
+                    <div class="sort_item_container" @click="chooseType('shop')">
+                        <div class="sort_item_border">
+                            <span>全部地区</span>
+                            <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
+                                <polygon points="0,3 10,3 5,8"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="sort_item" >
+                    <div class="sort_item_container" @click="chooseType('shop')">
+                        <div class="sort_item_border">
+                            <span>今天</span>
+                            <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
+                                <polygon points="0,3 10,3 5,8"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
             </section>
-        </transition>
-        <transition name="router-slid" mode="out-in">
-            <router-view></router-view>
-        </transition>
+            <section class="shoplist_container">
+                <ul v-if="rateList.length > 0">
+                    <li v-for="(item,index) in rateList" :key="index">
+                        <section class="menu_detail_list">
+                            <div class="menu_detail_link">
+                                <h3 class="rate_head">
+                                    <section class="user_profile">
+                                        <img :src="item.avatar">
+                                        <div class="rate_username">{{item.username}} {{item.ratedAt}}<br/>
+                                                <span class="rate_tag">口味好</span>
+                                                <span class="rate_tag">环境很好</span>
+                                                <span class="rate_tag">服务好</span>
+                                         </div>
+                                    </section>
+                                </h3>
+                                <section class="rate_desc">
+                                    
+                                    <p class="rate_content" v-html="item.ratingText"></p>
+                                    <div class="rate_time">{{item.ratingTime}}</div>
+                                </section>
+                            </div>
+                        </section>
+                        
+                    </li>
+
+                </ul>
+            </section>
+            
+        </section>
+            
     </div>
 </template>
 
 <script>
 	import headTop from 'src/components/header/head'
     import {mapState} from 'vuex'
+    import {userHome,getUser,getStoreRate} from 'src/service/getData'
+    import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import {getImgPath} from 'src/components/common/mixin'
     import {imgBaseUrl} from 'src/config/env'
 
@@ -87,11 +96,13 @@
             return{
                licenseImg: null,
                showlicenseImg: false,
+               rateList:[],
+               storeName:'',
                imgBaseUrl
             }
         },
         mounted(){
-        	
+        	this.initData();
         },
         computed: {
             ...mapState([
@@ -107,140 +118,408 @@
                 this.licenseImg = img;
                 this.showlicenseImg = true;
             },
+            async initData(){
+                this.storeId = this.$route.query.storeId;
+                this.storeName = this.$route.query.storeName;
+
+                this.user = JSON.parse(getStore('user'));
+
+                let response = await getStoreRate(this.user.id,this.storeId);
+
+                if(response.status == 0){
+                    if( response.rates.length ==0){
+                        setTimeout(()=>{
+                            this.initData();
+                        },3000)
+                    }
+
+                    this.rateList = response.rates;
+                }
+            }
         }
     }
 </script>
 	
 <style lang="scss" scoped>
     @import 'src/style/mixin';
-	
-	.rating_page{
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-        padding-top: 1.95rem;
-		background-color: #ebebeb;
-		z-index: 18;
-	}
-    .activities_container{
+    #head_top{
         background-color: #fff;
-        margin: .4rem 0;
-        padding-bottom: .6rem;
-        header{
-            @include sc(.75rem, #333);
-            line-height: 1.8rem;
-            padding-left: .6rem;
-            border-bottom: 1px solid #f1f1f1;
-            margin-bottom: .3rem;
-        }
-        .actibities_ul{
-            padding: 0 .6rem;
-            li{
-                margin-bottom: .2rem;
-                span:nth-of-type(1){
-                    @include sc(.45rem, #fff);
-                    padding: .1rem;
-                    border: 1px;
-                    border-radius: 0.1rem;
-                    margin-right: .2rem;
-                }
-                span:nth-of-type(2){
-                    @include sc(.55rem, #666);
-                }
-            }
-        }
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        @include wh(100%, 1.95rem);
+        border-bottom:0.025rem solid #e5e5e5;
     }
-    .shop_status_container{
-        background-color: #fff;
-        margin-bottom: .4rem;
-        .shop_status_header{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            line-height: 1.8rem;
-            padding: 0 .6rem;
-            border-bottom: 0.025rem solid #f1f1f1;
-            .shop_detail_title{
-                @include sc(.75rem, #333);
-            }
-            .identification_detail{
-                @include sc(.7rem, #bbb);
-                vertical-align: middle;
-            }
-            svg{
-                @include wh(.6rem, .6rem);
-                vertical-align: middle;
-            }
-        }
-        .shop_statu_detail{
-            display: flex;
-            padding: .6rem;
-            svg{
-                @include wh(2rem, 2rem);
-                margin-right: .6rem;
-            }
-            .check_date{
-                span{
-                    @include sc(.55rem, #666);
-                }
-                .shop_status_well{
-                    color: rgb(126, 211, 33);
-                }
-                .shop_status_bad{
-                    color: red;
-                }
-            }
-        }
+    .head_goback{
+        left: 0.4rem;
+        @include wh(1.95rem, auto);
+        @include sc(0.6rem, #666);
+        line-height: 1.95rem;
+        margin-left: .4rem;
     }
-    .shop_status_info{
-        background-color: #fff;
-        margin-bottom: .4rem;
-        header{
-            line-height: 1.8rem;
-            padding: 0 .6rem;
-            @include sc(.75rem, #333);
-            border-bottom: 0.025rem solid #f1f1f1;
-        }
-        p{
-            @include sc(.6rem, #666);
-            padding: .7rem .6rem .7rem 0;
-            margin-left: .6rem;
-            border-bottom: 0.025rem solid #f5f5f5;
-        }
-        span{
+    .head_login{
+        right: 0.55rem;
+        @include sc(0.65rem, #666);
+        @include ct;
+        .login_span{
             color: #666;
         }
-        p:nth-of-type(4), p:nth-of-type(5){
-            display: flex;
-            justify-content: space-between;
+        .user_avatar{
+            fill: #666;
+            @include wh(.8rem, .8rem);
         }
     }
-    .license_container{
-        position: fixed;
-        top: 0;
-        left: 0;
+    .title_head{
+        @include center;
+        width: 50%;
+        color: #fff;
+        text-align: center;
+        line-height: 0.8rem;
+        .title_text{
+            @include sc(0.8rem, #666);
+            text-align: center;
+            /*font-weight: bold;*/
+        }
+    }
+	.main_container{
+        padding-top:50px;
+    }
+	.shop_container{
+        display: flex;
+        flex-direction: column;
+        position: absolute;
         right: 0;
-        bottom: 0;
-        background-color: rgba(0,0,0,.5);
-        z-index: 101;
-        img{
+        left: 0;
+        height: 100%;
+    }
+    .sort_container{
+        background-color: #fff;
+        border-bottom: 0.025rem solid #f1f1f1;
+        right: 0;
+        width: 100%;
+        display: flex;
+        z-index: 13;
+        box-sizing: border-box;
+
+        .sort_item{
+            flex:1;
+            margin:10px 10px 6px 15px;
+            @include wh(40%, 1.6rem);
+            
+            text-align: center;
+            line-height: 1rem;
+            .sort_item_container{
+                @include wh(100%, 100%);
+                position: relative;
+                z-index: 14;
+                background-color: #fff;
+                box-sizing: border-box;
+                /*padding-top: .3rem;*/
+                .sort_item_border{
+
+                    @include sc(.5rem, #fff);
+                    border: 0.025rem solid #e1e1e1;
+                    padding: .2rem .4rem;
+                    border-radius: 0.2rem;
+                    line-height: 1rem;
+                }
+            }
+            .sort_icon{
+                vertical-align: middle;
+                transition: all .3s;
+                fill:#666;
+            }
+            
+        }
+        .choose_type{
+            .sort_item_container{
+
+                .category_title{
+                    color: $blue;
+                }
+                .sort_icon{
+                    transform: rotate(180deg);
+                    fill:$blue;
+                }
+            }
+        }
+        .showlist-enter-active, .showlist-leave-active {
+            transition: all .3s;
+            transform: translateY(0);
+        }
+        .showlist-enter, .showlist-leave-active {
+            opacity: 0;
+            transform: translateY(-100%);
+        }
+        .sort_detail_type{
             width: 100%;
-            @include center;
+            position: absolute;
+            display:flex;
+            top: 1.6rem;
+            left: 0;
+            border-top: 0.025rem solid $bc;
+            background-color: #fff;
+        }
+        .category_container{
+            .category_left{
+                flex: 1;
+                background-color: #f1f1f1;
+                height: 16rem;
+                overflow-y: auto;
+                span{
+                    @include sc(0.5rem, #666);
+                    line-height: 1.8rem;
+                }
+                .category_left_li{
+                    @include fj;
+                    padding:0 0.5rem;
+                    .category_icon{
+                        @include wh(.8rem, .8rem);
+                        vertical-align: middle;
+                        margin-right: .2rem;
+                    }
+                    .category_count{
+                        background-color: #ccc;
+                        @include sc(.4rem, #fff);
+                        padding: 0 .1rem;
+                        border: 0.025rem solid #ccc;
+                        border-radius: 0.8rem;
+                        vertical-align: middle;
+                        margin-right: 0.25rem;
+                    }
+                    .category_arrow{
+                        vertical-align: middle;
+                    }
+                }
+                .category_active{
+                    background-color: #fff;
+                }
+            }
+            .category_right{
+                flex: 1;
+                background-color: #fff;
+                padding-left: 0.5rem;
+                height: 16rem;
+                overflow-y: auto;
+                .category_right_li{
+                    @include fj;
+                    height: 1.8rem;
+                    line-height: 1.8rem;
+                    padding-right: 0.5rem;
+                    border-bottom: 0.025rem solid $bc;
+                    span{
+                        color: #666;
+                    }
+                }
+                .category_right_choosed{
+                    span{
+                        color: $blue;
+                    }
+                }
+            }
+        }
+        .sort_list_container{
+            width: 100%;
+            .sort_list_li{
+                height: 2.5rem;
+                display: flex;
+                align-items: center;
+                svg{
+                    @include wh(0.7rem, 0.7rem);
+                    margin:0 .3rem 0 .8rem;
+                }
+                p{
+                    line-height: 2.5rem;
+                    flex: auto;
+                    text-align: left;
+                    text-indent: 0.25rem;
+                    border-bottom: 0.025rem solid $bc;
+                    @include fj;
+                    align-items: center;
+                    span{
+                        color: #666;
+                    }
+                }
+                .sort_select{
+                    span{
+                        color: $blue;
+                    }
+                }
+            }
+        }
+        .filter_container{
+            flex-direction: column;
+            align-items: flex-start;
+            min-height: 10.6rem;
+            background-color: #f1f1f1;
+            .filter_header_style{
+                @include sc(0.4rem, #333);
+                line-height: 1.5rem;
+                height: 1.5rem;
+                text-align: left;
+                padding-left: .5rem;
+                background-color: #fff;
+            }
+            .filter_ul{
+                display: flex;
+                flex-wrap: wrap;
+                padding: 0 0.5rem;
+                background-color: #fff;
+                .filter_li{
+                    display: flex;
+                    align-items: center;
+                    border: 0.025rem solid #eee;
+                    @include wh(4.7rem, 1.4rem);
+                    margin-right: 0.25rem;
+                    border-radius: 0.125rem;
+                    padding: 0 0.25rem;
+                    margin-bottom: 0.25rem;
+                    svg{
+                        @include wh(.8rem, .8rem);
+                        margin-right: 0.125rem;
+                    }
+                    span{
+                        @include sc(0.4rem, #333);
+                    }
+                    .filter_icon{
+                        @include wh(.8rem, .8rem);
+                        font-size: 0.5rem;
+                        border: 0.025rem solid $bc;
+                        border-radius: 0.15rem;
+                        margin-right: 0.25rem;
+                        line-height: .8rem;
+                        text-align: center;
+                    }
+                    .activity_svg{
+                        margin-right: .25rem;
+                    }
+                    .selected_filter{
+                        color: $blue;
+                    }
+                }
+            }
+            .confirm_filter{
+                display: flex;
+                background-color: #f1f1f1;
+                width: 100%;
+                padding: .3rem .2rem;
+                .filter_button_style{
+                    @include wh(50%, 1.8rem);
+                    font-size: 0.8rem;
+                    line-height: 1.8rem;
+                    border-radius: 0.2rem;
+                }
+                .clear_all{
+                    background-color: #fff;
+                    margin-right: .5rem;
+                    border: 0.025rem solid #fff;
+                }
+                .confirm_select{
+                    background-color: #56d176;
+                    color: #fff;
+                    border: 0.025rem solid #56d176;
+                    span{
+                        color: #fff;
+                    }
+                }
+            }
         }
     }
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .5s;
-    }
-    .fade-enter, .fade-leave-active {
-        opacity: 0;
-    }
-    .router-slid-enter-active, .router-slid-leave-active {
-        transition: all .4s;
-    }
-    .router-slid-enter, .router-slid-leave-active {
-        transform: translate3d(2rem, 0, 0);
-        opacity: 0;
+    .shoplist_container{
+        overflow-y: auto;
+        flex:1;
+        display: block;
+        flex-direction:column;
+        padding-bottom: 2rem;
+        align-items: center;
+        align-content:center;
+        background-color:#fff;
+        ul{
+            width: 100%;
+            overflow: hidden;
+            .menu_detail_list{
+                word-break: break-word;
+                flex:1;
+                background-color: #fff;
+                padding: .6rem .4rem .6rem 1.2rem ;
+                border-bottom: 1px solid #d7d7d7;
+                position: relative;
+                overflow: hidden;
+                .menu_detail_link{
+                    display:flex;
+                    flex-direction:column;
+                    .rate_head{
+                        @include fj;
+                        margin-bottom: .1rem;
+                        .user_profile{
+                            display:flex;
+                            flex-direction:row;
+                            margin-right: .4rem;
+
+                            img{
+                                border-radius: 2rem;
+                                @include wh(2rem, 2rem);
+                                display: block;
+                            }
+                            .rate_username{
+                                @include sc(.6rem, #333);
+                                margin-left:1rem;
+                                .rate_tag{
+                                    background-color:rgba(255,139,103,1);
+                                    @include sc(.5rem, #fff);
+                                    padding: .1rem;
+                                }
+                            }
+                        }
+                    }
+                    .rate_desc{
+                        width: 100%;
+                        .rate_time{
+                            @include sc(.6rem, #aaa);
+                        }
+                        .rate_content{
+                            @include sc(.6rem, #666);
+                            line-height: .8rem;
+                            padding:0 1rem 0 0rem;
+                            max-height: 3.2rem;
+                            overflow: hidden;
+                        }
+                        
+                    }
+                }
+            }
+            .menu_detail_reply{
+                display: flex;
+                flex-direction:row;
+                @include wh(100%, auto);
+                @include sc(.7rem, #969696);
+                li{
+                    flex:1;
+                    text-align: center;
+                    line-height: 1rem;
+                    margin: .5rem 0 .5rem 0;
+                    border-right:0.025rem solid #e5e5e5;
+                    &:last-child{
+                        border-width:0;
+                    };
+
+                    .reply_count{
+                        @include sc(.9rem, #969696);
+                        line-height: 1.2rem;
+                        &.green{
+                            color:#88ce41;
+                        }
+                        &.yellow{
+                            color:#ffd500;
+                        }
+                        &.red{
+                            color:#fc3c3f;
+                        }
+                    }
+                }
+            }
+        }
+        
     }
 </style>

@@ -17,14 +17,14 @@
                 <div class="pay_icon_contaienr">
                     <span>门店数量</span>
                 </div>
-                <div class="order_item_text">2</div>
+                <div class="order_item_text">{{storeIds.length}}</div>
             </section>
             <section class="pay_item order_item">
                 <div class="pay_icon_contaienr">
                     <span>套餐时间</span>
                 </div>
                 <div class="order_item_text">
-                    连续包月
+                    {{paymentName}}
                 </div>
             </section>
             <section class="pay_item order_item">
@@ -32,7 +32,7 @@
                     <span>支付日期</span>
                 </div>
                 <div class="order_item_text">
-                    2017-7-7
+                    {{date}}
                 </div>
             </section>
             <section class="pay_item order_item">
@@ -40,7 +40,7 @@
                     <span>支付金额</span>
                 </div>
                 <div class="order_item_text">
-                    ￥4元
+                    ￥{{price}}元
                 </div>
             </section>
         </section> 
@@ -71,7 +71,7 @@
             </section>
         </section>
 
-        <p class="determine" @click="closeTipFun">确认支付</p>
+        <p class="determine" @click="confrimPay">确认支付</p>
         <!-- <alert-tip v-if="showAlert" @closeTip="closeTipFun" :alertText="alertText"></alert-tip> -->
     </div>
 </template>
@@ -79,7 +79,8 @@
 <script>
     import headTop from 'src/components/header/head'
     import {mapState, mapMutations} from 'vuex'
-    import {payRequest} from 'src/service/getData'
+    import {getStore, setStore, removeStore} from 'src/config/mUtils'
+    import {addToCart} from 'src/service/getData'
     import alertTip from 'src/components/common/alertTip'
 
     export default {
@@ -91,6 +92,30 @@
                 payWay: 1, //付款方式
                 countNum: 900, //倒计时15分钟
                 gotoOrders: false, //去付款
+                paymentId: 0,
+                payments:[
+                    {
+                        id:0,
+                        title:"连续包月",
+                        subTitle:"自动续费，可随时取消",
+                        rrpPrice:4,
+                        price:2
+                    },
+                    {
+                        id:1,
+                        title:"1个月",
+                        subTitle:"",
+                        rrpPrice:4,
+                        price:3
+                    },
+                    {
+                        id:2,
+                        title:"3个月",
+                        subTitle:"",
+                        rrpPrice:16,
+                        price:8
+                    }
+                ]
             }
         },
         components: {
@@ -98,11 +123,35 @@
             alertTip,
         },
         created(){
-            this.initData();
-            //清除购物车中当前商铺的信息
-            if (this.shopid) {
-                this.CLEAR_CART(this.shopid);
+            // //清除购物车中当前商铺的信息
+            // if (this.shopid) {
+            //     this.CLEAR_CART(this.shopid);
+            // }
+            
+
+            Date.prototype.Format = function (fmt) { //author: meizz 
+                var o = {
+                    "M+": this.getMonth() + 1, //月份 
+                    "d+": this.getDate(), //日 
+                    "h+": this.getHours(), //小时 
+                    "m+": this.getMinutes(), //分 
+                    "s+": this.getSeconds(), //秒 
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+                    "S": this.getMilliseconds() //毫秒 
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
             }
+
+            this.date = new Date().Format("yyyy-MM-dd");
+            this.storeIds = this.$route.query.ids.map(item => parseInt(item));
+            this.paymentName = this.payments[this.$route.query.payment].title;
+            this.price = this.payments[this.$route.query.payment].price * this.storeIds.length;
+
+            // console.log(this.storeIds);
+            this.initData();
         },
         mounted(){
             this.remainingTime();
@@ -113,7 +162,7 @@
         props:[],
         computed: {
             ...mapState([
-                'orderMessage', 'userInfo', 'shopid', 'cartPrice'
+                // 'orderMessage', 'userInfo', 'shopid', 'cartPrice'
             ]),
             //时间转换
             remaining: function (){
@@ -134,7 +183,8 @@
             ]),
             //初始化信息
             async initData(){
-            	this.payDetail = await payRequest(this.orderMessage.order_id, this.userInfo.user_id);
+            	// this.payDetail = await payRequest(this.orderMessage.order_id, this.userInfo.user_id);
+                
                 if (this.payDetail.message) {
                     this.showAlert = true;
                     this.alertText = this.payDetail.message;
@@ -154,16 +204,24 @@
                 }, 1000);
             },
             //确认付款
-            confrimPay(){
-                this.showAlert = false;
-                this.alertText = '当前环境无法支付，请打开官方APP进行付款';
-                this.gotoOrders = true;
+            async confrimPay(){
+                let user = JSON.parse(getStore('user'));
+                let response = await addToCart(user.id,this.storeIds);
+                if(response.status == 0){
+                    this.$router.push('/shop');
+                }
+                // console.log(response);
+                
+                // this.showAlert = false;
+                // this.alertText = '当前环境无法支付，请打开官方APP进行付款';
+                // this.gotoOrders = true;
             },
             //关闭提示框，跳转到订单列表页
             closeTipFun(){
                 this.showAlert = false;
-                // if (this.gotoOrders) {
-                    this.$router.push('/shop?id=2');
+                
+                // if(response.status == 0){
+                //     this.$router.push('/shop?id=2');
                 // }
             },
         }

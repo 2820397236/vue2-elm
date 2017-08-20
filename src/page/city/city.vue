@@ -3,33 +3,37 @@
         
         <form class="city_form" v-on:submit.prevent>
             <router-link to="/home" slot="changecity" class="change_city_right button_style">上海</router-link>
-            <input type="search" name="city" placeholder="请输入要搜索订阅的门店名称" class="city_input input_style" required v-model='inputVaule' @input='postpois'>
-            <div class="head_back_left button_style" @click="$router.go(-1)">取消</div>
+            <input type="search" name="city" placeholder="请输入要搜索订阅的门店名称" 
+            class="city_input input_style" v-model='inputVaule' @input='postpois(inputVaule)'>
+            
+            <div class="head_back_left button_style" @click="$router.go(-1)">返回</div>
             <!-- <div>
                 <input type="submit" name="submit" class="city_submit input_style" @click='postpois' value="提交">
             </div> -->
         </form>
-        <header v-if="historytitle" class="pois_search_history">共36,705,325条</header>
+        <header v-if="historytitle" class="pois_search_history">共{{total | currency('', 0)}}条</header>
         <ul class="getpois_ul">
-            <!-- <li v-for="(item, index) in placelist" @click='nextpage(index, item.geohash)' :key="index"> -->
-            <li v-for="(item, index) in placelist" :key="index" @click='active(item)'>
-                <a class="add_icon" :class="{'active':item.active === true}">
-                    <svg @touchstart="">
+            <!-- <li v-for="(item, index) in stores" @click='nextpage(index, item.geohash)' :key="index"> -->
+            <li v-for="(item, index) in stores" :key="index" @click='active(item,index)'  >
+                <a class="add_icon">
+                    <svg @touchstart="" :class="{active: selectStores.indexOf(item.id) > -1}">
                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select"></use>
                     </svg>
                 </a>
-                <img src="http://images.cangdu.org/15d4a7a730f14.png">
+                <img :src="item.defaultPic">
                 <div class="pois_detail">
-                    <h4 class="pois_name ellipsis">{{item.name}}</h4>
-                    <p class="pois_address ellipsis">{{item.address}}</p>
+                    <h4 class="pois_name ellipsis">{{item.name}} {{item.branchName}}</h4>
+                    <p class="pois_address ellipsis">
+                    {{item.priceText}}&nbsp;&nbsp;{{item.regionName}}&nbsp;&nbsp;
+                    {{selectStores.indexOf(item.id) > -1 ? 'id:'+item.id : ''}} </p>
                 </div>
             </li>
         </ul>
-        <footer v-if="historytitle&&placelist.length" class="clear_all_history" @click="clearAll">清空所有</footer>
+        <footer v-if="historytitle&&stores.length" class="clear_all_history" @click="clearAll">清空所有</footer>
         <div class="search_none_place" v-if="placeNone">很抱歉！无搜索结果</div>
         <div class="button_container">
             <a class="button orange">全选</a>
-            <a class="button red" @click='nextpage(2, "31.15385,121.30464")'>去订阅</a>
+            <a class="button red" @click='nextpage(2, selectStores)'>去订阅</a>
         </div>
     </div>
 </template>
@@ -38,14 +42,16 @@
     import {mapState, mapMutations} from 'vuex'
     import {currentcity, searchplace} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
-
+    import debounce from 'debounce'
     export default {
     	data(){
             return{
                 inputVaule:'', // 搜索地址
                 cityid:'', // 当前城市id
                 cityname:'', // 当前城市名字
-                placelist:[], // 搜索城市列表
+                stores:[], // 搜索城市列表
+                selectStores:[],
+                total:36705325,
                 placeHistory:[], // 历史搜索记录
                 historytitle: true, // 默认显示搜索历史头部，点击搜索后隐藏
                 placeNone: false, // 搜索无结果，显示提示信息
@@ -53,15 +59,16 @@
         },
 
         mounted(){
-            this.cityid = this.$route.params.cityid;
-            //获取当前城市名字
-            currentcity(this.cityid).then(res => {
-                this.cityname = res.name;
-            })
+            // this.cityid = this.$route.params.cityid;
+            // //获取当前城市名字
+            // currentcity(this.cityid).then(res => {
+            //     this.cityname = res.name;
+            // })
             this.initData();
         },
 
         components:{
+
         },
 
         computed:{
@@ -70,45 +77,75 @@
 
         methods:{
             ...mapMutations([
-                'RECORD_ADDRESS','ADD_CART','REDUCE_CART','INIT_BUYCART','CLEAR_CART','RECORD_SHOPDETAIL'
+                'RECORD_ADDRESS','ADD_CART','REDUCE_CART','CLEAR_CART','RECORD_SHOPDETAIL'
             ]),
 
             initData(){
                 //获取搜索历史记录
                 if (getStore('placeHistory')) {
-                    this.placelist = JSON.parse(getStore('placeHistory'));
+                    this.stores = JSON.parse(getStore('placeHistory'));
                 }else{
-                    this.placelist = [];
+                    this.stores = [];
                 }
-                this.INIT_BUYCART();
             },
             //发送搜索信息inputVaule
-            postpois(){
-                //输入值不为空时才发送信息
-                if (this.inputVaule) {
-                    searchplace(this.cityid, this.inputVaule).then(res => {
-                        if(res.name === "ERROR_QUERY_TYPE" || false === res instanceof  Array){
+            // postpois(inputVaule){ 
+            //     var _this = this;
+
+            //     debounce(this.searchPlace(this.inputVaule),2000)
+            // },
+
+            postpois:debounce(function (inputVaule) {
+              
+              if (inputVaule && inputVaule != " ") {
+                    console.log(inputVaule);
+                    searchplace('上海',inputVaule).then(res => {
+                        console.log(res);
+                        if(res.status == -1){
                             return;
                         }
-                        this.historytitle = false;
-                        this.placelist = res;
-                        this.placeNone = res.length? false : true;
+                        this.stores = res.stores;
+                        this.total = this.stores.length;
+                        // this.historytitle = false;
+                        this.placeNone = res.pageSize * (res.pageNo+1) > res.total;
                     })
                 }
-            },
+            }, 500),
+
+            // searchPlace(inputVaule){
+            //     console.log("12:"+inputVaule);
+            //     // if (inputVaule) {
+            //     //     searchplace('上海',inputVaule).then(res => {
+            //     //         console.log(res);
+            //     //         if(res.status == -1){
+            //     //             return;
+            //     //         }
+            //     //         this.stores = res.stores;
+            //     //         // this.historytitle = false;
+            //     //         this.placeNone = res.pageSize * (res.pageNo+1) > res.total;
+            //     //     })
+            //     // }
+            // },
             /**
              * 点击搜索结果进入下一页面时进行判断是否已经有一样的历史记录
              * 如果没有则新增，如果有则不做重复储存，判断完成后进入下一页
              */
-            nextpage(index, geohash){
+            nextpage(index, ids){
                 // console.log(index, geohash);
-                this.ADD_CART({shopid: 2, category_id:2, item_id:2, food_id:1, name:'西贝莜面村（上海宝乐汇店）', price:1, specs:""});
-                this.$router.push({path:'/confirmOrder', query:{shopId:2,geohash}});
+                // this.ADD_CART({shopid: 2, category_id:2, item_id:2, food_id:1, name:'西贝莜面村（上海宝乐汇店）', price:1, specs:""});
+                
+                this.$router.push({path:'/confirmOrder', query:{ids}});
                 
             },
-            active(item){
-                console.log(item);
-                item.active = !item.active;
+            active(item,index){
+                
+                if(this.selectStores.indexOf(item.id) == -1){
+                    this.selectStores.push(item.id);
+                }else{
+                    this.selectStores.splice(this.selectStores.indexOf(item.id),1);
+                }
+                
+                console.log(this.selectStores);
             },
             clearAll(){
                 removeStore('placeHistory');
@@ -209,7 +246,7 @@
             text-align: center;
             padding: .5rem 0;
             img{
-                @include wh(70px, 3rem);
+                @include wh(3rem, 3rem);
             }
             .add_icon{
                 padding: 0 .4rem;
@@ -218,12 +255,11 @@
                     width:.85rem;
                     height:.85rem;
                     fill: #ccc;
-                }
-                &.active{
-                    svg{
-                        fill:#fc3c3f;
+                    &.active{
+                         fill:#fc3c3f;
                     }
                 }
+                
             }
             .pois_detail{
                 flex:1;

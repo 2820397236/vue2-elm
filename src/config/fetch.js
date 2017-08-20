@@ -2,7 +2,7 @@ import {
 	baseUrl
 } from './env'
 
-export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
+export default async(url = '', data = {}, type = 'POST', method = '') => {
 	type = type.toUpperCase();
 	url = baseUrl + url;
 
@@ -58,7 +58,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 			}
 
 			requestObj.open(type, url, true);
-			requestObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			requestObj.setRequestHeader("Content-type", "application/json");
 			requestObj.send(sendData);
 
 			requestObj.onreadystatechange = () => {
