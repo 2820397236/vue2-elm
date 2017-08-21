@@ -68,7 +68,7 @@
                                 <section class="rate_desc">
                                     
                                     <p class="rate_content" v-html="item.ratingText"></p>
-                                    <div class="rate_time">{{item.ratingTime}}</div>
+                                    <div class="rate_time" v-html="item.ratingTime"></div>
                                 </section>
                             </div>
                         </section>
