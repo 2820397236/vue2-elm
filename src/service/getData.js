@@ -499,7 +499,7 @@ export const deleteAddress = (userid, addressid) => fetch( '/v1/users/' + userid
  */
 export const accountLogin = (phone, code) => fetch('/v1/user/signin', { phone }, 'POST');
 
-export const accountRegister = (phone, code) => fetch('/v1/user/signin', { phone , code }, 'POST');
+export const accountRegister = (phone, code) => fetch('/v1/user/signup', { phone , code }, 'POST');
 
 
 /**

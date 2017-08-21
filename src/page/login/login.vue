@@ -66,7 +66,7 @@
     import {localapi, proapi, imgBaseUrl} from 'src/config/env'
     import {mapState, mapMutations} from 'vuex'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
-    import {mobileCode, checkExsis, sendLogin, getcaptchas, accountLogin} from '../../service/getData'
+    import {mobileCode, checkExsis, sendLogin, getcaptchas, accountLogin,accountRegister} from '../../service/getData'
 
     export default {
         data(){
