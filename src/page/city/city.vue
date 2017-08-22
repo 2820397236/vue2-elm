@@ -93,6 +93,8 @@
 
                 if(getStore('city')) {
                     this.city = JSON.parse(getStore('city'));
+                }else{
+                    this.$router.push({path:'/home'});
                 }
             },
             //发送搜索信息inputVaule
