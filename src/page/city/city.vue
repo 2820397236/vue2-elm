@@ -2,7 +2,9 @@
   	<div class="city_container">
         
         <form class="city_form" v-on:submit.prevent>
-            <router-link to="/home" slot="changecity" class="change_city_right button_style">上海</router-link>
+            <router-link to="/home" slot="changecity" class="change_city_right button_style">
+                {{city.cityName}}
+            </router-link>
             <input type="search" name="city" placeholder="请输入要搜索订阅的门店名称" 
             class="city_input input_style" v-model='inputVaule' @input='postpois(inputVaule)'>
             
@@ -47,6 +49,7 @@
     	data(){
             return{
                 inputVaule:'', // 搜索地址
+                city:null,
                 cityid:'', // 当前城市id
                 cityname:'', // 当前城市名字
                 stores:[], // 搜索城市列表
@@ -87,6 +90,10 @@
                 }else{
                     this.stores = [];
                 }
+
+                if(getStore('city')) {
+                    this.city = JSON.parse(getStore('city'));
+                }
             },
             //发送搜索信息inputVaule
             // postpois(inputVaule){ 
@@ -99,7 +106,7 @@
               
               if (inputVaule && inputVaule != " ") {
                     console.log(inputVaule);
-                    searchplace('上海',inputVaule).then(res => {
+                    searchplace(this.city.cityName,inputVaule).then(res => {
                         console.log(res);
                         if(res.status == -1){
                             return;

@@ -1,6 +1,6 @@
 <template>
   	<div>
-        <head-top signin-up='home'>
+        <head-top>
             <span slot='logo' class="head_logo"  @click="reload">ele.me</span>
         </head-top>
         <nav class="city_nav">
@@ -18,9 +18,9 @@
         <section id="hot_city_container">
             <h4 class="city_title">热门城市</h4>
             <ul class="citylistul clear">
-                <router-link  tag="li" v-for="item in hotcity" :to="'/city/' + item.id" :key="item.id">
-                    {{item.name}}
-                </router-link>  
+                <li v-for="item in hotcity" :key="item.id" @click="setCity(item)">
+                    {{item.cityName}}
+                </li>  
             </ul>
         </section>
         <section class="group_city_container">
@@ -44,12 +44,13 @@
 <script>
 import headTop from '../../components/header/head'
 import {cityGuess, hotcity, groupcity} from '../../service/getData'
+import {getStore, setStore, removeStore} from 'src/config/mUtils'
 
 export default {
     data(){
         return{
-            guessCity: '',   //当前城市
-            guessCityid: '', //当前城市id
+            guessCity: '上海',   //当前城市
+            guessCityid: '1', //当前城市id
             hotcity: [],     //热门城市列表
             groupcity: {},   //所有城市列表
         }
@@ -57,20 +58,20 @@ export default {
 
 	mounted(){
         // 获取当前城市
-        cityGuess().then(res => {
-            this.guessCity = res.name;
-            this.guessCityid = res.id;
-        })
+        // cityGuess().then(res => {
+        //     this.guessCity = res.name;
+        //     this.guessCityid = res.id;
+        // })
 
         //获取热门城市
         hotcity().then(res => {
-            this.hotcity = res;
+            this.hotcity = res.cities;
         })
 
         //获取所有城市
-        groupcity().then(res => {
-            this.groupcity = res;
-        })
+        // groupcity().then(res => {
+        //     this.groupcity = res;
+        // })
     },
 
     components:{
@@ -91,9 +92,14 @@ export default {
     },
 
     methods:{
-        //点击图标刷新页面
+
         reload(){
             window.location.reload();
+        },
+
+        setCity(city){    
+            setStore('city',city);
+            this.$router.push({path:'/city/'+city.id});
         }
     },
 }
