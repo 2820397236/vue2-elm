@@ -24,7 +24,11 @@
                 </a>
                 <img :src="item.defaultPic">
                 <div class="pois_detail">
-                    <h4 class="pois_name ellipsis">{{item.name}} {{item.branchName}}</h4>
+                    <h4 class="pois_name ellipsis">
+                        {{item.name}} {{item.branchName}}
+                        <span class="store_status green" v-if="item.status==0">开业</span>
+                        <span class="store_status red" v-if="item.status!=0">停业</span>
+                    </h4>
                     <p class="pois_address ellipsis">
                     {{item.priceText}}&nbsp;&nbsp;{{item.regionName}}&nbsp;&nbsp;
                     {{selectStores.indexOf(item.id) > -1 ? 'id:'+item.id : ''}} </p>
@@ -104,22 +108,36 @@
             //     debounce(this.searchPlace(this.inputVaule),2000)
             // },
 
-            postpois:debounce(function (inputVaule) {
+            postpois:debounce(function (keyword) {
               
-              if (inputVaule && inputVaule != " ") {
-                    console.log(inputVaule);
-                    searchplace(this.city.cityName,inputVaule).then(res => {
+              if (keyword && keyword != " ") {
+                    console.log(keyword);
+                    let city = this.city.cityName;
+
+                    this.searchStore(city,keyword);
+                }
+            }, 1000),
+
+            searchStore(city,keyword){
+                console.log(city,keyword);
+                searchplace(city,keyword).then(res => {
                         console.log(res);
                         if(res.status == -1){
                             return;
                         }
+
                         this.stores = res.stores;
                         this.total = this.stores.length;
-                        // this.historytitle = false;
                         this.placeNone = res.pageSize * (res.pageNo+1) > res.total;
+
+                        if(res.stores.length == 0 || res.stores.length <5){
+                            
+                            setTimeout(()=>{
+                                this.searchStore(city,keyword);
+                            },3000 );
+                        }
                     })
-                }
-            }, 500),
+            },
 
             // searchPlace(inputVaule){
             //     console.log("12:"+inputVaule);
@@ -280,6 +298,17 @@
                     margin: 0 auto 0.35rem;
                     width: 90%;
                    @include sc(0.65rem, #333);
+                   .store_status{
+                        background-color: #fc3c3f;
+                        @include sc(.4rem, #fff);
+                        padding: 0rem .1rem .1rem .1rem;
+                        &.green{
+                            background-color: #5ddb44;
+                        }
+                        &.red{
+                            background-color: #fc3c3f;
+                        }
+                    }
                 }
                 .pois_address{
                     width: 90%;

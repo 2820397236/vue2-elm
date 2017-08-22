@@ -8,7 +8,7 @@
             </nav> -->
             <header class="shop_detail_header" ref="shopheader" style="z-index:0">
                 <!-- <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"> -->
-                <section class="description_header" :class="menuList.length == 0?'empty':''">
+                <section class="description_header" :class="storeList.length == 0?'empty':''">
                     <div class="description_top">
                         <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
                             <img :src="user.profileImg">
@@ -38,7 +38,7 @@
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-left"></use>
                         </svg>
                     </footer> -->
-                    <router-link :to="{path:'/city/1'}" tag="div" class="search_container" v-if="menuList.length != 0">
+                    <router-link :to="{path:'/city/1'}" tag="div" class="search_container" v-if="storeList.length != 0">
                         搜索并订阅更多店铺评论
                     </router-link>
 
@@ -78,33 +78,43 @@
                     <span :class='{activity_show: changeShowType =="rating"}' @click="changeShowType='rating'">暂停监测</span>
                 </div>
             </section> -->
-            <section class="food_container emptyShop" v-if="menuList.length == 0">
+            <section class="food_container emptyShop" v-if="storeList.length == 0">
                 <div class="start_button" @click = "gotoAddress('/city/1')">
                     立即体验订阅评论监控
                 </div>
             </section>
-            <transition name="fade-choose" v-if="menuList.length > 0">
+            <transition name="fade-choose" v-if="storeList.length > 0">
                 <section v-show="changeShowType =='food'" class="food_container">
                     <section class="menu_container">
                         <section class="menu_right" ref="menuFoodList">
                             <ul>
-                                <li v-for="(item,index) in menuList" :key="index">
+                                <li v-for="(store,index) in storeList" :key="index">
 
-                                    <section class="menu_detail_list">
-                                        <router-link  :to="{path: 'shop/shopDetail', query:{storeId:item.id,storeName:item.name+'('+ item.branchName+')'}}" tag="div" class="menu_detail_link">
-                                            <section class="menu_food_img">
-                                                <img :src="item.defaultPic">
-                                            </section>
-                                            <section class="menu_food_description">
-                                                <h3 class="food_description_head">
-                                                    <span class="description_foodname ellipsis">{{item.name}} {{item.branchName}}</span>
+                                    <section class="store_detail_list">
+                                        <div class="menu_detail_link">
+                                            <router-link  :to="{path: 'shop/shopDetail', query:{storeId:store.id,storeName:store.name+'('+ store.branchName+')'}}" tag="section" class="store_img">
+                                                <img :src="store.defaultPic">
+                                            </router-link>
+
+                                            <router-link  :to="{path: 'shop/shopDetail', query:{storeId:store.id,storeName:store.name+'('+ store.branchName+')'}}" tag="section" class="store_info">
+                                                <h3 class="store_head">
+                                                    <span class="store_name ellipsis">
+                                                    <span>{{store.name}} {{store.branchName}} </span>
+                                                    <span class="store_status green" v-if="store.status==0">开业</span>
+                                                    <span class="store_status red" v-if="store.status!=0">停业</span>
+                                                </span>
                                                 </h3>
-                                                <p class="food_description_content ellipsis">{{item.regionName}}&nbsp;&nbsp;{{item.priceText}}&nbsp;&nbsp;id:{{item.id}}</p>
-                                                <p class="food_description_sale_rating">
-                                                    <span>{{item.updateTime}}</span>
+                                                <p class="store_content ellipsis">{{store.regionName}}&nbsp;&nbsp;{{store.priceText}}</p>
+                                                <p class="store_time">
+                                                    <span>{{store.updateTime}}</span>
                                                 </p>
+                                            </router-link>
+                                            <section class="store_right" @click="deleteStore(store.id,index)">
+                                                <svg>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-minus"></use>
+                                                </svg>
                                             </section>
-                                        </router-link>
+                                        </div>
                                     </section>
                                 </li>
                             </ul>
@@ -121,7 +131,7 @@
             </transition>
         </section>
 
-        <foot-guide v-if="menuList.length > 0"></foot-guide>
+        <foot-guide v-if="storeList.length > 0"></foot-guide>
 
        <loading v-show="showLoading || loadRatings"></loading>
        <!-- <section class="animation_opactiy shop_back_svg_container" v-if="showLoading">
@@ -135,7 +145,7 @@
 
 <script>
     import {mapState, mapMutations} from 'vuex'
-    import {userHome,getUser} from 'src/service/getData'
+    import {getMyStore,getUser,cancelMyStore} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import loading from 'src/components/common/loading'
     import buyCart from 'src/components/common/buyCart'
@@ -148,13 +158,14 @@
     export default {
         data(){
             return{
+                user:null,
                 geohash: '', //geohash位置信息
                 shopId: null, //商店id值
                 showLoading: true, //显示加载动画
                 changeShowType: 'food',//切换显示商品或者评价
                 shopDetailData: null, //商铺详情
                 showActivities: false, //是否显示活动详情
-                menuList: [], //食品列表
+                storeList: [], //食品列表
                 menuIndex: 0, //已选菜单索引值，默认为0
                 menuIndexChange: true,//解决选中index时，scroll监听事件重复判断设置index的bug
                 shopListTop: [], //商品列表的高度集合
@@ -262,9 +273,9 @@
                 this.user = JSON.parse(getStore('user'));
 
 
-                let response = await userHome(this.user.id);
+                let response = await getMyStore(this.user.id);
                 if(response.status == 0){
-                    this.menuList = response.stores;
+                    this.storeList = response.stores;
                 }
                 
                 // //评论列表
@@ -276,6 +287,16 @@
                 // this.RECORD_SHOPDETAIL(this.shopDetailData)
                 //隐藏加载动画
                 this.hideLoading();
+            },
+            async deleteStore(storeId,index){
+                console.log(storeId,index);
+
+                let response = await cancelMyStore(this.user.id,[storeId]);
+
+                if(response.status == 0){
+                    this.storeList.splice(index,1);
+                }
+
             },
             gotoAddress(path){
                 this.$router.push(path);
@@ -311,8 +332,8 @@
                 //     this.shopListTop.forEach((item, index) => {
                 //         if (this.menuIndexChange && Math.abs(Math.round(pos.y)) >= item) {
                 //             this.menuIndex = index;
-                //             const menuList=this.$refs.wrapperMenu.querySelectorAll('.activity_menu');
-                //             const el = menuList[0];
+                //             const storeList=this.$refs.wrapperMenu.querySelectorAll('.activity_menu');
+                //             const el = storeList[0];
                 //             wrapperMenu.scrollToElement(el, 800, 0, -(wrapMenuHeight/2 - 50));
                 //         }
                 //     })
@@ -856,29 +877,48 @@
                     transform: rotate(-45deg) translateY(.41rem);
                 }
             }
-            .menu_detail_list{
+            .store_detail_list{
                 background-color: #fff;
                 margin: .6rem .4rem;
                 padding: 0 0 .6rem .4rem;
                 border-bottom: 1px solid #f8f8f8;
                 position: relative;
                 overflow: hidden;
+                .store_right{
+
+                    svg{
+                        margin-top:24px;
+                        @include wh(1rem, 1rem);
+                        fill: #999;
+                    }
+                }
                 .menu_detail_link{
                     display:flex;
-                    .menu_food_img{
+                    .store_img{
                         margin-right: .4rem;
                         img{
                             @include wh(3rem, 3rem);
                             display: block;
                         }
                     }
-                    .menu_food_description{
+                    .store_info{
                         width: 100%;
-                        .food_description_head{
+                        .store_head{
                             @include fj;
                             margin-bottom: .2rem;
-                            .description_foodname{
+                            .store_name{
                                 @include sc(.7rem, #333);
+                                .store_status{
+                                    background-color: #fc3c3f;
+                                    @include sc(.4rem, #fff);
+                                    padding: 0rem .1rem .1rem .1rem;
+                                    &.green{
+                                        background-color: #5ddb44;
+                                    }
+                                    &.red{
+                                        background-color: #fc3c3f;
+                                    }
+                                }
                             }
                             .attributes_ul{
                                 display: flex;
@@ -914,11 +954,11 @@
                                 }
                             }
                         }
-                        .food_description_content{
+                        .store_content{
                             @include sc(.7rem, #969696);
                             line-height: 1rem;
                         }
-                        .food_description_sale_rating{
+                        .store_time{
                             line-height: .8rem;
                             span{
                                 @include sc(.5rem, #d5d5d5);
