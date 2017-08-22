@@ -3,7 +3,7 @@
         
         <form class="city_form" v-on:submit.prevent>
             <router-link to="/home" slot="changecity" class="change_city_right button_style">
-                {{city.cityName}}
+                {{city?city.cityName:"上海"}}
             </router-link>
             <input type="search" name="city" placeholder="请输入要搜索订阅的门店名称" 
             class="city_input input_style" v-model='inputVaule' @input='postpois(inputVaule)'>
