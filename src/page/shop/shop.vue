@@ -18,10 +18,10 @@
                             <!-- <p class="description_text">商家配送／{{shopDetailData.order_lead_time}}分钟送达／配送费¥{{shopDetailData.float_delivery_fee}}</p>
                             <p class="description_promotion ellipsis">公告：{{promotionInfo}}</p> -->
                         </section>
-                        <section v-if="user.isCompany == true">
-                            <span class="shop_detail_vip">
-                                企业认证                            
-                            </span>
+                        <section >
+                            <router-link class="shop_detail_vip" :to="{path:'/city/1'}" tag="span" >
+                                订阅更多                            
+                            </router-link>
                         </section>
 
                         <!-- <svg width="14" height="14" xmlns="http://www.w3.org/2000/svg" version="1.1" class="description_arrow" >
@@ -39,50 +39,18 @@
                         </svg>
                     </footer> -->
                     <router-link :to="{path:'/city/1'}" tag="div" class="search_container" v-if="storeList.length != 0">
-                        搜索并订阅更多店铺评论
+                        搜索已订阅的门店
                     </router-link>
 
                 </section>
             </header>
-            <!-- <transition name="fade">
-                <section class="activities_details" v-if="showActivities">
-                    <h2 class="activities_shoptitle">{{shopDetailData.name}}</h2>
-                    <h3 class="activities_ratingstar">
-                        <rating-star :rating='shopDetailData.rating'></rating-star>
-                    </h3>
-                    <section class="activities_list">
-                        <header class="activities_title_style"><span>优惠信息</span></header>
-                        <ul>
-                            <li v-for="item in shopDetailData.activities" :key="item.id">
-                                <span class="activities_icon" :style="{backgroundColor: '#' + item.icon_color, borderColor: '#' + item.icon_color}">{{item.icon_name}}</span>
-                                <span>{{item.description}}（APP专享）</span>
-                            </li>
-                        </ul>
-                    </section>
-                    <section class="activities_shopinfo">
-                        <header class="activities_title_style"><span>商家公告</span></header>
-                        <p>{{promotionInfo}}</p>
-                    </section>
-                    <svg width="60" height="60" class="close_activities" @click.stop="showActivitiesFun">
-                        <circle cx="30" cy="30" r="25" stroke="#555" stroke-width="1" fill="none"/>
-                        <line x1="22" y1="38" x2="38" y2="22" style="stroke:#999;stroke-width:2"/>
-                        <line x1="22" y1="22" x2="38" y2="38" style="stroke:#999;stroke-width:2"/>
-                    </svg>
-                </section>
-            </transition> -->
-            <!-- <section class="change_show_type" ref="chooseType">
-                <div>
-                    <span :class='{activity_show: changeShowType =="food"}' @click="changeShowType='food'">已订阅监测</span>
-                </div>
-                <div>
-                    <span :class='{activity_show: changeShowType =="rating"}' @click="changeShowType='rating'">暂停监测</span>
-                </div>
-            </section> -->
+
             <section class="food_container emptyShop" v-if="storeList.length == 0">
                 <div class="start_button" @click = "gotoAddress('/city/1')">
                     立即体验订阅评论监控
                 </div>
             </section>
+
             <transition name="fade-choose" v-if="storeList.length > 0">
                 <section v-show="changeShowType =='food'" class="food_container">
                     <section class="menu_container">
@@ -91,30 +59,30 @@
                                 <li v-for="(store,index) in storeList" :key="index">
 
                                     <section class="store_detail_list">
-                                        <div class="menu_detail_link">
-                                            <router-link  :to="{path: 'shop/shopDetail', query:{storeId:store.id,storeName:store.name+'('+ store.branchName+')'}}" tag="section" class="store_img">
+                                            <section class="store_img" @click="alert(store,index)">
                                                 <img :src="store.defaultPic">
-                                            </router-link>
+                                            </section>
 
-                                            <router-link  :to="{path: 'shop/shopDetail', query:{storeId:store.id,storeName:store.name+'('+ store.branchName+')'}}" tag="section" class="store_info">
+                                            <section  @click="alert(store,index)" class="store_info">
                                                 <h3 class="store_head">
                                                     <span class="store_name ellipsis">
-                                                    <span>{{store.name}} {{store.branchName}} </span>
+                                                    <span>{{store.name}}</span>
+                                                    <span v-if="store.branchName">({{store.branchName}})</span> 
                                                     <span class="store_status green" v-if="store.status==0">开业</span>
                                                     <span class="store_status red" v-if="store.status!=0">停业</span>
                                                 </span>
                                                 </h3>
-                                                <p class="store_content ellipsis">{{store.regionName}}&nbsp;&nbsp;{{store.priceText}}</p>
-                                                <p class="store_time">
-                                                    <span>{{store.updateTime}}</span>
+                                                <p class="store_content ellipsis" v-if="store.address == ''">
+                                                    {{store.regionName}}&nbsp;&nbsp;{{store.priceText}}
                                                 </p>
-                                            </router-link>
-                                            <section class="store_right" @click="deleteStore(store.id,index)">
-                                                <svg>
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-minus"></use>
-                                                </svg>
+                                                <p class="store_content ellipsis" v-else>{{store.address}}</p>
+                                                <p class="store_time">
+                                                    <span v-if="store.isCancel == false">
+                                                        {{store.createTime | dateTime('自YYYY年MM月DD日订阅')}}</span>
+                                                    <span v-if="store.isCancel == true" class="cancel">
+                                                        {{store.expireTime | dateTime('将于YYYY年MM月DD日取消订阅')}}</span>
+                                                </p>
                                             </section>
-                                        </div>
                                     </section>
                                 </li>
                             </ul>
@@ -140,20 +108,30 @@
        <transition name="router-slid" mode="out-in">
             <router-view></router-view>
         </transition>
+
+        <alert-tip v-if="showAlert" @closeTip="showAlert = false" 
+            :alertText="alertText" 
+            :alertSubText="alertSubText" 
+            :alertTime="alertTime" 
+            :alertImg="alertImg"
+            :alertFunc="alertFunc"
+            :confirmBtn="confirmBtn"
+            :format="format"
+        ></alert-tip>  
     </div>
 </template>
 
 <script>
     import {mapState, mapMutations} from 'vuex'
-    import {getMyStore,getUser,cancelMyStore} from 'src/service/getData'
+    import {getMyStore,getUser,cancelMyStore,renewMyStore} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
+    import alertTip from 'src/components/common/alertStore'
     import loading from 'src/components/common/loading'
-    import buyCart from 'src/components/common/buyCart'
-    import ratingStar from 'src/components/common/ratingStar'
     import {loadMore, getImgPath} from 'src/components/common/mixin'
     import {imgBaseUrl} from 'src/config/env'
     import BScroll from 'better-scroll'
     import footGuide from '../../components/footer/footGuide'
+
 
     export default {
         data(){
@@ -161,7 +139,7 @@
                 user:null,
                 geohash: '', //geohash位置信息
                 shopId: null, //商店id值
-                showLoading: true, //显示加载动画
+                showLoading: true, //显示加载动画 
                 changeShowType: 'food',//切换显示商品或者评价
                 shopDetailData: null, //商铺详情
                 showActivities: false, //是否显示活动详情
@@ -194,6 +172,11 @@
                 elBottom: 0, //当前点击加按钮在网页中的绝对left值
                 ratingScroll: null, //评论页Scroll
                 imgBaseUrl,
+                showAlert: false,
+                alertText: null,
+                alertFunc:null,
+                confirmBtn:null,
+                format:'',
             }
         },
         created(){
@@ -212,9 +195,8 @@
         mixins: [loadMore, getImgPath],
         components: {
             loading,
-            ratingStar,
-            buyCart,
             footGuide,
+            alertTip,
         },
         computed: {
             ...mapState([
@@ -252,54 +234,108 @@
                 return num
             },
         },
+        // props: ['alertText','alertSubText','alertTime','alertImg'],
         methods: {
             ...mapMutations([
                 // 'RECORD_ADDRESS','ADD_CART','REDUCE_CART','INIT_BUYCART','CLEAR_CART','RECORD_SHOPDETAIL'
             ]),
             //初始化时获取基本数据
             async initData(){
-                // if (!this.latitude) {
-                //     //获取位置信息
-                //     let res = await msiteAdress(this.geohash);
-                //     // 记录当前经度纬度进入vuex
-                //     this.RECORD_ADDRESS(res);
-                // }
-                // //获取商铺信息
-                // this.shopDetailData = await shopDetails(this.shopId, this.latitude, this.longitude);
-                // //获取商铺食品列表
+               
                 if(getStore('user') == undefined){
                     this.gotoAddress('/login');
                 }
                 this.user = JSON.parse(getStore('user'));
 
-
+                //获取我的门店
                 let response = await getMyStore(this.user.id);
                 if(response.status == 0){
                     this.storeList = response.stores;
+                    this.extra = response.extra;
                 }
+
+                //整合数据
+                for(var i=0;i<this.extra.length;i++){
+                    for(var j=0;j<this.storeList.length;j++){
+                        if( this.storeList[j].id == this.extra[i].storeId){
+                            
+
+                            this.storeList[j].createTime = this.extra[i].createTime;
+                            this.storeList[j].expireTime = new Date(new Date().setMonth(new Date(this.extra[i].createTime).getMonth() + 1));
+                            this.storeList[j].isCancel = this.extra[i].isCancel;
+
+
+                            console.log(this.storeList[j].name + ","+this.extra[i].isCancel);
+                        }
+                    }
+                }
+
+                console.log(this.storeList);
                 
-                // //评论列表
-                // this.ratingList = await getRatingList(this.shopId, this.ratingOffset);
-                // //商铺评论详情
-                // this.ratingScoresData = await ratingScores(this.shopId);
-                // //评论Tag列表
-                // this.ratingTagsList = await ratingTags(this.shopId);
-                // this.RECORD_SHOPDETAIL(this.shopDetailData)
                 //隐藏加载动画
                 this.hideLoading();
             },
-            async deleteStore(storeId,index){
-                console.log(storeId,index);
+            async cancelStore(store,index){
 
-                let response = await cancelMyStore(this.user.id,[storeId]);
+                let response = await cancelMyStore(this.user.id,[store.id]);
 
                 if(response.status == 0){
-                    this.storeList.splice(index,1);
+                    store.isCancel = !store.isCancel;
+                    this.storeList.splice( index,1,store);
+                    return true;
                 }
+
+                return false;
+
+            },
+            async renewStore(store,index){
+                let response = await renewMyStore(this.user.id,[store.id]);
+
+                if(response.status == 0){
+                    store.isCancel = !store.isCancel;
+                    this.storeList.splice( index,1,store);
+                    return true;
+                }
+
+                return false;
 
             },
             gotoAddress(path){
                 this.$router.push(path);
+            },
+            closeTip(){
+                this.$emit('closeTip')
+            },
+            alert(store,index){
+
+                this.showAlert = true;
+
+                if(store.branchName==""){
+                    this.alertText = store.name;
+                }else{
+                    this.alertText = store.name + "("+store.branchName+")";
+                }
+
+                this.alertSubText = store.address;
+                this.alertTime = store.createTime;
+                this.alertImg = store.defaultPic;
+
+                console.log(store.isCancel);
+
+                if( store.isCancel == false){
+                    this.confirmBtn = "取消订阅";
+                    this.format = '自YYYY年MM月DD日取消订阅';
+                    this.alertFunc = ()=>{
+                        return this.cancelStore(store,index);
+                    }
+                }else{
+                    this.confirmBtn = "继续订阅";
+                    this.format = '自YYYY年MM月DD日继续订阅';
+                    this.alertFunc = ()=>{
+                        return this.renewStore(store,index);
+                    }
+                }
+                
             },
             //获取食品列表的高度，存入shopListTop
             getFoodListHeight(){
@@ -551,6 +587,77 @@
        75%  { transform: scale(.9) }
        100% { transform: scale(1) }
     }
+    @keyframes tipMove{
+       0%   { transform: scale(1) }
+       35%  { transform: scale(.8) }
+       70%  { transform: scale(1.1) }
+       100% { transform: scale(1) }
+    }
+    .alet_container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 200;
+    }
+    .tip_text_container{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -6rem;
+        margin-left: -6rem;
+        width: 12rem;
+        animation: tipMove .4s ;
+        background-color: rgba(255,255,255,1);
+        border: 1px;
+        padding-top: .6rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        border: 1px;
+        border-radius: 0.25rem;
+        .tip_icon{
+            @include wh(3rem, 3rem);
+            border: 0.15rem solid #f8cb86;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            span:nth-of-type(1){
+                @include wh(.12rem, 1.5rem);
+                background-color: #f8cb86;
+            }
+            span:nth-of-type(2){
+                @include wh(.2rem, .2rem);
+                border: 1px;
+                border-radius: 50%;
+                margin-top: .2rem;
+                background-color: #f8cb86;
+            }
+        }
+        .tip_text{
+            @include sc(.7rem, #333);
+            line-height: .9rem;
+            text-align: center;
+            margin-top: .8rem;
+            padding: 0 .4rem;
+        }
+        .confrim{
+            @include sc(.8rem, #fff);
+            font-weight: bold;
+            margin-top: .8rem;
+            background-color: #4cd964;
+            width: 100%;
+            text-align: center;
+            line-height: 1.8rem;
+            border: 1px;
+            border-bottom-left-radius: 0.25rem;
+            border-bottom-right-radius: 0.25rem;
+        }
+    }
     .shop_back_svg_container{
         position: fixed;
         @include wh(100%, 100%);
@@ -591,10 +698,10 @@
             position: relative;
             z-index: 10;
             /*background-color: rgba(119,103,137,.43);*/
-            background:-moz-linear-gradient(bottom,#fc3c3f,#ff726f);/*Mozilla*/  
-            background:-webkit-gradient(linear,0 0%,100% 100%,from(#fc3c3f),to(#ff726f));/*Old gradient for webkit*/  
-            background:-webkit-linear-gradient(bottom,#fc3c3f,#ff726f);/*new gradient for Webkit*/  
-            background:-o-linear-gradient(bottom,#fc3c3f,#ff726f); /*Opera11*/ 
+            background:-moz-linear-gradient(bottom,#fdcb2e,#fbba2a);/*Mozilla*/  
+            background:-webkit-gradient(linear,0 0%,100% 100%,from(#fdcb2e),to(#fbba2a));/*Old gradient for webkit*/  
+            background:-webkit-linear-gradient(bottom,#fdcb2e,#fbba2a);/*new gradient for Webkit*/  
+            background:-o-linear-gradient(bottom,#fdcb2e,#fbba2a); /*Opera11*/ 
             padding: 0.6rem 0.8rem 0.6rem 0.8rem;
             width: 100%;
             overflow: hidden;
@@ -602,7 +709,7 @@
                 display: flex;
                 margin-top:0.6rem;
                 .description_left{
-                    margin-right: 0.3rem;
+                    margin-right: 0.5rem;
                     img{
                         @include wh(2.9rem, 2.9rem);
                         display: block;
@@ -612,18 +719,18 @@
                 .description_right{
                     flex: 1;
                     .description_title{
-                        @include sc(.7rem, #fff);
+                        @include sc(.7rem, #282828);
                         /*font-weight: bold;*/
                         width: 100%;
                         margin-top:0.5rem;
                         /*margin-bottom: 0.3rem;*/
                     }
                     .description_text{
-                        @include sc(.5rem, #fff);
+                        @include sc(.5rem, #282828);
                         /*margin-bottom: 0.3rem;*/
                     }
                     .description_promotion{
-                        @include sc(.5rem, #fff);
+                        @include sc(.5rem, #282828);
                         width: 11.5rem;
                     }
                 }
@@ -638,11 +745,11 @@
                     font-size: 12px;
                     line-height: 12px;
                     padding:10px;
-                    padding-right:54px;
+                    padding-left:24px;
                     margin-top:20px;
 
-                    background-color:#ff5a59;
-                    @include bis('../../images/vip.jpg');
+                    background-color:#3d3d3d;
+                    /*@include bis('../../images/vip.jpg');*/
                     background-size: 34px auto;
                     background-position: 68px center;
 
@@ -763,9 +870,9 @@
         justify-content: center;
         .start_button{
             @include wh(90%, auto);
-            @include sc(.6rem, #fff);
+            @include sc(.6rem, #312f26);
             text-align: center;
-            background-color:#fc3c3f;
+            background-color:#ffd101;
             padding:.6rem 0;
             border-radius: .2rem;
         }
@@ -879,11 +986,11 @@
             }
             .store_detail_list{
                 background-color: #fff;
-                margin: .6rem .4rem;
-                padding: 0 0 .6rem .4rem;
-                border-bottom: 1px solid #f8f8f8;
-                position: relative;
+                padding: .6rem .4rem .6rem .6rem;
+                border-bottom: 1px solid #e5e5e5;
+                display:flex;
                 overflow: hidden;
+
                 .store_right{
 
                     svg{
@@ -892,93 +999,104 @@
                         fill: #999;
                     }
                 }
-                .menu_detail_link{
-                    display:flex;
-                    .store_img{
-                        margin-right: .4rem;
-                        img{
-                            @include wh(3rem, 3rem);
-                            display: block;
+                .store_img{
+                    display: block;
+                    margin-right: .6rem;
+                    margin-left: .2rem;
+                    img{
+                        @include wh(2.6rem, 2.6rem);
+                        display: block;
+                        border:1px solid #ccc;
+                    }
+                }
+                .store_info{
+                    width:50%;
+                    flex:1;
+                    .store_head{
+                        @include fj;
+                        margin-bottom: .2rem;
+                        .store_name{
+                            @include sc(.6rem, #333);
+                            span{
+                                vertical-align:middle;
+                            }
+                            .store_status{
+                                background-color: #fc3c3f;
+                                @include sc(.4rem, #fff);
+                                padding: 0rem .1rem .1rem .1rem;
+                                &.green{
+                                    background-color: #5ddb44;
+                                }
+                                &.red{
+                                    background-color: #fc3c3f;
+                                }
+                            }
+                        }
+                        .attributes_ul{
+                            display: flex;
+                            li{
+                                font-size: .3rem;
+                                height: .6rem;
+                                line-height: .35rem;
+                                padding: .1rem;
+                                border: 1px solid #666;
+                                border-radius: 0.3rem;
+                                margin-right: .1rem;
+                                transform: scale(.8);
+                                p{
+                                    white-space: nowrap;
+                                }
+                            }
+                            .attribute_new{
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                background-color: #4cd964;
+                                @include wh(2rem, 2rem);
+                                display: flex;
+                                align-items: flex-end;
+                                transform: rotate(-45deg) translate(-.1rem, -1.5rem);
+                                border: none;
+                                border-radius: 0;
+                                p{
+                                    @include sc(.4rem, #fff);
+                                    text-align: center;
+                                    flex: 1;
+                                }
+                            }
                         }
                     }
-                    .store_info{
-                        width: 100%;
-                        .store_head{
-                            @include fj;
-                            margin-bottom: .2rem;
-                            .store_name{
-                                @include sc(.7rem, #333);
-                                .store_status{
-                                    background-color: #fc3c3f;
-                                    @include sc(.4rem, #fff);
-                                    padding: 0rem .1rem .1rem .1rem;
-                                    &.green{
-                                        background-color: #5ddb44;
-                                    }
-                                    &.red{
-                                        background-color: #fc3c3f;
-                                    }
-                                }
-                            }
-                            .attributes_ul{
-                                display: flex;
-                                li{
-                                    font-size: .3rem;
-                                    height: .6rem;
-                                    line-height: .35rem;
-                                    padding: .1rem;
-                                    border: 1px solid #666;
-                                    border-radius: 0.3rem;
-                                    margin-right: .1rem;
-                                    transform: scale(.8);
-                                    p{
-                                        white-space: nowrap;
-                                    }
-                                }
-                                .attribute_new{
-                                    position: absolute;
-                                    top: 0;
-                                    left: 0;
-                                    background-color: #4cd964;
-                                    @include wh(2rem, 2rem);
-                                    display: flex;
-                                    align-items: flex-end;
-                                    transform: rotate(-45deg) translate(-.1rem, -1.5rem);
-                                    border: none;
-                                    border-radius: 0;
-                                    p{
-                                        @include sc(.4rem, #fff);
-                                        text-align: center;
-                                        flex: 1;
-                                    }
-                                }
-                            }
+                    .store_content{
+                        @include sc(.6rem, #969696);
+                        line-height: 1rem;
+                    }
+                    .store_time{
+                        line-height: .8rem;
+                        span{
+                            @include sc(.4rem, #d5d5d5);
                         }
-                        .store_content{
-                            @include sc(.7rem, #969696);
-                            line-height: 1rem;
+                        .cancel{
+                            background-color: #fc997a;
+                            @include sc(.4rem, #fff);
+                            padding:.1rem .3rem;
+                            border-radius: .1rem;
                         }
-                        .store_time{
-                            line-height: .8rem;
-                            span{
-                                @include sc(.5rem, #d5d5d5);
-                            }
-                        }
-                        .food_activity{
-                            line-height: .4rem;
-                            span{
-                                font-size: .3rem;
-                                border: 1px solid currentColor;
-                                border-radius: 0.3rem;
-                                padding: .08rem;
-                                display: inline-block;
-                                transform: scale(.8);
-                                margin-left: -0.35rem;
+                    }
+                    .food_activity{
+                        line-height: .4rem;
+                        span{
+                            font-size: .3rem;
+                            border: 1px solid currentColor;
+                            border-radius: 0.3rem;
+                            padding: .08rem;
+                            display: inline-block;
+                            transform: scale(.8);
+                            margin-left: -0.35rem;
 
-                            }
                         }
                     }
                 }
+
                 .menu_detail_footer{
                     margin-left: 2.4rem;
                     font-size: 0;
@@ -1471,10 +1589,10 @@
         transform: translateY(100%);
     }
     .search_container{
-        background-color:#fdb7b7;
+        background-color:#fff;
         
         @include wh(100%, 1.4rem);
-        @include sc(.6rem, #fff);
+        @include sc(.6rem, #ccc);
         line-height: 1.4rem;
         text-align: center;
         font-weight: normal;

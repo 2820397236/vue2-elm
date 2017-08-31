@@ -61,54 +61,6 @@
                     </section>
                 </section>
             </section>
-
-
-            <section class="pay_way container_style">
-                <header class="header_style">
-                    <span>选择订阅套餐</span>
-                    <!-- <div class="more_type" @click="showPayWayFun">
-                        <span>在线支付</span>
-                        <svg class="address_empty_right">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                        </svg>
-                    </div> -->
-                </header>
-                <div class="choose_type_Container">
-                    <header>会员测试期，购买<span class="highlight">5折起</span></header>
-                    <ul>
-                      <!--  <li v-for="item in payments" :key="item.id" :class="{choose: payWayId == item.id}" 
-                        @click="choosePayWay(item.is_online_payment, item.id)">
-                            <span class="pay_way">
-                                {{item.name}}<br/>
-                                <span v-if="item.is_online_payment" class="pay_way_subtitle">{{item.description}}</span>
-                            </span>
-                            <span class="price_rrp">￥{{item.select_state*2}}/店</span>
-                            <span class="price_now">￥{{item.select_state}}/店</span>
-                            <div class="tri"></div>
-                            <svg class="address_empty_right" >
-                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select"></use>
-                            </svg>
-                        </li> -->
-                        <li  v-for="item in payments" :key="item.id" :class="{choose: payWayId == item.id}"
-                        @click="choosePayWay(item.id)">
-                            <span class="pay_way">
-                                {{item.title}}<br/>
-                                <span class="pay_way_subtitle" v-if="item.subtitle">{{item.subTitle}}</span>
-                            </span>
-                            <span class="price_rrp">￥{{item.rrpPrice}}/店</span>
-                            <span class="price_now">￥{{item.price}}/店</span>
-                            <div class="tri"></div>
-                            <svg class="address_empty_right" >
-                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select"></use>
-                            </svg>
-                        </li>
-                    </ul>
-                </div>
-                <!-- <section class="hongbo">
-                    <span>红包</span>
-                    <span>暂时只在饿了么 APP 中支持</span>
-                </section> -->
-            </section>
             <!-- <section class="food_list">
                 <header v-if="checkoutData.cart.restaurant_info">
                     <img :src="imgBaseUrl + checkoutData.cart.restaurant_info.image_path">
@@ -164,10 +116,56 @@
                     </span>
                 </router-link>
             </section> -->
-            <section class="confrim_order" @click="confrimOrder">
-                <p>总计 {{storeList.length}} 家门店，共计 ¥{{storeList.length * payments[payWayId].price}}</p>
-                <p>确认订单</p>
+            <section class="pay_way container_style">
+                <header class="header_style">
+                    <span>选择订阅套餐</span>
+                    <!-- <div class="more_type" @click="showPayWayFun">
+                        <span>在线支付</span>
+                        <svg class="address_empty_right">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
+                        </svg>
+                    </div> -->
+                </header>
+                <div class="choose_type_Container">
+                    <header>会员测试期，购买<span class="highlight">5折起</span></header>
+                    <ul>
+                      <!--  <li v-for="item in payments" :key="item.id" :class="{choose: payWayId == item.id}" 
+                        @click="choosePayWay(item.is_online_payment, item.id)">
+                            <span class="pay_way">
+                                {{item.name}}<br/>
+                                <span v-if="item.is_online_payment" class="pay_way_subtitle">{{item.description}}</span>
+                            </span>
+                            <span class="price_rrp">￥{{item.select_state*2}}/店</span>
+                            <span class="price_now">￥{{item.select_state}}/店</span>
+                            <div class="tri"></div>
+                            <svg class="address_empty_right" >
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select"></use>
+                            </svg>
+                        </li> -->
+                        <li  v-for="item in payments" :key="item.id" :class="{choose: payWayId == item.id}"
+                        @click="choosePayWay(item.id)">
+                            <span class="pay_way_title">
+                                {{item.title}}<br/>
+                                <span class="pay_way_subtitle" v-if="item.subTitle">{{item.subTitle}}</span>
+                            </span>
+                            <span class="price_rrp">￥{{item.rrpPrice}}/店</span>
+                            <span class="price_now">￥{{item.price}}/店</span>
+                            <div class="tri"></div>
+                            <svg class="address_empty_right" >
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select"></use>
+                            </svg>
+                        </li>
+                    </ul>
+                </div>
+                <section class="hongbo">
+                    <span>*备注：请核对订阅信息，信息订阅后不可退款。</span>
+                </section>
+                <section class="confrim_order" @click="confrimOrder">
+                    <p>总计 {{storeList.length}} 家门店，共计 ¥{{storeList.length * payments[payWayId].price}}</p>
+                    <p>确认订单</p>
+                </section>
             </section>
+            
             <!-- <transition name="fade">
                 <div class="cover" v-if="showPayWay" @click="showPayWayFun"></div>
             </transition> -->
@@ -187,7 +185,7 @@
     import headTop from 'src/components/header/head'
     import alertTip from 'src/components/common/alertTip'
     import loading from 'src/components/common/loading'
-    import {getStoreInfo, getAddress, placeOrders, getAddressList} from 'src/service/getData'
+    import {getStoreInfo, addToCart} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import {imgBaseUrl} from 'src/config/env'
 
@@ -213,26 +211,30 @@
                         rrpPrice:4,
                         price:2
                     },
-                    {
-                        id:1,
-                        title:"1个月",
-                        subTitle:"",
-                        rrpPrice:4,
-                        price:3
-                    },
-                    {
-                        id:2,
-                        title:"3个月",
-                        subTitle:"",
-                        rrpPrice:16,
-                        price:8
-                    }
+                    // {
+                    //     id:1,
+                    //     title:"1个月",
+                    //     subTitle:"",
+                    //     rrpPrice:4,
+                    //     price:3
+                    // },
+                    // {
+                    //     id:2,
+                    //     title:"3个月",
+                    //     subTitle:"",
+                    //     rrpPrice:16,
+                    //     price:8
+                    // }
                 ]
             }
         },
         created(){
             console.log(this.$route.query.ids);
-            this.storeIds = this.$route.query.ids.map(item => parseInt(item));
+            if(this.$route.query.ids instanceof Array){
+                this.storeIds = this.$route.query.ids.map(item => parseInt(item));
+            }else{
+                this.storeIds = [this.$route.query.ids];
+            }
             // //获取上个页面传递过来的geohash值
             // this.geohash = this.$route.query.geohash;
             // //获取上个页面传递过来的shopid值
@@ -304,9 +306,9 @@
                 // })
                 // console.log(newArr);
                 // //检验订单是否满足条件
-                let user = JSON.parse(getStore('user'));
+                // let user = JSON.parse(getStore('user'));
 
-                let response = await getStoreInfo(user.id,this.storeIds);
+                let response = await getStoreInfo(this.storeIds);
                 if(response.status == 0 ){
                     this.storeList = response.stores;
                     if(this.storeList.length > 0){
@@ -395,7 +397,12 @@
                 //     this.ORDER_SUCCESS(orderRes);
                 //     this.$router.push('/confirmOrder/payment');
                 // }
-                 this.$router.push({path:'/confirmOrder/payment',query:param});
+                 // this.$router.push({path:'/confirmOrder/payment',query:param});
+                let user = JSON.parse(getStore('user'));
+                let response = await addToCart(user.id,this.storeIds,this.payWayId);
+                if(response.status == 0){
+                    this.$router.push('/shop');
+                }
             },
         },
         watch: {
@@ -413,15 +420,17 @@
     @import 'src/style/mixin';
     
     .confirmOrderContainer{
+        background-color: #fff;
         padding-top: 1.95rem;
-        padding-bottom: 3rem;
+        padding-bottom: 13.4rem;
+        height: 100%;
+        overflow: scroll;
         p, span{
             font-family: Helvetica Neue,Tahoma,Arial;
         }
     }
     .container_style{
         background-color: #fff;
-        margin-top: .4rem;
         padding: 0 .7rem;
     }
     .address_container{
@@ -500,49 +509,7 @@
             }
         }
     }
-    .pay_way{
-        .header_style{
-            @include fj;
-            line-height: 1rem;
-            span:nth-of-type(1){
-                @include sc(.7rem, #333);
-            }
-            .more_type{
-                span:nth-of-type(1){
-                    @include sc(.6rem, #aaa);
-                    /*width: 10rem;*/
-                    display: inline-block;
-                    text-align: right;
-                    vertical-align: middle;
-                }
-                svg{
-                    @include wh(.5rem, .5rem);
-                    fill: #ccc;
-                }
-            }
-        }
-        .hongbo{
-            @include fj;
-            border-top: 0.025rem solid #f5f5f5;
-            span{
-                @include sc(.6rem, #aaa);
-                line-height: 2rem;
-                svg{
-                    @include wh(.5rem, .5rem);
-                    vertical-align: middle;
-                    fill: #ccc;
-                }
-            }
-            span:nth-of-type(2){
-                color: #aaa;
-            }
-        }
-        .support_is_available{
-            span{
-                color: #666;
-            }
-        }
-    }
+    
     .food_list{
         background-color: #fff;
         margin-top: .4rem;
@@ -583,29 +550,72 @@
             border-top: 0.025rem solid #f5f5f5;
         }
     }
-    .confrim_order{
-        display: flex;
+    .pay_way{
         position: fixed;
-        bottom: 1rem;
+        bottom: 0;
         left:0;
         right:0;
+        padding-top:.5rem;
+        padding-bottom:1rem;
+        .header_style{
+            @include fj;
+            line-height: 1rem;
+            span:nth-of-type(1){
+                @include sc(.7rem, #333);
+            }
+            .more_type{
+                span:nth-of-type(1){
+                    @include sc(.6rem, #aaa);
+                    /*width: 10rem;*/
+                    display: inline-block;
+                    text-align: right;
+                    vertical-align: middle;
+                }
+                svg{
+                    @include wh(.5rem, .5rem);
+                    fill: #ccc;
+                }
+            }
+        }
+        .hongbo{
+            @include fj;
+            span{
+                @include sc(.5rem, #aaa);
+                line-height: 1.2rem;
+                svg{
+                    @include wh(.5rem, .5rem);
+                    vertical-align: middle;
+                    fill: #ccc;
+                }
+            }
+            span:nth-of-type(2){
+                color: #aaa;
+            }
+        }
+        .support_is_available{
+            span{
+                color: #666;
+            }
+        }
+    }
+    .confrim_order{
+        display: flex;
         height: 2rem;
         border-radius: .2rem;
-        margin:0 0.7rem;
-        background-color: #fc3c3f;
+        background-color: #ffd101;
         p{
             line-height: 2rem;
-            @include sc(.75rem, #fff);
+            @include sc(.65rem, #111);
             border-radius: .2rem;
         }
         p:nth-of-type(1){
-            background-color: #fc3c3f;
+            background-color: #ffd101;
             flex: 5;
             padding-left: .7rem;
         }
         p:nth-of-type(2){
             flex: 2;
-            background-color: #fc3c3f;
+            background-color: #ffd101;
             text-align: center;
         }
     }
@@ -619,7 +629,7 @@
         z-index: 203;
     }
     .choose_type_Container{
-        min-height: 10rem;
+        min-height: 4rem;
         background-color: #fff;
         
         header{
@@ -640,30 +650,29 @@
                 border-radius: .2rem;
                 position:relative;
                 border:0.025rem solid #e5e5e5;
+                display: flex;
                 span{
-                    @include sc(.6rem, #ccc);
+                    @include sc(.6rem, #fff);
                     margin-right:.2rem;
                 }
-                .pay_way{
+                .pay_way_title{
                     width:50%;
-                    color:#333;
+                    color:#fff;
                     line-height: .8rem;
                     .pay_way_subtitle{
 
-                        @include sc(.5rem, #ccc);
+                        @include sc(.5rem, #fff);
                     }
                 }
                 .price_rrp{
-                    flex:1;
                     text-align: center;
                     text-decoration: line-through;
-                    @include sc(.6rem, #c1bcbb);
+                    @include sc(.6rem, #fff);
 
                 }
                 .price_now{
-                    flex:1;
                     text-align: center;
-                    @include sc(.7rem, #fc3c3f);
+                    @include sc(.7rem, #ffd001);
                 }
                 svg{
                     @include wh(.8rem, .8rem);
@@ -677,17 +686,17 @@
                     width: 0;
                     height: 0;
                     border-style: solid;
-                    border-width: 0 38px 38px 0;
-                    border-color: transparent #ff6d40 transparent transparent;
+                    border-width: 0 1.5rem 1.5rem 0;
+                    border-color: transparent #ffd101 transparent transparent;
                     display: none;
                 }
             }
             .choose{
-                border:0.025rem solid #ff6d40;
-                background-color:#fff9f7;
+                border:0 solid #3d3d3d;
+                background-color:#3d3d3d;
                 overflow: hidden;
                 svg{
-                    fill: #ff6d40;
+                    fill: #ffd101;
                     position:absolute;
                     right:.06rem;
                     top:.06rem;

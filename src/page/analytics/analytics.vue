@@ -1,46 +1,22 @@
  <template>
     <div>
+        <header id='head_top'>
+            
+            <section class="title_head ellipsis">
+                <span class="title_text" >{{date | dateTime('YYYY年MM月DD日') }}</span>
+            </section>
+            <section class="head_login">
+                搜索
+            </section>
+        </header>
         <section v-if="!showLoading" class="shop_container main_container">
-            <!-- <nav class="goback" @click="goback">
-                <svg width="4rem" height="100%" xmlns="http://www.w3.org/2000/svg" version="1.1">
-                    <polyline points="12,18 4,9 12,0" style="fill:none;stroke:rgb(255,255,255);stroke-width:3"/>
-                </svg>
-            </nav> -->
             
-            
-            <section class="change_show_type" ref="chooseType">
-                <div  @click="changeShowType='full'">
-                    <span :class='{activity_show: changeShowType =="full"}'>综合统计</span>
-                </div>
-                <div  @click="changeShowType='shop'">
-                    <span :class='{activity_show: changeShowType =="shop"}'>门店统计</span>
-                </div>
-            </section>
-            
-            <section class="sort_container" v-show="changeShowType =='full'">
-                <div class="sort_item">
-                    <div class="sort_item_container" @click="chooseType('food')">
-                        <div class="sort_item_border">
-                            <span>按周排列</span>
-                            <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
-                                <polygon points="0,3 10,3 5,8"/>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                <div class="sort_item" >
-                    <div class="sort_item_container" @click="chooseType('rating')">
-                        <div class="sort_item_border">
-                            <span>全部品牌</span>
-                            <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
-                                <polygon points="0,3 10,3 5,8"/>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </section>
+
             <section class="chart_container" v-show="changeShowType =='full'">
-                <IEcharts :option="bar" :height="270" theme="customer" @ready="onReady" @click="onClick"></IEcharts>
+                <IEcharts :option="bar" :height="100" theme="customer" @ready="onReady" @click="onClick"></IEcharts>
+            </section>
+            <section class="detail_container">
+                <input type="button" name="button" class="search_submit" value="查看详情"  @click="gotoAddress({path:'/rateByShop',query:{ids:storeIds,date:dateFormat}})">
             </section>
            <!--  <section class="detail_container" v-show="changeShowType =='full'">
                 <input type="submit" name="button" class="search_submit" value="查看门店详细信息" @click="onClick">
@@ -48,91 +24,22 @@
             <section class="reply_container" v-show="changeShowType =='full'">
                <div class="reply_item">
                    <div class="reply_item_border">负面评论
-                        <div class="reply_item_count">100条</div>
+                        <div class="reply_item_count">{{rateCount.countLow}}条</div>
                    </div>
                 </div>
                <div class="reply_item">
                    <div class="reply_item_border">正面评论
-                        <div class="reply_item_count green">26条</div>
+                        <div class="reply_item_count green">{{rateCount.countHigh}}条</div>
                     </div>
                    <div class="reply_item_border">中性评论
-                        <div class="reply_item_count green">35条</div>
+                        <div class="reply_item_count green">{{rateCount.countMid}}条</div>
                     </div>
                </div>
             </section>
-
-            <section class="sort_container" v-show="changeShowType =='shop'">
-                <div class="sort_item">
-                    <div class="sort_item_container" @click="chooseType('shop')">
-                        <div class="sort_item_border">
-                            <span>按周排列</span>
-                            <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
-                                <polygon points="0,3 10,3 5,8"/>
-                            </svg>
-                        </div>
-                    </div>
-                     
-                </div>
-                <div class="sort_item" >
-                    <div class="sort_item_container" @click="chooseType('shop')">
-                        <div class="sort_item_border">
-                            <span>全部地区</span>
-                            <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
-                                <polygon points="0,3 10,3 5,8"/>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                <div class="sort_item" >
-                    <div class="sort_item_container" @click="chooseType('shop')">
-                        <div class="sort_item_border">
-                            <span>今天</span>
-                            <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
-                                <polygon points="0,3 10,3 5,8"/>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section class="shoplist_container" v-show="changeShowType =='shop'">
-                <ul v-if="storeList.length > 0">
-                    <router-link v-for="(item,index) in storeList" :key="index" :to="{path: 'shop/shopDetail', query:{storeId:item.id,storeName:item.name+'('+ item.branchName+')'}}" tag="li">
-                        <section class="menu_detail_list">
-                            <div class="menu_detail_link">
-                                <section class="menu_food_img">
-                                    <img :src="item.defaultPic">
-                                </section>
-                                <section class="menu_food_description">
-                                    <h3 class="food_description_head">
-                                        <strong class="description_foodname">{{item.name}}({{item.branchName}})</strong>
-                                    </h3>
-                                    <p class="food_description_content">{{item.regionName}}&nbsp;&nbsp;{{item.priceText}}</p>
-                                </section>
-                            </div>
-                        </section>
-                        <ul class="menu_detail_reply">
-                            <li>
-                                <div class="reply_content">正面评论</div>
-                                <div class="reply_count green">13</div>
-                            </li>
-                            <li>
-                                <div class="reply_content">中性评论</div>
-                                <div class="reply_count yellow">09</div>
-                            </li>
-                            <li>
-                                <div class="reply_content">负面评论</div>
-                                <div class="reply_count red">23</div>
-                            </li>
-                        </ul>
-                    </router-link>
-
-                </ul>
-            </section>
-            
         </section>
             
         <foot-guide></foot-guide>
-       <loading v-show="showLoading || loadRatings"></loading>
+       <loading v-show="showLoading"></loading>
        <!-- <section class="animation_opactiy shop_back_svg_container" v-if="showLoading">
            <img src="../../images/shop_back_svg.svg">
        </section> -->
@@ -144,7 +51,7 @@
 
 <script>
     import {mapState, mapMutations} from 'vuex'
-    import {userHome} from 'src/service/getData'
+    import {getMyStore,getRateAnalytics,getStoreRate} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import loading from 'src/components/common/loading'
 
@@ -152,79 +59,81 @@
     import {imgBaseUrl} from 'src/config/env'
     import BScroll from 'better-scroll'
     import footGuide from '../../components/footer/footGuide'
-    import IEcharts from 'vue-echarts-v3/src/full.vue';
+    import IEcharts from 'vue-echarts-v3/src/full.vue'
+    import 'echarts/lib/component/graphic'
+
     import theme from './theme.json'
     IEcharts.registerTheme('customer', theme)
+
+
     export default {
         data(){
             return{
-                geohash: '', //geohash位置信息
-                shopId: null, //商店id值
                 showLoading: true, //显示加载动画
                 changeShowType: 'full',//切换显示商品或者评价
-                shopDetailData: null, //商铺详情
-                showActivities: false, //是否显示活动详情
-                storeList: [], //食品列表
-                menuIndex: 0, //已选菜单索引值，默认为0
-                menuIndexChange: true,//解决选中index时，scroll监听事件重复判断设置index的bug
-                shopListTop: [], //商品列表的高度集合
-                TitleDetailIndex: null, //点击展示列表头部详情
-                categoryNum: [], //商品类型右上角已加入购物车的数量
-                totalPrice: 0, //总共价格
-                cartFoodList: [], //购物车商品列表
-                showCartList: false,//显示购物车列表
-                receiveInCart: false, //购物车组件下落的圆点是否到达目标位置
-                ratingList: null, //评价列表
-                ratingOffset: 0, //评价获取数据offset值
-                ratingScoresData: null, //评价总体分数
-                ratingTagsList: null, //评价分类列表
-                ratingTageIndex: 0, //评价分类索引
-                preventRepeatRequest: false,// 防止多次触发数据请求
-                ratingTagName: '',//评论的类型
-                loadRatings: false, //加载更多评论是显示加载组件
-                foodScroll: null,  //食品列表scroll
-                showSpecs: false,//控制显示食品规格
-                specsIndex: 0, //当前选中的规格索引值
-                choosedFoods: null, //当前选中视频数据
-                showDeleteTip: false, //多规格商品点击减按钮，弹出提示框
-                showMoveDot: [], //控制下落的小圆点显示隐藏
-                windowHeight: null, //屏幕的高度
-                elLeft: 0, //当前点击加按钮在网页中的绝对top值
-                elBottom: 0, //当前点击加按钮在网页中的绝对left值
-                ratingScroll: null, //评论页Scroll
-                imgBaseUrl,
+                storeList: [],
+                storeIds: [],
+                chart:null,
+                date:new Date(),
+                dateFormat:'',
+                rateCount:{
+                    countLow:0,
+                    countMid:0,
+                    countHigh:0,
+                },
                 bar: {
-                    tooltip : {
-                        trigger: 'axis',
-                        // axisPointer: {
-                        //     type: 'cross',
-                        //     label: {
-                        //         backgroundColor: '#6a7985'
-                        //     }
-                        // }
+                    title: {
+                        left: '4%',
+                        top:'4%',
+                        text: '统计中..'
+                    },
+                    toolbox: {
+                        
                     },
                     grid: {
-                        left: '-5%',
-                        right: '5%',
-                        bottom: '3%',
-                        top: '10%',
+                        left: '-10%',
+                        right: '0%',
+                        bottom: '23px',
+                        top: '0%',
                         containLabel: true
+                    },
+                    tooltip : {
+                        show:true,
+                        trigger: 'axis',
+                        axisPointer: {
+                            value: '8/30',
+                            snap: false,
+                            lineStyle: {
+                                color: '#ffe983',
+                                opacity: 1,
+                                width: 2
+                            },
+                            label: {
+                                show: true,
+                                backgroundColor: '#ffe983'
+                            },
+                            handle: {
+                                show: true,
+                                color: '#004E52'
+                            }
+                        },
+
+                        triggerOn:'click'
                     },
                     xAxis : [
                         {
-                            position: 'top',
-                            offset:10,
+                            position: 'bottom',
+                            offset:4,
                             type : 'category',
                             boundaryGap : false,
-                            data : ['周日','周一','周二','周三','周四','周五','今天'],
-                            nameTextStyle :{
-                                color  : "#000"
-                            },
-                            
+                            splitLine: {
+                                show: false
+                            }
                         }
                     ],
                     yAxis : [
                         {
+                            show : false,
                             axisLine :{
                                 show : false
                             },
@@ -234,32 +143,25 @@
                             type : 'value'
                         }
                     ],
+                    dataZoom: [{
+                        type: 'inside',
+                        start: 50,
+                        end: 100
+                    }],
                     series : [
-                        {
-                            name:'差评',
-                            type:'line',
-                            stack: '总量',
-                            areaStyle: {normal: {opacity : 0.1}},
-                            data:[1201, 1132, 1101, 134, 190, 1230, 1210]
-                        },{
-                            name:'中评',
-                            type:'line',
-                            stack: '总量',
-                            areaStyle: {normal: {opacity : 0.1}},
-                            data:[201, 1132, 101, 134, 1190, 230, 210]
-                        },
                         {
                             name:'好评',
                             type:'line',
-                            stack: '总量',
-                            label: {
-                                normal: {
-                                    show: true,
-                                    position: 'top'
-                                },
-                            },
-                            areaStyle: {normal: {opacity : 0.1}},
-                            data:[820, 932, 901, 934, 1290, 1330, 1320]
+                            areaStyle: {normal: {opacity : 0.1}}
+                        },{
+                            name:'中评',
+                            type:'line',
+                            areaStyle: {normal: {opacity : 0.1}}
+                        },
+                        {
+                            name:'差评',
+                            type:'line',
+                            areaStyle: {normal: {opacity : 0.1}}
                         }
                     ]
                 }
@@ -270,6 +172,13 @@
             // this.shopId = this.$route.query.id;
         },
         mounted(){
+            // let pie = this.$refs.chart;
+            // pie.dispatchAction({
+            //     type: 'showTip',
+            //     x: 100,
+            //     y: 100,
+            // });
+
             this.initData();
             this.windowHeight = window.innerHeight;
         },
@@ -324,50 +233,89 @@
             ]),
             //初始化时获取基本数据
             async initData(){
-                // if (!this.latitude) {
-                    // //获取位置信息
-                    // let res = await msiteAdress(this.geohash);
-                    // // 记录当前经度纬度进入vuex
-                    // this.RECORD_ADDRESS(res);
-                // }
-                // //获取商铺信息
-                // this.shopDetailData = await shopDetails(this.shopId, this.latitude, this.longitude);
-                // //获取商铺食品列表
-                // this.storeList = await foodMenu(this.shopId);
-                // //评论列表
-                // this.ratingList = await getRatingList(this.shopId, this.ratingOffset);
-                // //商铺评论详情
-                // this.ratingScoresData = await ratingScores(this.shopId);
-                // //评论Tag列表
-                // this.ratingTagsList = await ratingTags(this.shopId);
-                // this.RECORD_SHOPDETAIL(this.shopDetailData)
+
                 this.user =  JSON.parse(getStore('user'));
-                let response = await userHome(this.user.id);
+                let response = await getMyStore(this.user.id);
                 if(response.status == 0){
                     this.storeList = response.stores;
                 }
-                console.log(this.storeList.length);
+
+                this.storeList.map(item=>{
+                    this.storeIds.push(item.id);
+                })
+
+                // for(let i=0; i < this.storeIds.length ; i++){
+                //     getStoreRate(this.user.id, this.storeIds[i]);
+                // }
+
+                let _this = this;
+                getRateAnalytics(_this.storeIds).then(function(resCount){
+                    if(resCount.status == 0){
+                        
+                        _this.bar.yAxis[0].max = resCount.max*1.3;
+
+                        let year = new Date().getFullYear();
+                        _this.bar.xAxis[0].data = resCount.date;
+                        _this.date = year+'/'+resCount.date[resCount.date.length-2];
+                        _this.dateFormat = new Date(_this.date).getTime();
+                        _this.bar.tooltip.axisPointer.value = "8/30";
+
+                        _this.bar.series[0].data = resCount.countHigh;
+                        _this.bar.series[1].data = resCount.countMid;
+                        _this.bar.series[2].data = resCount.countLow;
+
+                        _this.rateCount.countHigh = _this.bar.series[0].data[resCount.date.length-2]; 
+                        _this.rateCount.countMid = _this.bar.series[1].data[resCount.date.length-2]; 
+                        _this.rateCount.countLow = _this.bar.series[2].data[resCount.date.length-2]; 
+
+                        _this.bar.tooltip.formatter = function(param){
+                            
+                            _this.rateCount.countHigh = param[0].data; 
+                            _this.rateCount.countMid = param[1].data; 
+                            _this.rateCount.countLow = param[2].data; 
+
+                            
+                            let year = new Date().getFullYear();
+                            if(param[0].axisValue.indexOf(year) == -1){
+                                param[0].axisValue = year+'/'+param[0].axisValue;
+                            }
+                            _this.date = new Date(param[0].axisValue); 
+                            _this.dateFormat = _this.date.getTime();
+                            console.log(_this.dateFormat);
+                        }
+
+                        _this.bar.title.text = _this.storeList[0].name +'等 ('+ _this.storeList.length +'家)门店';
+                        _this.chart.option = _this.bar;
+                        _this.chart.dispatchAction({type: 'showTip', seriesIndex: '10', dataIndex: '10'})
+                    }
+                    
+                    
+                })
+                
+                
 
                 //隐藏加载动画
                 this.hideLoading();
             },
+            gotoAddress(path){
+                this.$router.push(path);
+            },
             doRandom() {
                 const that = this;
-                let data = [];
-                for (let i = 0, min = 1000, max = 3000; i < 7; i++) {
-                  data.push(Math.floor(Math.random() * (max + 1 - min) + min));
-                }
-                that.bar.series[0].data = data;
+                
             },
             onReady(instance) {
-                console.log(instance);
-
+                // console.log(instance);
+                this.chart = instance;
+                console.log(this.chart);
                 this.hideLoading();
             },
             onClick(event, instance, echarts) {
                 console.log(arguments);
-                this.doRandom();
+
             },
+
+
 
             //隐藏动画
             hideLoading(){
@@ -434,12 +382,63 @@
        75%  { transform: scale(.9) }
        100% { transform: scale(1) }
     }
+    #head_top{
+        background-color: #fff;
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        @include wh(100%, 1.95rem);
+        border-bottom:0.025rem solid #e5e5e5;
+    }
+    .head_goback{
+        left: 0.4rem;
+        @include wh(1.95rem, auto);
+        @include sc(0.6rem, #666);
+        line-height: 1.95rem;
+        margin-left: .4rem;
+    }
+    .head_login{
+        right: 0.55rem;
+        @include sc(0.6rem, #999);
+        @include ct;
+        border-radius: .2rem;
+        .login_span{
+            color: #666;
+        }
+        .user_avatar{
+            fill: #666;
+            @include wh(.8rem, .8rem);
+        }
+    }
+    .title_head{
+        @include center;
+        width: 50%;
+        color: #fff;
+        text-align: center;
+        line-height: 0.8rem;
+        img{
+            @include wh(1rem, 1rem);
+            vertical-align:middle;
+            display: inline-block;
+        }
+        .title_text{
+            @include sc(0.6rem, #666);
+            text-align: center;
+            vertical-align:middle;
+            /*font-weight: bold;*/
+        }
+    }
+
     .shop_back_svg_container{
         position: fixed;
         @include wh(100%, 100%);
         img{
             @include wh(100%, 100%);
         }
+    }
+    .main_container{
+        padding-top:1.95rem;
     }
     .shop_container{
         display: flex;
@@ -464,12 +463,12 @@
         height:1.4rem;
         margin-top:.4rem;
         margin-bottom:.4rem;
-        border: 0.025rem solid #868686;
+        border: 0.025rem solid #ffd101;
         border-width: 0 0 0.025rem 0;
         margin-left: .2rem;
-        @include sc(0.65rem, #fff);
+        @include sc(0.65rem, #292929);
         border-radius: 0.125rem;
-        background-color: #fc8462;
+        background-color: #ffd101;
         font-weight: normal;
         padding: 0 0.25rem;
     }
@@ -477,7 +476,7 @@
         background-color: #fff;
         border-bottom: 0.025rem solid #f1f1f1;right: 0;
         width: 100%;
-        height: 300px;
+        height: 336px;
         display: flex;
         /*flex:1;*/
         z-index: 13;
@@ -735,7 +734,7 @@
             .reply_item_border{
                 flex: 1;
                 height: 2.6rem;
-                @include sc(0.6rem, #949494);
+                @include sc(0.6rem, #333);
                 background-color: #fff;
                 margin:  0 0.025rem 0.025rem 0;
                 padding: .1rem .5rem;

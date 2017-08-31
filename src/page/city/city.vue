@@ -38,8 +38,8 @@
         <footer v-if="historytitle&&stores.length" class="clear_all_history" @click="clearAll">清空所有</footer>
         <div class="search_none_place" v-if="placeNone">很抱歉！无搜索结果</div>
         <div class="button_container">
-            <a class="button orange">全选</a>
-            <a class="button red" @click='nextpage(2, selectStores)'>去订阅</a>
+            <a class="button">全选</a>
+            <a class="button" @click='nextpage(2, selectStores)'>去订阅</a>
         </div>
     </div>
 </template>
@@ -118,7 +118,7 @@
                 }
             }, 1000),
 
-            searchStore(city,keyword){
+            searchStore(city,keyword,i=0){
                 console.log(city,keyword);
                 searchplace(city,keyword).then(res => {
                         console.log(res);
@@ -129,11 +129,13 @@
                         this.stores = res.stores;
                         this.total = this.stores.length;
                         this.placeNone = res.pageSize * (res.pageNo+1) > res.total;
+                        
+                        if(i>=3) return;
 
                         if(res.stores.length == 0 || res.stores.length <5){
                             
                             setTimeout(()=>{
-                                this.searchStore(city,keyword);
+                                this.searchStore(city,keyword,++i);
                             },3000 );
                         }
                     })
@@ -200,13 +202,14 @@
         padding:.4rem 0;
         .button{
             @include wh(90%, auto);
-            @include sc(.6rem, #fff);
+            @include sc(.6rem, #111);
             text-align: center;
             padding:.4rem 0;
             border-radius: .2rem;
             margin:0 1rem;
+            background-color:#ffd101;
             &.orange{
-                background-color:#ff6d40;
+                background-color:#ffd101;
             }
             &.red{
                 background-color:#fc3c3f;

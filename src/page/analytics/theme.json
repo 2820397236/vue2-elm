@@ -1,9 +1,9 @@
 
 {
     "color": [
-        "#fc3c3f",
-        "#ffd500",
-        "#88ce41",
+        "#72a996",
+        "#f8d455",
+        "#eca892",
         "#93b7e3",
         "#a5e7f0",
         "#cbb0e3"
@@ -12,10 +12,10 @@
     "textStyle": {},
     "title": {
         "textStyle": {
-            "color": "#516b91"
+            "color": "#9c9c9c"
         },
         "subtextStyle": {
-            "color": "#93b7e3"
+            "color": "#9c9c9c"
         }
     },
     "line": {
@@ -30,9 +30,9 @@
             }
         },
         
-        "symbolSize": "6",
-        "symbol": "circle",
-        "smooth": true
+        "symbolSize": "1",
+        "symbol": "emptyCircle",
+        "smooth": false
     },
     "radar": {
         "itemStyle": {

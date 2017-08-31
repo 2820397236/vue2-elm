@@ -73,6 +73,8 @@
     "npm": ">= 3.0.0"
   },
   "optionalDependencies": {
+    "moment": "^2.18.1",
+    "vue-wechat-auth": "^1.0.2",
     "vue2-filters": "^0.1.9"
   }
 }

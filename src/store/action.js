@@ -13,6 +13,7 @@ export default {
 		commit,
 		state
 	}) {
+		console.log(commit,state);
 		let res = await getUser();
 		commit(GET_USERINFO, res)
 	},

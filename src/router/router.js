@@ -5,6 +5,9 @@ const city = r => require.ensure([], () => r(require('../page/city/city')), 'cit
 const msite = r => require.ensure([], () => r(require('../page/msite/msite')), 'msite')
 const search = r => require.ensure([], () => r(require('../page/search/search')), 'search')
 const shop = r => require.ensure([], () => r(require('../page/shop/shop')), 'shop')
+const rate = r => require.ensure([], () => r(require('../page/rate/rate')), 'rate')
+const rateByShop = r => require.ensure([], () => r(require('../page/rate/rateByShop')), 'rateByShop')
+const warning = r => require.ensure([], () => r(require('../page/rate/rateWarning')), 'rateWarning')
 const login = r => require.ensure([], () => r(require('../page/login/login')), 'login')
 const profile = r => require.ensure([], () => r(require('../page/profile/profile')), 'profile')
 const forget = r => require.ensure([], () => r(require('../page/forget/forget')), 'forget')
@@ -100,6 +103,21 @@ export default [{
                     component: shopSafe,
                 }, ]
             }]
+        },
+        //评论
+        {
+            path: '/rate',
+            component: rate
+        },
+        //评论
+        {
+            path: '/rateByShop',
+            component: rateByShop
+        },
+        //评论预警
+        {
+            path: '/warning',
+            component: warning
         },
         //确认订单页
         {

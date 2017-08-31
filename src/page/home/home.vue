@@ -8,12 +8,12 @@
                 <span>当前定位城市：</span>
                 <span>定位不准时，请在城市列表中选择</span>
             </div>
-            <router-link :to="'/city/' + guessCityid" class="guess_city">
-                <span>{{guessCity}}</span>
+            <div class="guess_city" @click="setCity(guesscity)">
+                <span>{{guesscity.cityName}}</span>
                 <svg class="arrow_right">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
                 </svg>
-            </router-link>  
+            </div>  
         </nav>
         <section id="hot_city_container">
             <h4 class="city_title">热门城市</h4>
@@ -49,9 +49,8 @@ import {getStore, setStore, removeStore} from 'src/config/mUtils'
 export default {
     data(){
         return{
-            guessCity: '上海',   //当前城市
-            guessCityid: '1', //当前城市id
             hotcity: [],     //热门城市列表
+            guesscity:{},
             groupcity: {},   //所有城市列表
         }
     },
@@ -66,6 +65,7 @@ export default {
         //获取热门城市
         hotcity().then(res => {
             this.hotcity = res.cities;
+            this.guesscity = res.cities[0];
         })
 
         //获取所有城市

@@ -218,23 +218,39 @@ export const sendMobile = (sendData, captcha_code, type, password) => fetch('/v1
 	password,
 }, 'POST');
 
-/**
- * 获取门店列表
- */
 
-export const getStoreInfo = (userId,storeId) => fetch('/v1/store/getInfo', {
-	userId: userId,
+export const getStoreInfo = (storeId) => fetch('/v1/store/getInfo', {
 	storeId: storeId
 }, 'POST');
+
+export const getRateCount = (storeId) => fetch('/v1/store/getRateCount', {
+	storeId: storeId
+}, 'POST');
+
+export const getRateAnalytics = (storeId) => fetch('/v1/store/getRateAnalytics', {
+	storeId //[id,id,id]
+}, 'POST');
+
+export const getRateByDate = (storeId,date) => fetch('/v1/store/getRateByDate', {
+	storeId, //[id,id,id]
+	date
+}, 'POST');
+
 
 export const getStoreRate = (userId,storeId) => fetch('/v1/store/getRate', {
 	userId,
 	storeId
 }, 'POST');
 
+export const getUser = () => fetch('/v1/user', {userId: JSON.parse(getStore('user')).id,token: JSON.parse(getStore('user')).token});
 
 export const getMyStore = userId => fetch('/v1/user/home', {
 	userId
+});
+
+export const getUserRate = (userId,level) => fetch('/v1/store/getUserRate', {
+	userId,
+	level
 });
 
 export const cancelMyStore = (userId,storeIds) => fetch('/v1/user/cancelMyStore', {
@@ -242,9 +258,15 @@ export const cancelMyStore = (userId,storeIds) => fetch('/v1/user/cancelMyStore'
 	storeIds
 });
 
-export const addToCart = (userId,storeIds) => fetch('/v1/user/addToCart', {
+export const renewMyStore = (userId,storeIds) => fetch('/v1/user/renewMyStore', {
 	userId,
 	storeIds
+});
+
+export const addToCart = (userId,storeIds,payment) => fetch('/v1/user/addToCart', {
+	userId,
+	storeIds,
+	payment
 }, 'POST');
 
 export const searchplace = (cityName, keywords, pageNo=0, pageSize=10) => fetch('/searchDpStore', {

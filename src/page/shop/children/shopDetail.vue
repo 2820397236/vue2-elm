@@ -86,7 +86,7 @@
 <script>
 	import headTop from 'src/components/header/head'
     import {mapState} from 'vuex'
-    import {userHome,getUser,getStoreRate} from 'src/service/getData'
+    import {getMyStore,getUser,getStoreRate} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import {getImgPath} from 'src/components/common/mixin'
     import {imgBaseUrl} from 'src/config/env'
@@ -130,7 +130,7 @@
                     if( response.rates.length ==0){
                         setTimeout(()=>{
                             this.initData();
-                        },3000)
+                        },5000)
                     }
 
                     this.rateList = response.rates;
