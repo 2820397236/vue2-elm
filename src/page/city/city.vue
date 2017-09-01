@@ -24,14 +24,14 @@
                 </a>
                 <img :src="item.defaultPic">
                 <div class="pois_detail">
-                    <h4 class="pois_name ellipsis">
-                        {{item.name}} {{item.branchName}}
+                    <h4 class="store_name ellipsis">
+                        <span>{{item.name}} {{item.branchName}}</span>
                         <span class="store_status green" v-if="item.status==0">开业</span>
                         <span class="store_status red" v-if="item.status!=0">停业</span>
                     </h4>
                     <p class="pois_address ellipsis">
                     {{item.priceText}}&nbsp;&nbsp;{{item.regionName}}&nbsp;&nbsp;
-                    {{selectStores.indexOf(item.id) > -1 ? 'id:'+item.id : ''}} </p>
+                    </p>
                 </div>
             </li>
         </ul>
@@ -39,7 +39,9 @@
         <div class="search_none_place" v-if="placeNone">很抱歉！无搜索结果</div>
         <div class="button_container">
             <a class="button">全选</a>
-            <a class="button" @click='nextpage(2, selectStores)'>去订阅</a>
+            <a class="button" @click='nextpage(2, selectStores)'>
+            {{ selectStores.length > 0 ? '已选'+ selectStores.length + '家' :''}}
+            去订阅</a>
         </div>
     </div>
 </template>
@@ -206,7 +208,11 @@
             text-align: center;
             padding:.4rem 0;
             border-radius: .2rem;
-            margin:0 1rem;
+            margin-left:.8rem;
+            margin-right:.8rem;
+            &:first-child{
+                margin-right:0rem;
+            }
             background-color:#ffd101;
             &.orange{
                 background-color:#ffd101;
@@ -286,7 +292,7 @@
                     height:.85rem;
                     fill: #ccc;
                     &.active{
-                         fill:#fc3c3f;
+                         fill:#fed101;
                     }
                 }
                 
@@ -297,10 +303,13 @@
                 flex-direction:column;
                 justify-content: center;
                 text-align: start;
-                .pois_name{
+                .store_name{
                     margin: 0 auto 0.35rem;
                     width: 90%;
                    @include sc(0.65rem, #333);
+                   span{
+                        vertical-align:middle;
+                   }
                    .store_status{
                         background-color: #fc3c3f;
                         @include sc(.4rem, #fff);

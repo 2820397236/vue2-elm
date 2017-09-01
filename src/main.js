@@ -5,9 +5,9 @@ import store from './store/'
 import {routerMode} from './config/env'
 import './config/rem'
 import FastClick from 'fastclick'
-import Vue2Filters from 'vue2-filters'
-import moment from 'moment/moment.js';
-import WechatAuth from 'vue-wechat-auth'
+// import Vue2Filters from 'vue2-filters'
+import moment from 'moment/moment.js'
+import weixin from 'weixin-js-sdk'
 
 if ('addEventListener' in document) {
     document.addEventListener('DOMContentLoaded', function() {
@@ -15,8 +15,9 @@ if ('addEventListener' in document) {
     }, false);
 }
 
-Vue.use(Vue2Filters)
+// Vue.use(Vue2Filters)
 Vue.use(VueRouter)
+Vue.use(weixin)
 
 Vue.filter('dateTime', function (value,format) {
     return moment(value).format(format || 'YYYY-MM-DD HH:mm');
@@ -38,39 +39,66 @@ const router = new VueRouter({
 	}
 })
 
-// 微信授权插件初始化 
-Vue.use(WechatAuth , {
-  router, // 路由实例对象 
-  appid: 'wx95ab74c069adc622', // 您的微信appid 
-  responseType: 'code',  // 返回类型，请填写code 
-  scope: 'snsapi_userinfo', // 应用授权作用域，snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid），snsapi_userinfo （弹出授权页面，可通过openid拿到昵称、性别、所在地。并且，即使在未关注的情况下，只要用户授权，也能获取其信息） 
-  getCodeCallback (code, next) {
-    // 用户同意授权后回调方法 
-    // code：用户同意授权后，获得code值 
-    // code说明： code作为换取access_token的票据，每次用户授权带上的code将不一样，code只能使用一次，5分钟未被使用自动过期。 
-    // next： 无论access_token是否获取成功,一定要调用该方法 
-    // next说明：next方法接收两个参数 
-    // 参数1为通过code值请求后端获取到的access_token值，如果获取失败请填入空字符串'' 
-    // 参数2(非必填，默认获取access_token切换到当前路由对象)，指定切换对象 next('/') 或者 next({ path: '/' }) 
-    
-    console.log(code);
-    // axios.get('通过code值换取access_token接口地址', {
-    //   params: {
-    //     code,
-    //     state: ''
-    //   }
-    // }).then(response => {
-    //   let data = response.data
-    //   let accessToken = data.data['access_token']
-    //   if (accessToken) {
-    //     next(accessToken) // 获取access_toeken成功 
-    //   } else {
-    //     next() // 获取access_token失败 
-    //   }
-    // }).catch(() => {
-    //   next() // ajax出现错误 
-    // })
-  }
+weixin.config({
+    debug:true,  //开启debug
+    appId: 'wx95ab74c069adc622', //微信appid
+    timestamp: Math.ceil((new Date() - 0)/1000),  //时间戳
+    nonceStr: (parseInt(Math.random() * new Date() - 0)).toString(32), 
+    signature: 'xxx', //签名
+    jsApiList: [
+        'checkJsApi',
+        'onMenuShareTimeline',
+        'onMenuShareAppMessage',
+        'onMenuShareQQ',
+        'onMenuShareWeibo',
+        'onMenuShareQZone',
+        'hideMenuItems',
+        'showMenuItems',
+        'hideAllNonBaseMenuItem',
+        'showAllNonBaseMenuItem',
+        'translateVoice',
+        'startRecord',
+        'stopRecord',
+        'onVoiceRecordEnd',
+        'playVoice',
+        'onVoicePlayEnd',
+        'pauseVoice',
+        'stopVoice',
+        'uploadVoice',
+        'downloadVoice',
+        'chooseImage',
+        'previewImage',
+        'uploadImage',
+        'downloadImage',
+        'getNetworkType',
+        'openLocation',
+        'getLocation',
+        'hideOptionMenu',
+        'showOptionMenu',
+        'closeWindow',
+        'scanQRCode',
+        'chooseWXPay',
+        'openProductSpecificView',
+        'addCard',
+        'chooseCard',
+        'openCard'
+    ]
+});
+
+weixin.ready(function () {
+    // weixin.checkJsApi();
+    // weixin.onMenuShareTimeline({
+    //     title: 'xxx', // 分享标题
+    //     link: 'xxx', // 分享链接
+    //     desc: 'xxx', // 分享描述
+    //     imgUrl: '', // 分享图标
+    //     success: function () {
+    //         alert('分享成功啦！');
+    //     },
+    //     cancel: function(){
+    //         alert('分享失败');
+    //     }
+    // });
 });
 
 

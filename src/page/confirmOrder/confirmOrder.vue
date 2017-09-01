@@ -45,7 +45,8 @@
                                         </section>
                                         <section class="menu_food_description">
                                             <h3 class="food_description_head">
-                                                <span class="description_foodname">{{store.name}}({{store.branchName}})</span>
+                                                <span class="description_foodname">{{store.name}}</span>
+                                                <span class="description_foodname" v-if="store.branchName !=''">{{store.name}}({{store.branchName}})</span>
                                             </h3>
                                             <p class="food_description_content">{{store.regionName}} {{store.priceText}}</p>
                                         </section>

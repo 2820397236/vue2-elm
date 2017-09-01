@@ -8,7 +8,7 @@
             </nav> -->
             <header class="shop_detail_header" ref="shopheader" style="z-index:0">
                 <!-- <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"> -->
-                <section class="description_header" :class="storeList.length == 0?'empty':''">
+                <section class="description_header" :class="storeList.length == 0  && storeListOrigin.length == 0 ?'empty':''">
                     <div class="description_top">
                         <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
                             <img :src="user.profileImg">
@@ -38,9 +38,7 @@
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-left"></use>
                         </svg>
                     </footer> -->
-                    <router-link :to="{path:'/city/1'}" tag="div" class="search_container" v-if="storeList.length != 0">
-                        搜索已订阅的门店
-                    </router-link>
+                    <input class="search_container" v-if="storeList.length != 0 || storeListOrigin.length != 0" placeholder="搜索已订阅的门店" v-model='inputVaule' @input='searchLocal(inputVaule)'>
 
                 </section>
             </header>
@@ -131,11 +129,13 @@
     import {imgBaseUrl} from 'src/config/env'
     import BScroll from 'better-scroll'
     import footGuide from '../../components/footer/footGuide'
+    import debounce from 'debounce'
 
 
     export default {
         data(){
             return{
+                inputVaule:'',
                 user:null,
                 geohash: '', //geohash位置信息
                 shopId: null, //商店id值
@@ -144,6 +144,7 @@
                 shopDetailData: null, //商铺详情
                 showActivities: false, //是否显示活动详情
                 storeList: [], //食品列表
+                storeListOrigin: [], //食品列表
                 menuIndex: 0, //已选菜单索引值，默认为0
                 menuIndexChange: true,//解决选中index时，scroll监听事件重复判断设置index的bug
                 shopListTop: [], //商品列表的高度集合
@@ -251,6 +252,7 @@
                 let response = await getMyStore(this.user.id);
                 if(response.status == 0){
                     this.storeList = response.stores;
+                    this.storeListOrigin = response.stores;
                     this.extra = response.extra;
                 }
 
@@ -264,13 +266,12 @@
                             this.storeList[j].expireTime = new Date(new Date().setMonth(new Date(this.extra[i].createTime).getMonth() + 1));
                             this.storeList[j].isCancel = this.extra[i].isCancel;
 
-
-                            console.log(this.storeList[j].name + ","+this.extra[i].isCancel);
+                            this.storeListOrigin[j].createTime = this.extra[i].createTime;
+                            this.storeListOrigin[j].expireTime = new Date(new Date().setMonth(new Date(this.extra[i].createTime).getMonth() + 1));
+                            this.storeListOrigin[j].isCancel = this.extra[i].isCancel;
                         }
                     }
                 }
-
-                console.log(this.storeList);
                 
                 //隐藏加载动画
                 this.hideLoading();
@@ -300,6 +301,19 @@
                 return false;
 
             },
+            searchLocal :debounce(function (keyword) {
+              
+              if (keyword && keyword != " ") {
+                   console.log(keyword);
+                   this.storeList = this.storeListOrigin.filter(store=>{
+                        console.log(store.name,keyword,store.name.indexOf(keyword) > -1);
+                        return store.name.indexOf(keyword) > -1
+                    });
+                }else if(keyword=="") {
+                    this.storeList = this.storeListOrigin;
+                }
+
+            }, 1000),
             gotoAddress(path){
                 this.$router.push(path);
             },
@@ -319,8 +333,6 @@
                 this.alertSubText = store.address;
                 this.alertTime = store.createTime;
                 this.alertImg = store.defaultPic;
-
-                console.log(store.isCancel);
 
                 if( store.isCancel == false){
                     this.confirmBtn = "取消订阅";
