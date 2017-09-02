@@ -177,15 +177,7 @@ export const ratingScores = shopid => fetch('/ugc/v2/restaurants/' + shopid + '/
 export const ratingTags = shopid => fetch('/ugc/v2/restaurants/' + shopid + '/ratings/tags');
 
 
-/**
- * 获取短信验证码
- */
 
-export const mobileCode = phone => fetch('/v4/mobile/verify_code/send', {
-	mobile: phone,
-	scene: 'login',
-	type: 'sms'
-}, 'POST');
 
 
 /**
@@ -275,6 +267,10 @@ export const searchplace = (cityName, keywords, pageNo=0, pageSize=10) => fetch(
 	pageNo:pageNo,
 	pageSize:pageSize
 });
+
+export const mobileCode = phone => fetch('/v1/user/verifyCode', {
+	phone: phone
+}, 'POST');
 
 
 

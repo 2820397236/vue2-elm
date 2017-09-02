@@ -39,66 +39,23 @@ const router = new VueRouter({
 	}
 })
 
-weixin.config({
-    debug:true,  //开启debug
-    appId: 'wx95ab74c069adc622', //微信appid
-    timestamp: Math.ceil((new Date() - 0)/1000),  //时间戳
-    nonceStr: (parseInt(Math.random() * new Date() - 0)).toString(32), 
-    signature: 'xxx', //签名
-    jsApiList: [
-        'checkJsApi',
-        'onMenuShareTimeline',
-        'onMenuShareAppMessage',
-        'onMenuShareQQ',
-        'onMenuShareWeibo',
-        'onMenuShareQZone',
-        'hideMenuItems',
-        'showMenuItems',
-        'hideAllNonBaseMenuItem',
-        'showAllNonBaseMenuItem',
-        'translateVoice',
-        'startRecord',
-        'stopRecord',
-        'onVoiceRecordEnd',
-        'playVoice',
-        'onVoicePlayEnd',
-        'pauseVoice',
-        'stopVoice',
-        'uploadVoice',
-        'downloadVoice',
-        'chooseImage',
-        'previewImage',
-        'uploadImage',
-        'downloadImage',
-        'getNetworkType',
-        'openLocation',
-        'getLocation',
-        'hideOptionMenu',
-        'showOptionMenu',
-        'closeWindow',
-        'scanQRCode',
-        'chooseWXPay',
-        'openProductSpecificView',
-        'addCard',
-        'chooseCard',
-        'openCard'
-    ]
-});
+weixin.config({debug:true,appId:'wx95ab74c069adc622',timestamp:1504328262,nonceStr:'7d9e9f1b-1a48-4788-a0c5-b79e41b3ab5d',signature:'008245500b0ffdeffc3ce4e5fa34d9f81687a719',jsApiList:["checkJsApi","onMenuShareTimeline","onMenuShareAppMessage","onMenuShareQQ","onMenuShareWeibo","onMenuShareQZone","chooseImage","previewImage","uploadImage","downloadImage","startRecord","stopRecord","onVoiceRecordEnd","playVoice","pauseVoice","stopVoice","onVoicePlayEnd","uploadVoice","downloadVoice","translateVoice","getNetworkType","openLocation","getLocation","startSearchBeacons","stopSearchBeacons","onSearchBeacons","hideOptionMenu","showOptionMenu","closeWindow","hideMenuItems","showMenuItems","hideAllNonBaseMenuItem","showAllNonBaseMenuItem","scanQRCode","openProductSpecificView","chooseCard","addCard","openCard","chooseWXPay"]});
+
 
 weixin.ready(function () {
-    // weixin.checkJsApi();
-    // weixin.onMenuShareTimeline({
-    //     title: 'xxx', // 分享标题
-    //     link: 'xxx', // 分享链接
-    //     desc: 'xxx', // 分享描述
-    //     imgUrl: '', // 分享图标
-    //     success: function () {
-    //         alert('分享成功啦！');
-    //     },
-    //     cancel: function(){
-    //         alert('分享失败');
-    //     }
-    // });
+    
+    weixin.onMenuShareTimeline({
+        title: '蜜蜂舆情', // 分享标题
+        link: 'http://c.icoos.cn', // 分享链接
+        desc: '蜜蜂舆情测试版', // 分享描述
+        imgUrl: '', // 分享图标
+        success: function () {
+            alert('分享成功啦！');
+        },
+        cancel: function(){
+            alert('分享失败');
+        }
+    });
 });
 
 

@@ -260,7 +260,6 @@
                 for(var i=0;i<this.extra.length;i++){
                     for(var j=0;j<this.storeList.length;j++){
                         if( this.storeList[j].id == this.extra[i].storeId){
-                            
 
                             this.storeList[j].createTime = this.extra[i].createTime;
                             this.storeList[j].expireTime = new Date(new Date().setMonth(new Date(this.extra[i].createTime).getMonth() + 1));
@@ -303,13 +302,13 @@
             },
             searchLocal :debounce(function (keyword) {
               
-              if (keyword && keyword != " ") {
-                   console.log(keyword);
-                   this.storeList = this.storeListOrigin.filter(store=>{
-                        console.log(store.name,keyword,store.name.indexOf(keyword) > -1);
-                        return store.name.indexOf(keyword) > -1
+                if (keyword && keyword != " ") {
+
+                    this.storeList = this.storeListOrigin.filter(store=>{
+                        return store.name.indexOf(keyword) > -1;
                     });
-                }else if(keyword=="") {
+
+                }else if(keyword == "") {
                     this.storeList = this.storeListOrigin;
                 }
 

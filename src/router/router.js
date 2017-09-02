@@ -9,6 +9,7 @@ const rate = r => require.ensure([], () => r(require('../page/rate/rate')), 'rat
 const rateByShop = r => require.ensure([], () => r(require('../page/rate/rateByShop')), 'rateByShop')
 const warning = r => require.ensure([], () => r(require('../page/rate/rateWarning')), 'rateWarning')
 const login = r => require.ensure([], () => r(require('../page/login/login')), 'login')
+const code = r => require.ensure([], () => r(require('../page/login/code')), 'code')
 const profile = r => require.ensure([], () => r(require('../page/profile/profile')), 'profile')
 const forget = r => require.ensure([], () => r(require('../page/forget/forget')), 'forget')
 const order = r => require.ensure([], () => r(require('../page/order/order')), 'order')
@@ -152,6 +153,11 @@ export default [{
         {
             path: '/login',
             component: login
+        },
+        //验证码
+        {
+            path: '/code',
+            component: code
         },
         //个人信息页
         {

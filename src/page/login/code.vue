@@ -5,22 +5,28 @@
         </head-top> -->
         <form class="loginForm">
             <section class="title_container">
-                <img src="http://opub24jup.bkt.clouddn.com/CBD.jpg"/>
+              
             </section>
             <section class="title_container">
-            蜜蜂点评
+            输入验证码
             </section>
             <section class="subtitle_container">
-               帮助您自动收集所有互联网平台实时真实的用户评论，协助您改善餐厅
+               已向手机号码：13788997536 发送验证码
             </section>
         </form>
-        <p class="login_tips">
-            <span>&nbsp;</span>
-            <span v-if="errorMsg != ''">{{errorMsg}}</span>
-        </p>
-        <form class="loginForm">
+        <form class="loginForm" v-if="loginWay">
+            <section class="input_container phone_number">
+                <input type="text" placeholder="账号密码随便输入" name="phone" maxlength="11" v-model="phoneNumber">
+                <button @click.prevent="getVerifyCode" :class="{right_phone_number:rightPhoneNumber}" v-show="!computedTime">获取验证码</button>
+                <button  @click.prevent v-show="computedTime">已发送({{computedTime}}s)</button>
+            </section>
             <section class="input_container">
-                <input type="text" placeholder="请输入您要绑定的手机号码" v-model.lazy="phoneNumber">
+                <input type="text" placeholder="验证码" name="mobileCode" maxlength="6" v-model="mobileCode">
+            </section>
+        </form>
+        <form class="loginForm" v-else>
+            <section class="input_container">
+                <input type="text" placeholder="手机" v-model.lazy="userAccount">
             </section>
             <!-- <section class="input_container">
                 <input v-if="!showPassword" type="password" placeholder="密码"  v-model="passWord">
@@ -43,10 +49,12 @@
             </section> -->
         </form>
         <p class="login_tips">
+            <!-- 温馨提示：未注册过的账号，登录时将自动注册 -->
+        </p>
+        <p class="login_tips">
             <!-- 注册过的用户可凭账号密码登录 -->
         </p>
-        <div class="login_container" @click="getVerifyCode">获取验证码</div>
-
+        <div class="login_container" @click="mobileLogin">登录</div>
         <!-- <router-link to="/forget" class="to_forget" v-if="!loginWay">重置密码？</router-link> -->
         <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
     </div>
@@ -58,14 +66,15 @@
     import {localapi, proapi, imgBaseUrl} from 'src/config/env'
     import {mapState, mapMutations} from 'vuex'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
-    import {mobileCode, accountLogin} from '../../service/getData'
+    import {mobileCode, checkExsis, sendLogin, getcaptchas, accountLogin,accountRegister} from '../../service/getData'
 
     export default {
         data(){
             return {
                 loginWay: false, //登录方式，默认短信登录
                 showPassword: false, // 是否显示密码
-                phoneNumber: '', //电话号码
+                phoneNumber: null, //电话号码
+                mobileCode: null, //短信验证码
                 validate_token: null, //获取短信时返回的验证值，登录时需要
                 computedTime: 0, //倒数记时
                 userInfo: null, //获取到的用户信息
@@ -73,9 +82,8 @@
                 passWord: null, //密码
                 captchaCodeImg: null, //验证码地址
                 codeNumber: null, //验证码
-                showError: false, //显示提示组件
-                errorMsg: '', //提示的内容
-                showAlert:false
+                showAlert: false, //显示提示组件
+                alertText: null, //提示的内容
             }
         },
         created(){
@@ -95,47 +103,67 @@
             ...mapMutations([
                 'RECORD_USERINFO',
             ]),
-
+            //改变登录方式
+            changeLoginWay(){
+                this.loginWay = !this.loginWay;
+            },
+            //是否显示密码
+            changePassWordType(){
+                this.showPassword = !this.showPassword;
+            },
+            //获取验证吗，线上环境使用固定的图片，生产环境使用真实的验证码
+            async getCaptchaCode(){
+                let res = await getcaptchas();
+                this.captchaCodeImg = res.code;
+            },
+            //获取短信验证码
+            async getVerifyCode(){
+                if (this.rightPhoneNumber) {
+                    this.computedTime = 30;
+                    this.timer = setInterval(() => {
+                        this.computedTime --;
+                        if (this.computedTime == 0) {
+                            clearInterval(this.timer)
+                        }
+                    }, 1000)
+                    //判读用户是否存在
+                    let exsis = await checkExsis(this.phoneNumber, 'mobile');
+                    if (exsis.message) {
+                        this.showAlert = true;
+                        this.alertText = exsis.message;
+                        return
+                    }else if(!exsis.is_exists) {
+                        this.showAlert = true;
+                        this.alertText = '您输入的手机号尚未绑定';
+                        return
+                    }
+                    //发送短信验证码
+                    let res = await mobileCode(this.phoneNumber);
+                    if (res.message) {
+                        this.showAlert = true;
+                        this.alertText = res.message;
+                        return
+                    }
+                    this.validate_token = res.validate_token;
+                }
+            },
             //发送登录信息
             async mobileLogin(){
-                
-                this.codeRes = await mobileCode(this.phoneNumber);
-                if(this.userResponse.status == 0){
-
-                }
-
+               
                 //用户名登录
-                // this.userResponse = await accountLogin(this.userAccount,'1234');
+                this.userResponse = await accountLogin(this.userAccount,'1234');
 
-                // if(this.userResponse.status == 0){
-                //     setStore('user',this.userResponse.user);
-                //     this.$router.push({path:'/shop'});
-                //     return;
-                // }
+                if(this.userResponse.status == 0){
+                    setStore('user',this.userResponse.user);
+                    this.$router.push({path:'/shop'});
+                    return;
+                }
 
                 // this.userResponse = await accountRegister(this.userAccount,'1234');
                 // if(this.userResponse.status == 0){
                 //     setStore('user',this.userResponse.user);
                 //     this.$router.push({path:'/shop'});
                 // }
-                
-            },
-            async getVerifyCode(){
-                
-                if (!this.rightPhoneNumber) {
-                    this.showError=true;
-                    this.errorMsg = '手机格式错误';
-                    return;
-                }
-
-                this.codeRes = await mobileCode(this.phoneNumber);
-                if(this.codeRes.status == -1){
-                    this.showError=true;
-                    this.errorMsg = '该手机号已被注册';
-                    return;
-                }
-
-                this.$router.push({path:'/code'});
                 
             },
             closeTip(){
@@ -164,8 +192,7 @@
 
     .loginForm{
         background-color: #fff;
-        margin-top: .2rem;
-        text-align: center;
+        margin-top: .6rem;
         .title_container{
             display: flex;
             justify-content: center;
@@ -180,22 +207,20 @@
             justify-content: center;
             text-align: center;
             padding: .6rem 1.6rem;
+            border-bottom: 1px solid #f1f1f1;
             font-size:0.6rem;
             color:#aaa;
         }
         .input_container{
             display: flex;
             justify-content: space-between;
+            padding: .6rem .8rem;
+            border-bottom: 1px solid #f1f1f1;
             input{
-                flex:1;
-                @include sc(.6rem, #666);
-                padding: .5rem .4rem;
-                margin:0 .5rem;
-                border:0.025rem solid #ededed;
-                text-align: center;
+                @include sc(.7rem, #666);
             }
             button{
-                @include sc(.5rem, #fff);
+                @include sc(.65rem, #fff);
                 font-family: Helvetica Neue,Tahoma,Arial;
                 padding: .28rem .4rem;
                 border: 1px;
@@ -235,19 +260,16 @@
         }
     }
     .login_tips{
+        @include sc(.5rem, red);
         padding: .4rem .6rem;
         line-height: .5rem;
-        text-align: center;
-        span{ 
-            @include sc(.5rem, red);
-        }
         a{
             color: #3b95e9;
         }
     }
     .login_container{
         margin: 0 .5rem 1rem;
-        @include sc(.6rem, #fff);
+        @include sc(.7rem, #fff);
         background-color: #fdd02f;
         padding: .5rem 0;
         border: 1px;

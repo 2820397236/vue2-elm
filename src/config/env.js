@@ -6,7 +6,7 @@
  * imgBaseUrl: 图片所在域名地址
  * 
  */
-let baseUrl = 'http://vip.linkersocks.com:8889'; 
+let baseUrl = 'http://api.icoos.cn'; 
 // let baseUrl = 'http://192.168.199.210:8889'; 
 // let baseUrl = 'http://127.0.0.1:8890'; 
 // let baseUrl = ''; 

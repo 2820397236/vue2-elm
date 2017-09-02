@@ -91,11 +91,10 @@
                         
                     },
                     grid: {
-                        left: '-10%',
+                        left: '0%',
                         right: '0%',
-                        bottom: '23px',
+                        bottom: '32px',
                         top: '0%',
-                        containLabel: true
                     },
                     tooltip : {
                         show:true,
@@ -233,7 +232,10 @@
             ]),
             //初始化时获取基本数据
             async initData(){
-
+                if(getStore('user') == undefined){
+                    this.gotoAddress('/login');
+                }
+                
                 this.user =  JSON.parse(getStore('user'));
                 let response = await getMyStore(this.user.id);
                 if(response.status == 0){
@@ -285,8 +287,8 @@
                         }
 
                         _this.bar.title.text = _this.storeList[0].name +'等 ('+ _this.storeList.length +'家)门店';
-                        _this.chart.option = _this.bar;
-                        _this.chart.dispatchAction({type: 'showTip', seriesIndex: '10', dataIndex: '10'})
+                        // _this.chart.option = _this.bar;
+                        // _this.chart.dispatchAction({type: 'showTip', seriesIndex: '10', dataIndex: '10'})
                     }
                     
                     

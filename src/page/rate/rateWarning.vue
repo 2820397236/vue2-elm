@@ -4,7 +4,7 @@
             <section class="head_option" :class="{red:warningType == 'high',yellow:warningType == 'mid', green:warningType == 'low'}"  @click="clickRateType()">
                 预警等级 {{rateType}}
             </section>
-            <section class="title_head ellipsis"  @click="setRatingType('xx')">
+            <section class="title_head ellipsis"  @click="setRatingType('high')">
                 
                 <span class="title_text">舆情评论监控预警</span>
             </section>
