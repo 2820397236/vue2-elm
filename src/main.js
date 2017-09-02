@@ -39,8 +39,7 @@ const router = new VueRouter({
 	}
 })
 
-weixin.config({debug:true,appId:'wx95ab74c069adc622',timestamp:1504328262,nonceStr:'7d9e9f1b-1a48-4788-a0c5-b79e41b3ab5d',signature:'008245500b0ffdeffc3ce4e5fa34d9f81687a719',jsApiList:["checkJsApi","onMenuShareTimeline","onMenuShareAppMessage","onMenuShareQQ","onMenuShareWeibo","onMenuShareQZone","chooseImage","previewImage","uploadImage","downloadImage","startRecord","stopRecord","onVoiceRecordEnd","playVoice","pauseVoice","stopVoice","onVoicePlayEnd","uploadVoice","downloadVoice","translateVoice","getNetworkType","openLocation","getLocation","startSearchBeacons","stopSearchBeacons","onSearchBeacons","hideOptionMenu","showOptionMenu","closeWindow","hideMenuItems","showMenuItems","hideAllNonBaseMenuItem","showAllNonBaseMenuItem","scanQRCode","openProductSpecificView","chooseCard","addCard","openCard","chooseWXPay"]});
-
+weixin.config({debug:true,appId:'wx95ab74c069adc622',timestamp:1504343140,nonceStr:'2a1b8854-82d7-495a-a848-2e548144a907',signature:'05c20f917fb9fd657c5b74e64475f69c4b094562',jsApiList:["checkJsApi","onMenuShareTimeline","onMenuShareAppMessage","onMenuShareQQ","onMenuShareWeibo","onMenuShareQZone","chooseImage","previewImage","uploadImage","downloadImage","startRecord","stopRecord","onVoiceRecordEnd","playVoice","pauseVoice","stopVoice","onVoicePlayEnd","uploadVoice","downloadVoice","translateVoice","getNetworkType","openLocation","getLocation","startSearchBeacons","stopSearchBeacons","onSearchBeacons","hideOptionMenu","showOptionMenu","closeWindow","hideMenuItems","showMenuItems","hideAllNonBaseMenuItem","showAllNonBaseMenuItem","scanQRCode","openProductSpecificView","chooseCard","addCard","openCard","chooseWXPay"]});
 
 weixin.ready(function () {
     
