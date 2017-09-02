@@ -48,7 +48,7 @@ weixin.ready(function () {
         title: '蜜蜂舆情', // 分享标题
         link: 'http://c.icoos.cn', // 分享链接
         desc: '蜜蜂舆情测试版', // 分享描述
-        imgUrl: '', // 分享图标
+        imgUrl: 'http://opub24jup.bkt.clouddn.com/CBD.jpg', // 分享图标
         success: function () {
             alert('分享成功啦！');
         },
