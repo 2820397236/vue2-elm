@@ -64,6 +64,10 @@ export default [{
             component: login
         },
         {
+            path: '/MP_verify_mB11U3quk54n8eQD.txt',
+            redirect: 'http://api.icoos.cn/MP_verify_mB11U3quk54n8eQD.txt'
+        },
+        {
             path: '?code=:code',
             component: login
         },
