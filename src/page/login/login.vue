@@ -132,7 +132,8 @@
                         let userRes = await getUserByOpenId(json.openid);
                         setStore('user',userRes.user);
 
-                        if(user.username !=""){
+                        alert(userRes.user.username);
+                        if(user.username){
                             this.$router.push({path:'/shop'});
                             return;
                         }
