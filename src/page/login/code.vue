@@ -131,14 +131,15 @@
             async mobileLogin(){
                 console.log(this.verify);
 
-                if(getStore('wx') == undefined){
+                if(getStore('user') == undefined){
                      window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
                     return;
                 }
 
-                let weixin = JSON.parse(getStore('wx'));
-                console.log("verifyCode Get Openid:"+weixin.openid);
-                let verifyRes = await verifyCode(this.phone,this.verify,weixin.openid);
+                let weixin = JSON.parse(getStore('user'));
+                console.log("verifyCode Get Openid:"+user.openid);
+                
+                let verifyRes = await verifyCode(this.phone,this.verify, weixin.openid);
                 if(verifyRes.status == -1){
                     this.errorMsg = "验证码输入错误，请重新输入";
                     this.verify = "";
