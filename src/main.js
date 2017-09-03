@@ -40,11 +40,11 @@ const router = new VueRouter({
 	}
 })
 
-
+alert("href:"+location.href);
 getJsConfig(location.href).then(function(data){
     // console.log(data);
     weixin.config(data);
-    
+
     // weixin.ready(function () {
         
     //     weixin.onMenuShareTimeline({
