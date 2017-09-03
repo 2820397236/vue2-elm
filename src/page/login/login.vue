@@ -148,7 +148,6 @@
 
                 this.codeRes = await mobileCode(this.phoneNumber);
                 this.lock = true;
-                this.$router.push({path:'/code',query:{phone:this.phoneNumber}});
 
                 if(this.codeRes.status == -1){
                     this.showError=true;
@@ -173,6 +172,8 @@
                     this.errorMsg = '服务器未响应，邀请码发送失败';
                     return;
                 }
+                
+                this.$router.push({path:'/code',query:{phone:this.phoneNumber}});
 
                 
                 
