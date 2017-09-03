@@ -11,7 +11,7 @@
             输入验证码
             </section>
             <section class="subtitle_container">
-               已向手机号码：13788997536 发送验证码
+               已向手机号码：{{phone}} 发送验证码
             </section>
         </form>
         <form class="loginForm" v-if="loginWay">
@@ -26,7 +26,7 @@
         </form>
         <form class="loginForm" v-else>
             <section class="input_container">
-                <input type="text" placeholder="手机" v-model.lazy="userAccount">
+                <input type="text" placeholder="输入验证码" v-model.lazy="verify">
             </section>
             <!-- <section class="input_container">
                 <input v-if="!showPassword" type="password" placeholder="密码"  v-model="passWord">
@@ -49,12 +49,10 @@
             </section> -->
         </form>
         <p class="login_tips">
-            <!-- 温馨提示：未注册过的账号，登录时将自动注册 -->
+            <span>&nbsp;</span>
+            <span v-if="errorMsg != ''">{{errorMsg}}</span>
         </p>
-        <p class="login_tips">
-            <!-- 注册过的用户可凭账号密码登录 -->
-        </p>
-        <div class="login_container" @click="mobileLogin">登录</div>
+        <div class="login_container" @click="mobileLogin">确认</div>
         <!-- <router-link to="/forget" class="to_forget" v-if="!loginWay">重置密码？</router-link> -->
         <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
     </div>
@@ -66,11 +64,14 @@
     import {localapi, proapi, imgBaseUrl} from 'src/config/env'
     import {mapState, mapMutations} from 'vuex'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
-    import {mobileCode, checkExsis, sendLogin, getcaptchas, accountLogin,accountRegister} from '../../service/getData'
+    import {verifyCode,mobileCode, checkExsis, sendLogin, getcaptchas, accountLogin,accountRegister} from '../../service/getData'
 
     export default {
         data(){
             return {
+                errorMsg:'',
+                phone:'',
+                verify:'',
                 loginWay: false, //登录方式，默认短信登录
                 showPassword: false, // 是否显示密码
                 phoneNumber: null, //电话号码
@@ -88,6 +89,7 @@
         },
         created(){
             // this.getCaptchaCode();
+            this.initData();
         },
         components: {
             headTop,
@@ -111,6 +113,11 @@
             changePassWordType(){
                 this.showPassword = !this.showPassword;
             },
+            async initData(){
+                this.phone = this.$route.query.phone;
+                console.log(this.$route.query.phone);
+
+            },
             //获取验证吗，线上环境使用固定的图片，生产环境使用真实的验证码
             async getCaptchaCode(){
                 let res = await getcaptchas();
@@ -118,46 +125,31 @@
             },
             //获取短信验证码
             async getVerifyCode(){
-                if (this.rightPhoneNumber) {
-                    this.computedTime = 30;
-                    this.timer = setInterval(() => {
-                        this.computedTime --;
-                        if (this.computedTime == 0) {
-                            clearInterval(this.timer)
-                        }
-                    }, 1000)
-                    //判读用户是否存在
-                    let exsis = await checkExsis(this.phoneNumber, 'mobile');
-                    if (exsis.message) {
-                        this.showAlert = true;
-                        this.alertText = exsis.message;
-                        return
-                    }else if(!exsis.is_exists) {
-                        this.showAlert = true;
-                        this.alertText = '您输入的手机号尚未绑定';
-                        return
-                    }
-                    //发送短信验证码
-                    let res = await mobileCode(this.phoneNumber);
-                    if (res.message) {
-                        this.showAlert = true;
-                        this.alertText = res.message;
-                        return
-                    }
-                    this.validate_token = res.validate_token;
-                }
+                
             },
             //发送登录信息
             async mobileLogin(){
-               
-                //用户名登录
-                this.userResponse = await accountLogin(this.userAccount,'1234');
+                console.log(this.verify);
 
-                if(this.userResponse.status == 0){
-                    setStore('user',this.userResponse.user);
+                let verifyRes = await verifyCode(this.phone,this.verify);
+                if(verifyRes.status == -1){
+                    this.errorMsg = "验证码输入错误，请重新输入";
+                    this.verify = "";
+
+                }else if(verifyRes.status == 0){
+
+                    setStore('user',verifyRes.user);
                     this.$router.push({path:'/shop'});
-                    return;
                 }
+
+                //用户名登录
+                // this.userResponse = await accountLogin(this.phone, this.verify);
+
+                // if(this.userResponse.status == 0){
+                //     setStore('user',this.userResponse.user);
+                //     this.$router.push({path:'/shop'});
+                //     return;
+                // }
 
                 // this.userResponse = await accountRegister(this.userAccount,'1234');
                 // if(this.userResponse.status == 0){
@@ -260,9 +252,12 @@
         }
     }
     .login_tips{
-        @include sc(.5rem, red);
         padding: .4rem .6rem;
         line-height: .5rem;
+        text-align: center;
+        span{ 
+            @include sc(.5rem, red);
+        }
         a{
             color: #3b95e9;
         }

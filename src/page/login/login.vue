@@ -101,18 +101,22 @@
             ]),
 
             async initData(){
-                console.log(this.$route.query.code);
+
+                // if(!this.$route.query.code){
+                //     window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
+                //     return;
+                // }
+
                 let json = await getOpenId(this.$route.query.code);
-                console.log(json);
+                setStore('wx',json);
+                alert("welcome "+json.nickname);
             },
 
             //发送登录信息
             async mobileLogin(){
                 
                 this.codeRes = await mobileCode(this.phoneNumber);
-                if(this.userResponse.status == 0){
-
-                }
+                
 
                 //用户名登录
                 // this.userResponse = await accountLogin(this.userAccount,'1234');
@@ -140,12 +144,33 @@
 
                 this.codeRes = await mobileCode(this.phoneNumber);
                 if(this.codeRes.status == -1){
+                    return;
+                }
+                if(this.userResponse.status == -1){
                     this.showError=true;
-                    this.errorMsg = '该手机号已被注册';
+                    this.errorMsg = '手机号不能为空';
                     return;
                 }
 
-                this.$router.push({path:'/code'});
+                if(this.userResponse.status == -2){
+                    this.showError=true;
+                    this.errorMsg = '用户已存在';
+                    return;
+                }
+
+                if(this.userResponse.status == -3){
+                    this.showError=true;
+                    this.errorMsg = '邀请码已发送，请等3分钟再尝试';
+                    return;
+                }
+
+                if(this.userResponse.status == -4){
+                    this.showError=true;
+                    this.errorMsg = '服务器未响应，邀请码发送失败';
+                    return;
+                }
+
+                this.$router.push({path:'/code',query:{phone:this.phoneNumber}});
                 
             },
             closeTip(){

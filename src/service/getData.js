@@ -268,8 +268,13 @@ export const searchplace = (cityName, keywords, pageNo=0, pageSize=10) => fetch(
 	pageSize:pageSize
 });
 
-export const mobileCode = phone => fetch('/v1/user/verifyCode', {
+export const mobileCode = phone => fetch('/v1/user/sendCode', {
 	phone: phone
+}, 'POST');
+
+export const verifyCode = (phone,code) => fetch('/v1/user/verifyCode', {
+	phone: phone,
+	code:code
 }, 'POST');
 
 export const getJsConfig = currentUrl => fetch('/wx/getJsConfig', {
