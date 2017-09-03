@@ -117,6 +117,12 @@
                     return;
                 }else{
                     let json = await getOpenId(this.$route.query.code);
+                    
+                    if(!json.nickname){
+                        window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
+                        return;
+                    }
+
                     setStore('wx',json);
                     alert("welcome "+json.nickname);
                 }
