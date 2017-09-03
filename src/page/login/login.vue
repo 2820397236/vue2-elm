@@ -103,14 +103,20 @@
             ]),
 
             async initData(){
-                let weixin = JSON.parse(getStore('wx'));
-                if(weixin && weixin.name){
-                    this.$router.push({path:'/shop'});
-                }
-                
-                if(!this.$route.query.code || !weixin){
+
+                if(!this.$route.query.code){
                     window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
                     return;
+                }
+
+                let weixin = JSON.parse(getStore('wx'));
+                let user = JSON.parse(getStore('user'));
+
+                alert(weixin);
+                alert(user);
+                
+                if(weixin && user){
+                    this.$router.push({path:'/shop'});
                 }
 
                 let json = await getOpenId(this.$route.query.code);
