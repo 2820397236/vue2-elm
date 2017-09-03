@@ -103,7 +103,8 @@
             ]),
 
             async initData(){
-
+                localStorage.clear();
+                
                 if(getStore('user')){
 
                     let user = JSON.parse(getStore('user'));
@@ -129,7 +130,7 @@
                         setStore('user',json);
                     }
                 }
-                
+
             },
 
             //发送登录信息

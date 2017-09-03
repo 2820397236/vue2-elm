@@ -41,7 +41,6 @@ const router = new VueRouter({
 	}
 })
 
-localStorage.clear();
 
 getJsConfig(location.href).then(function(data){
 
