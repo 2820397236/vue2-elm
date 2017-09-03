@@ -103,7 +103,11 @@
             ]),
 
             async initData(){
-                let weixin = getStore('wx');
+                let weixin = JSON.parse(getStore('wx'));
+                if(weixin && weixin.name){
+                    this.$router.push({path:'/shop'});
+                }
+                
                 if(!this.$route.query.code || !weixin){
                     window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
                     return;
