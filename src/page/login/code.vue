@@ -137,6 +137,8 @@
                 }
 
                 let weixin = JSON.parse(getStore('user'));
+
+                //weixin api return openid, but our system returns openId
                 console.log("verifyCode Get Openid:"+user.openId);
 
                 let verifyRes = await verifyCode(this.phone,this.verify, weixin.openId);
