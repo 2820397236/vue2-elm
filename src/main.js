@@ -45,6 +45,10 @@ getJsConfig(location.href).then(function(data){
     // console.log(data);
     weixin.config(data);
 
+    new Vue({
+        router,
+        store,
+    }).$mount('#app')
     // weixin.ready(function () {
         
     //     weixin.onMenuShareTimeline({
@@ -65,8 +69,5 @@ getJsConfig(location.href).then(function(data){
 
 
 
-new Vue({
-	router,
-	store,
-}).$mount('#app')
+
 
