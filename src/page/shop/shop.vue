@@ -248,7 +248,7 @@
                     this.gotoAddress('/login');
                 }
                 this.user = JSON.parse(getStore('user'));
-                
+
                 //获取我的门店
                 let response = await getMyStore(this.user.id);
                 if(response.status == 0){
@@ -876,7 +876,7 @@
     .emptyShop{
         @include bis('../../images/empty.png');
         background-color:#fff;
-        background-size: 100% auto;
+        background-size: auto 100%;
         display: flex;
         align-items: flex-end;
         justify-content: center;
