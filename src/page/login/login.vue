@@ -112,8 +112,8 @@
                 let weixin = JSON.parse(getStore('wx'));
                 let user = JSON.parse(getStore('user'));
 
-                alert("openid:"+weixin.openid);
-                alert("openid:"+user.realName);
+                alert("2 openid:"+weixin.openid);
+                alert("2 openid:"+user.realName);
 
                 if(weixin && user){
                     this.$router.push({path:'/shop'});

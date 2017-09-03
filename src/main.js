@@ -9,6 +9,7 @@ import Vue2Filters from 'vue2-filters'
 import moment from 'moment/moment.js'
 import weixin from 'weixin-js-sdk'
 import {getJsConfig} from './service/getData'
+import {getStore, setStore, removeStore} from 'src/config/mUtils'
 
 if ('addEventListener' in document) {
     document.addEventListener('DOMContentLoaded', function() {
@@ -40,11 +41,20 @@ const router = new VueRouter({
 	}
 })
 
-alert("href:"+location.href);
+let weixin = JSON.parse(getStore('wx'));
+
+alert("1 openid:"+weixin.openid);
+
+
 getJsConfig(location.href).then(function(data){
 
     weixin.config(data);
-    
+
+    new Vue({
+        router,
+        store,
+    }).$mount('#app')
+
     // weixin.ready(function () {
         
     //     weixin.onMenuShareTimeline({
@@ -62,10 +72,7 @@ getJsConfig(location.href).then(function(data){
     // });
 })
 
-new Vue({
-        router,
-        store,
-    }).$mount('#app')
+
 
 
 
