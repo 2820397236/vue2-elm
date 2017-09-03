@@ -121,6 +121,7 @@
                 }else{
 
                     let json = await getOpenId(this.$route.query.code);
+                    setStore('user',json);
                     console.log(json)
                     
                     if(!json.openid){
@@ -128,8 +129,13 @@
                         return;
                     }else{
 
-                        let user = await getUserByOpenId(json.openid);
-                        setStore('user',user);
+                        let userRes = await getUserByOpenId(json.openid);
+                        setStore('user',userRes.user);
+
+                        if(user.username !=""){
+                            this.$router.push({path:'/shop'});
+                            return;
+                        }
                     }
                 }
 
