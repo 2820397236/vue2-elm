@@ -155,8 +155,9 @@
                     return;
                 }
 
-                this.codeRes = await mobileCode(this.phoneNumber);
                 this.lock = true;
+                this.codeRes = await mobileCode(this.phoneNumber);
+                this.lock = false;
 
                 if(this.codeRes.status == -1){
                     this.showError=true;
