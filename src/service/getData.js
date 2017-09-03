@@ -272,7 +272,11 @@ export const mobileCode = phone => fetch('/v1/user/verifyCode', {
 	phone: phone
 }, 'POST');
 
+export const getJsConfig = currentUrl => fetch('/wx/getJsConfig', {
+	currentUrl
+}, 'POST');
 
+export const getOpenId = code => fetch('/wx/getOpenId/'+code);
 
 /**
  * 获取快速备注列表

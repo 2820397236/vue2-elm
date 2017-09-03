@@ -58,7 +58,8 @@
     import {localapi, proapi, imgBaseUrl} from 'src/config/env'
     import {mapState, mapMutations} from 'vuex'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
-    import {mobileCode, accountLogin} from '../../service/getData'
+    import {mobileCode, accountLogin,getOpenId } from '../../service/getData'
+    import weixin from 'weixin-js-sdk'
 
     export default {
         data(){
@@ -81,6 +82,9 @@
         created(){
             // this.getCaptchaCode();
         },
+        mounted(){
+            this.initData();
+        },
         components: {
             headTop,
             alertTip,
@@ -95,6 +99,12 @@
             ...mapMutations([
                 'RECORD_USERINFO',
             ]),
+
+            async initData(){
+                console.log(this.$route.query.code);
+                let json = await getOpenId(this.$route.query.code);
+                console.log(json);
+            },
 
             //发送登录信息
             async mobileLogin(){

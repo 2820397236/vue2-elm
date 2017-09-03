@@ -64,10 +64,6 @@ export default [{
             component: login
         },
         {
-            path: '/MP_verify_mB11U3quk54n8eQD.txt',
-            component: login
-        },
-        {
             path: '?code=:code',
             component: login
         },
