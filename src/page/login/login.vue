@@ -59,7 +59,7 @@
     import {localapi, proapi, imgBaseUrl} from 'src/config/env'
     import {mapState, mapMutations} from 'vuex'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
-    import {mobileCode, accountLogin,getOpenId } from '../../service/getData'
+    import {mobileCode, accountLogin,getOpenId,getUserByOpenId} from '../../service/getData'
     import weixin from 'weixin-js-sdk'
 
     export default {
@@ -104,7 +104,7 @@
 
             async initData(){
                 localStorage.clear();
-                
+
                 if(getStore('user')){
 
                     let user = JSON.parse(getStore('user'));
@@ -121,13 +121,15 @@
                 }else{
 
                     let json = await getOpenId(this.$route.query.code);
-                    console.log(json.nickname)
+                    console.log(json)
                     
-                    if(!json.nickname){
+                    if(!json.openid){
                         window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
                         return;
                     }else{
-                        setStore('user',json);
+
+                        let user = await getUserByOpenId(json.openid);
+                        setStore('user',user);
                     }
                 }
 
