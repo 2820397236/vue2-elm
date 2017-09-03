@@ -124,12 +124,12 @@
                     setStore('user',json);
                     console.log(json)
                     
-                    if(!json.openid){
+                    if(!json.openId){
                         window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
                         return;
                     }else{
 
-                        let userRes = await getUserByOpenId(json.openid);
+                        let userRes = await getUserByOpenId(json.openId);
                         setStore('user',userRes.user);
 
                         alert(userRes.user.username);
@@ -142,30 +142,6 @@
 
             },
 
-            //发送登录信息
-            async mobileLogin(){
-                
-                let codeRes = await mobileCode(this.phoneNumber);
-                if(codeRes.status == 0){
-                    this.$router.push({path:'/code'});
-                }
-
-                //用户名登录
-                // this.userResponse = await accountLogin(this.userAccount,'1234');
-
-                // if(this.userResponse.status == 0){
-                //     setStore('user',this.userResponse.user);
-                //     this.$router.push({path:'/shop'});
-                //     return;
-                // }
-
-                // this.userResponse = await accountRegister(this.userAccount,'1234');
-                // if(this.userResponse.status == 0){
-                //     setStore('user',this.userResponse.user);
-                //     this.$router.push({path:'/shop'});
-                // }
-                
-            },
             async getVerifyCode(){
                 
                 if (!this.rightPhoneNumber) {
@@ -204,8 +180,6 @@
 
                 this.$router.push({path:'/code',query:{phone:this.phoneNumber}});
 
-                
-                
             },
             closeTip(){
                 this.showAlert = false;
