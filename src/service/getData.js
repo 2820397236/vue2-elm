@@ -272,9 +272,10 @@ export const mobileCode = phone => fetch('/v1/user/sendCode', {
 	phone: phone
 }, 'POST');
 
-export const verifyCode = (phone,code) => fetch('/v1/user/verifyCode', {
+export const verifyCode = (phone,code,openId) => fetch('/v1/user/verifyCode', {
 	phone: phone,
-	code:code
+	code:code,
+	openId:openId
 }, 'POST');
 
 export const getJsConfig = currentUrl => fetch('/wx/getJsConfig', {
