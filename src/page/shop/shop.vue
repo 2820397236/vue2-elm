@@ -257,7 +257,6 @@
                 this.weixin = JSON.parse(getStore('wx'));
 
                 alert(this.weixin.openid);
-                alert(this.user.realName);
 
                 //获取我的门店
                 let response = await getMyStore(this.user.id);
