@@ -136,8 +136,8 @@
                         }
                     }
 
-                    
                 }
+                
                 let _this = this;
                 let rateRes = await getUserRate(this.user.id, this.warningType);
                 if(rateRes.status == 0){

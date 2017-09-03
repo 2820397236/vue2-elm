@@ -148,32 +148,33 @@
 
                 this.codeRes = await mobileCode(this.phoneNumber);
                 this.lock = true;
+                this.$router.push({path:'/code',query:{phone:this.phoneNumber}});
 
-                if(this.userResponse.status == -1){
+                if(this.codeRes.status == -1){
                     this.showError=true;
                     this.errorMsg = '手机号不能为空';
                     return;
                 }
 
-                if(this.userResponse.status == -2){
+                if(this.codeRes.status == -2){
                     this.showError=true;
                     this.errorMsg = '用户已存在';
                     return;
                 }
 
-                if(this.userResponse.status == -3){
+                if(this.codeRes.status == -3){
                     this.showError=true;
                     this.errorMsg = '邀请码已发送，请等3分钟再尝试';
                     return;
                 }
 
-                if(this.userResponse.status == -4){
+                if(this.codeRes.status == -4){
                     this.showError=true;
                     this.errorMsg = '服务器未响应，邀请码发送失败';
                     return;
                 }
 
-                this.$router.push({path:'/code',query:{phone:this.phoneNumber}});
+                
                 
             },
             closeTip(){
