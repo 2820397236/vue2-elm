@@ -45,7 +45,8 @@
         <p class="login_tips">
             <!-- 注册过的用户可凭账号密码登录 -->
         </p>
-        <div class="login_container" @click="getVerifyCode" >获取验证码</div>
+        <div class="login_container" @click="getVerifyCode" v-if="!lock">获取验证码</div>
+        <div class="login_container"  v-if="lock">验证码已发送</div>
 
         <!-- <router-link to="/forget" class="to_forget" v-if="!loginWay">重置密码？</router-link> -->
         <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
@@ -147,7 +148,7 @@
 
                 this.codeRes = await mobileCode(this.phoneNumber);
                 this.lock = true;
-                
+
                 if(this.userResponse.status == -1){
                     this.showError=true;
                     this.errorMsg = '手机号不能为空';
