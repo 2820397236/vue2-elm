@@ -109,8 +109,8 @@
                     return;
                 }
 
-                let weixin = JSON.parse(getStore('wx'));
-                let user = JSON.parse(getStore('user'));
+                let weixin = getStore('wx');
+                let user = getStore('wx');
 
                 alert(weixin);
                 alert(user);
