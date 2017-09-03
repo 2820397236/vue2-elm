@@ -236,6 +236,12 @@ export const getStoreRate = (userId,storeId) => fetch('/v1/store/getRate', {
 
 export const getUser = () => fetch('/v1/user', {userId: JSON.parse(getStore('user')).id,token: JSON.parse(getStore('user')).token});
 
+export const getUserByOpenId = (openId) => fetch('/v1/getByOpenId', {
+	openId
+});
+
+
+
 export const getMyStore = userId => fetch('/v1/user/home', {
 	userId
 });
