@@ -103,11 +103,11 @@
             ]),
 
             async initData(){
-
-                // if(!this.$route.query.code){
-                //     window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
-                //     return;
-                // }
+                let weixin = getStore('wx');
+                if(!this.$route.query.code || !weixin){
+                    window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
+                    return;
+                }
 
                 let json = await getOpenId(this.$route.query.code);
                 setStore('wx',json);
@@ -172,7 +172,7 @@
                     this.errorMsg = '服务器未响应，邀请码发送失败';
                     return;
                 }
-                
+
                 this.$router.push({path:'/code',query:{phone:this.phoneNumber}});
 
                 
