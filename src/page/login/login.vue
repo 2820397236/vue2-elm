@@ -45,7 +45,7 @@
         <p class="login_tips">
             <!-- 注册过的用户可凭账号密码登录 -->
         </p>
-        <div class="login_container" @click="getVerifyCode">获取验证码</div>
+        <div class="login_container" @click="getVerifyCode" >获取验证码</div>
 
         <!-- <router-link to="/forget" class="to_forget" v-if="!loginWay">重置密码？</router-link> -->
         <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
@@ -64,6 +64,7 @@
     export default {
         data(){
             return {
+                lock:false,
                 loginWay: false, //登录方式，默认短信登录
                 showPassword: false, // 是否显示密码
                 phoneNumber: '', //电话号码
@@ -115,8 +116,10 @@
             //发送登录信息
             async mobileLogin(){
                 
-                this.codeRes = await mobileCode(this.phoneNumber);
-                
+                let codeRes = await mobileCode(this.phoneNumber);
+                if(codeRes.status == 0){
+                    this.$router.push({path:'/code'});
+                }
 
                 //用户名登录
                 // this.userResponse = await accountLogin(this.userAccount,'1234');
@@ -143,9 +146,8 @@
                 }
 
                 this.codeRes = await mobileCode(this.phoneNumber);
-                if(this.codeRes.status == -1){
-                    return;
-                }
+                this.lock = true;
+                
                 if(this.userResponse.status == -1){
                     this.showError=true;
                     this.errorMsg = '手机号不能为空';
