@@ -877,6 +877,7 @@
         @include bis('../../images/empty.png');
         background-color:#fff;
         background-size: auto 100%;
+        background-position: center 0;
         display: flex;
         align-items: flex-end;
         justify-content: center;
