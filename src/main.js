@@ -41,11 +41,6 @@ const router = new VueRouter({
 	}
 })
 
-let weixin = JSON.parse(getStore('wx'));
-
-alert("1 openid:"+weixin.openid);
-
-
 getJsConfig(location.href).then(function(data){
 
     weixin.config(data);
