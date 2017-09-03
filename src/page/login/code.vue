@@ -146,7 +146,7 @@
                 }else if(verifyRes.status == 0){
 
                     setStore('user',verifyRes.user);
-                    this.$router.push({path:'/shop'});
+                    this.$router.push({path:'/analytics'});
                 }
 
                 //用户名登录

@@ -324,32 +324,6 @@
                 this.showLoading = false;
             },
 
-            //商品、评论切换状态
-            changeShowType: function (value){
-                if (value === 'full') {
-                    this.$nextTick(() => {
-
-                    })
-                }
-                if (value === 'rating') {
-                    this.$nextTick(() => {
-                        this.ratingScroll = new BScroll('#ratingContainer', {
-                            probeType: 3,
-                            deceleration: 0.003,
-                            bounce: false,
-                            swipeTime: 2000,
-                            click: true,
-                        });
-                        this.ratingScroll.on('scroll', (pos) => {
-                            if (Math.abs(Math.round(pos.y)) >=  Math.abs(Math.round(this.ratingScroll.maxScrollY))) {
-                                this.loaderMoreRating();
-                                this.ratingScroll.refresh();
-                            }
-                        })
-                    })
-                }
-            },
-
         }
     }
 </script>
@@ -449,6 +423,7 @@
         right: 0;
         left: 0;
         height: 100%;
+        background:#eef3fa;
     }
     .goback{
         position: fixed;
@@ -738,7 +713,8 @@
                 height: 2.6rem;
                 @include sc(0.6rem, #333);
                 background-color: #fff;
-                margin:  0 0.025rem 0.025rem 0;
+                border: 0.025rem solid #eef3fa;
+                border-width: 0 0.025rem 0.025rem 0;
                 padding: .1rem .5rem;
                 .reply_item_count{
                     @include sc(1rem, #fe736f);

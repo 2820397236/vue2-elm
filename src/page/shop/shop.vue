@@ -11,10 +11,10 @@
                 <section class="description_header" :class="storeList.length == 0  && storeListOrigin.length == 0 ?'empty':''">
                     <div class="description_top">
                         <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
-                            <img :src="weixin.headimgurl">
+                            <img :src="user.profileImg">
                         </section>
                         <section class="description_right">
-                            <h4 class="description_title ellipsis">您好，<br/>{{weixin.nickname}}</h4>
+                            <h4 class="description_title ellipsis">您好，<br/>{{user.realName}}</h4>
                             <!-- <p class="description_text">商家配送／{{shopDetailData.order_lead_time}}分钟送达／配送费¥{{shopDetailData.float_delivery_fee}}</p>
                             <p class="description_promotion ellipsis">公告：{{promotionInfo}}</p> -->
                         </section>
@@ -248,16 +248,7 @@
                     this.gotoAddress('/login');
                 }
                 this.user = JSON.parse(getStore('user'));
-
-                if(getStore('wx') == undefined){
-                    this.$router.push({path:'/login'});
-                    return;
-                }
-
-                this.weixin = JSON.parse(getStore('wx'));
-
-                alert(this.weixin.openid);
-
+                
                 //获取我的门店
                 let response = await getMyStore(this.user.id);
                 if(response.status == 0){

@@ -129,6 +129,10 @@
                 this.date = this.$route.query.date;
                 console.log(this.date);
 
+                if(false == this.storeIds instanceof Array ){
+                    this.storeIds = [this.storeIds];
+                }
+
                 let res = await getRateByDate(this.storeIds,parseInt(this.date));
                 if(res.status == 0){
                     console.log(res.rates);
