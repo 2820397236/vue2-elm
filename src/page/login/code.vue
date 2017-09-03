@@ -138,7 +138,7 @@
 
                 let weixin = JSON.parse(getStore('user'));
                 console.log("verifyCode Get Openid:"+user.openid);
-                
+
                 let verifyRes = await verifyCode(this.phone,this.verify, weixin.openid);
                 if(verifyRes.status == -1){
                     this.errorMsg = "验证码输入错误，请重新输入";
@@ -147,7 +147,7 @@
                 }else if(verifyRes.status == 0){
 
                     setStore('user',verifyRes.user);
-                    this.$router.push({path:'/analytics'});
+                    this.$router.push({path:'/shop'});
                 }
 
                 //用户名登录
