@@ -9,7 +9,10 @@
                 <span class="title_text">{{storeName}}</span>
             </section>
             <section class="head_login" @click="clickRateType()">
-                {{rateType}}
+                <span>{{rateType}}</span>
+                <svg class="icon_style">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#filter"></use>
+                        </svg>
             </section>
         </header>
         <section class="shop_container main_container">
@@ -205,17 +208,30 @@
     }
     .head_login{
         right: 0.55rem;
-        @include sc(0.5rem, #fff);
         @include ct;
         background:#ff9501;
-        padding:.2rem .8rem .2rem .4rem ;
         border-radius: .2rem;
+        line-height: .6rem;
+        padding:.2rem .2rem .2rem .3rem;
         .login_span{
             color: #666;
         }
         .user_avatar{
             fill: #666;
             @include wh(.8rem, .8rem);
+        }
+        span{
+            @include sc(0.5rem, #fff);
+            line-height: 0.5rem;
+            vertical-align:middle;
+        }
+        .icon_style{
+            @include wh(.6rem, .6rem);
+            vertical-align:middle;
+            use{
+                @include wh(.6rem, .6rem);
+                fill:#fff;
+            }
         }
     }
     .title_head{
