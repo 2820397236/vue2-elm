@@ -103,7 +103,7 @@
             ]),
 
             async initData(){
-                localStorage.clear();
+                // localStorage.clear();
 
                 if(getStore('user')){
 
