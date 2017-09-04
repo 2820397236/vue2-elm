@@ -43,7 +43,7 @@ const router = new VueRouter({
 
 
 getJsConfig(location.href).then(function(data){
-
+    data.debug = false;
     weixin.config(data);
 
     new Vue({
