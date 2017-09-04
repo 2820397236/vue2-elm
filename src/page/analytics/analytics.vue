@@ -1,45 +1,85 @@
  <template>
     <div>
         <header id='head_top'>
-            
             <section class="title_head ellipsis">
                 <span class="title_text" >{{date | dateTime('YYYY年MM月DD日') }}</span>
             </section>
-            <section class="head_login">
-                搜索
+            <section class="head_login" @click="eventSearch()">
+                <svg class="icon_style">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#search"></use>
+                    </svg>
             </section>
         </header>
         <section v-if="!showLoading" class="shop_container main_container">
             
-
-            <section class="chart_container" v-show="changeShowType =='full'">
+            <section class="chart_container">
                 <IEcharts :option="bar" :height="100" theme="customer" @ready="onReady" @click="onClick"></IEcharts>
             </section>
             <section class="detail_container">
-                <input type="button" name="button" class="search_submit" value="查看详情"  @click="gotoAddress({path:'/rateByShop',query:{ids:storeIds,date:dateFormat}})">
+                <div class="search_submit"  v-if="storeIds.length > 1"  @click="gotoAddress({path:'/rateByShop',query:{ids:storeIds,date:dateFormat}})">
+                    <svg class="icon_style">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#more"></use>
+                    </svg>
+                    <span>查看详情</span>
+                </div>
+
+                <div class="search_submit" v-else  @click="gotoAddress({'path': 'rate', 'query':{storeId:storeIds[0]}})">
+                    <svg class="icon_style">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#more"></use>
+                    </svg>
+                    <span>查看详情</span>
+                </div>
             </section>
-           <!--  <section class="detail_container" v-show="changeShowType =='full'">
-                <input type="submit" name="button" class="search_submit" value="查看门店详细信息" @click="onClick">
-            </section> -->
-            <section class="reply_container" v-show="changeShowType =='full'">
+
+            <section class="reply_container">
                <div class="reply_item">
-                   <div class="reply_item_border">负面评论
+                   <div class="reply_item_border">
+                        <span>负面评论</span>
                         <div class="reply_item_count">{{rateCount.countLow}}条</div>
                    </div>
                 </div>
                <div class="reply_item">
-                   <div class="reply_item_border">正面评论
+                   <div class="reply_item_border">
+                        <span>正面评论</span>
                         <div class="reply_item_count green">{{rateCount.countHigh}}条</div>
                     </div>
-                   <div class="reply_item_border">中性评论
-                        <div class="reply_item_count green">{{rateCount.countMid}}条</div>
+                   <div class="reply_item_border">
+                        <span>中性评论</span>
+                        <div class="reply_item_count yellow">{{rateCount.countMid}}条</div>
                     </div>
                </div>
             </section>
         </section>
             
-        <foot-guide></foot-guide>
+       <foot-guide></foot-guide>
+
        <loading v-show="showLoading"></loading>
+
+       <section class="shop_container main_container bg-gray" v-if="showSearch" >
+            
+            <div class="head_top">
+                <section class="title_search ellipsis">
+                    <input type="text" class="search_container" value="" placeholder="请输入搜索门店" 
+                    v-model='inputValue' @input='searchLocal(inputValue)'/>
+                </section>
+                <section class="title_right" @click="eventSearch()">
+                    <span>取消</span>
+                </section>
+            </div>
+
+            <ul class="search_list">
+                <li>
+                    <span class="store_name" @click="selectSearchResult(storeListOrigin)">
+                        全部 ({{storeListOrigin.length}}家门店)
+                    </span>
+                </li>
+                <li  v-for="(store,index) in storeList" :key="index" @click="selectSearchResult([store])">
+                    <span class="store_name">{{store.name}} {{store.branchName}}</span>
+                    <span class="store_address">{{store.address}}</span>
+                </li>
+            </ul>
+        </section>
+
        <!-- <section class="animation_opactiy shop_back_svg_container" v-if="showLoading">
            <img src="../../images/shop_back_svg.svg">
        </section> -->
@@ -54,14 +94,13 @@
     import {getMyStore,getRateAnalytics,getStoreRate} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import loading from 'src/components/common/loading'
-
     import {loadMore, getImgPath} from 'src/components/common/mixin'
     import {imgBaseUrl} from 'src/config/env'
     import BScroll from 'better-scroll'
     import footGuide from '../../components/footer/footGuide'
     import IEcharts from 'vue-echarts-v3/src/full.vue'
+    import debounce from 'debounce'
     import 'echarts/lib/component/graphic'
-
     import theme from './theme.json'
     IEcharts.registerTheme('customer', theme)
 
@@ -70,9 +109,11 @@
         data(){
             return{
                 showLoading: true, //显示加载动画
-                changeShowType: 'full',//切换显示商品或者评价
+                showSearch:false,
+                storeListOrigin:[],
                 storeList: [],
                 storeIds: [],
+                inputValue:'',
                 chart:null,
                 date:new Date(),
                 dateFormat:'',
@@ -237,10 +278,26 @@
                 }
                 
                 this.user =  JSON.parse(getStore('user'));
+
                 let response = await getMyStore(this.user.id);
                 if(response.status == 0){
                     this.storeList = response.stores;
+                    this.storeListOrigin = response.stores;
                 }
+                
+                this.chartInit(response.stores);
+
+                //隐藏加载动画
+                this.hideLoading();
+            },
+
+            chartInit(list){
+                console.log('chart init:');
+                console.log(list);
+
+                this.storeIds = [];
+                this.storeList = list;
+
 
                 this.storeList.map(item=>{
                     this.storeIds.push(item.id);
@@ -286,20 +343,43 @@
                             console.log(_this.dateFormat);
                         }
 
-                        _this.bar.title.text = _this.storeList[0].name +'等 ('+ _this.storeList.length +'家)门店';
+                        if(_this.storeList.length > 1 ){
+                            _this.bar.title.text = _this.storeList[0].name +'等 ('+ _this.storeList.length +'家)门店';
+                        }else{
+                             _this.bar.title.text = _this.storeList[0].name + ' '+ _this.storeList[0].branchName ;
+                        }
                         // _this.chart.option = _this.bar;
                         // _this.chart.dispatchAction({type: 'showTip', seriesIndex: '10', dataIndex: '10'})
                     }
-                    
-                    
                 })
-                
-                
 
-                //隐藏加载动画
-                this.hideLoading();
+            },
+            searchLocal :debounce(function (keyword) {
+              
+                if (keyword && keyword != " ") {
+
+                    this.storeList = this.storeListOrigin.filter(store=>{
+                        return store.name.indexOf(keyword) > -1;
+                    });
+
+                }else if(keyword == "") {
+                    this.storeList = this.storeListOrigin;
+                }
+
+            }, 200),
+
+            selectSearchResult(data){
+                
+                console.log('selectSearchResult:');
+                console.log(data);
+
+                this.chartInit(data);
+                this.showSearch = false;
+
             },
             gotoAddress(path){
+                console.log(path);
+
                 this.$router.push(path);
             },
             doRandom() {
@@ -316,9 +396,12 @@
                 console.log(arguments);
 
             },
-
-
-
+            eventSearch(){
+                this.showSearch = !this.showSearch;
+                if(this.showSearch){
+                    this.storeList = this.storeListOrigin;
+                }
+            },
             //隐藏动画
             hideLoading(){
                 this.showLoading = false;
@@ -379,6 +462,11 @@
         @include sc(0.6rem, #999);
         @include ct;
         border-radius: .2rem;
+        .icon_style{
+            width:0.8rem;
+            height:0.8rem;
+            padding-top:.2rem;
+        }
         .login_span{
             color: #666;
         }
@@ -406,6 +494,36 @@
         }
     }
 
+    .head_top{
+        background-color: #fff;
+        position: absolute;    
+        left: 0;
+        top: 0;
+        @include wh(100%, 1.95rem);
+        display: flex;
+        flex-direction: row;
+        align-content: middle;
+        align-items: center;
+        align-content:center;
+    }
+    .title_search{
+        flex:1;
+        margin: 0rem .2rem 0 .3rem;
+        input{
+            background-color: #eee;
+            padding:.4rem .6rem;
+            width: 100%;
+            border-radius: .2rem;
+        }
+    }
+    .title_right{
+        width:2rem;
+        height:1.6rem;
+        line-height: 1.6rem;
+        @include sc(0.6rem, #666);
+        text-align: center;
+    }
+
     .shop_back_svg_container{
         position: fixed;
         @include wh(100%, 100%);
@@ -424,6 +542,98 @@
         left: 0;
         height: 100%;
         background:#eef3fa;
+        &.bg-gray{
+            background-color: rgba(0,0,0,0.5);
+            position: fixed;
+            top:0;
+            right: 0;
+            left: 0;
+            bottom:0;
+            height: 100%;
+            z-index: 101;
+        }
+        .search_list{
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            border-radius: .7rem;
+            border-top-left-radius:0;
+            border-top-right-radius:0;
+            padding-bottom: .4rem;
+            max-height:12rem;
+            overflow: scroll;
+            li{
+                flex:1;
+                text-align: left;
+                padding-left:.4rem;
+                padding: .2rem 0.4rem;
+                border-bottom: 0.02rem solid #ddd;
+                @include sc(0.5rem, #666);
+
+                span{
+                    display:block;
+                    vertical-align:middle;
+                    margin-left: .4rem;
+                    line-height: 1rem;
+                    color:#aaa;
+                }
+                .store_name{
+                    @include sc(0.6rem, #666);
+
+                }
+                /*&::before{
+                    text-align: center;
+                    vertical-align:middle;
+                    display:inline-block;
+                    border-radius: 1.2rem;
+                    @include wh(1.2rem, 1.2rem);
+                    line-height: 1.2rem;
+                    content:' ';
+                    background-color:#e5e5e5;
+                    color:#fff;
+                    margin-right:.2rem;
+                }
+                &.green{
+                    &::before{
+                        content:'高';
+                    }
+                    &.active{
+                        &::before{
+                            background-color: #ff6d41;
+                        }
+                        span{
+                            color: #ff6d41;
+                        }
+                    }
+                }
+                &.yellow{
+                    &::before{
+                        content:'中';
+                    }
+                    &.active{
+                        &::before{
+                            background-color: #ffd819;
+                        }
+                        span{
+                            color: #ffd819;
+                        }
+                    }
+                }
+                &.red{
+                    &::before{
+                        content:'低';
+                    }
+                    &.active{
+                        &::before{
+                            background-color: #66d8b4;
+                        }
+                        span{
+                            color: #66d8b4;
+                        }
+                    }
+                }*/
+            }
+        }
     }
     .goback{
         position: fixed;
@@ -437,17 +647,35 @@
     }
     .search_submit{
         width:90%;
-        height:1.4rem;
-        margin-top:.4rem;
-        margin-bottom:.4rem;
+        padding: 0 0.25rem;
+        margin: .6rem 0;
         border: 0.025rem solid #ffd101;
         border-width: 0 0 0.025rem 0;
-        margin-left: .2rem;
-        @include sc(0.65rem, #292929);
         border-radius: 0.125rem;
         background-color: #ffd101;
+        @include sc(0.65rem, #292929);
         font-weight: normal;
-        padding: 0 0.25rem;
+        text-align: center;
+        line-height: 1.6rem;
+
+        span{
+            color:#111;
+            display: inline-block;
+            vertical-align:middle;
+            font-size:0.6rem;
+        }
+        .icon_style{
+            width: .8rem;
+            height:.8rem;
+            font-size:0.8rem;
+            display: inline-block;
+            vertical-align:middle;
+            margin-right:.2rem;
+            fill:#111;
+            use{
+                fill:#111;
+            }
+        }
     }
     .chart_container{
         background-color: #fff;
@@ -716,11 +944,18 @@
                 border: 0.025rem solid #eef3fa;
                 border-width: 0 0.025rem 0.025rem 0;
                 padding: .1rem .5rem;
+                span{
+                    line-height: 1.2rem;
+                }
                 .reply_item_count{
                     @include sc(1rem, #fe736f);
                     text-align: right;
+                    line-height: 1rem;
                     &.green{
-                        color:#caeba0;
+                        color:#4fd2a8;
+                    }
+                    &.yellow{
+                        color:#fed137;
                     }
                 }
             }

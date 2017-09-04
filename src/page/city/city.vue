@@ -26,7 +26,7 @@
                 <div class="pois_detail">
                     <h4 class="store_name ellipsis">
                         <span>{{item.name}} {{item.branchName}}</span>
-                        <span class="store_status green" v-if="item.status==0">开业</span>
+                        <span class="store_status green" v-if="item.status==0">营业</span>
                         <span class="store_status red" v-if="item.status!=0">停业</span>
                     </h4>
                     <p class="pois_address ellipsis">
@@ -313,7 +313,7 @@
                    .store_status{
                         background-color: #fc3c3f;
                         @include sc(.4rem, #fff);
-                        padding: 0rem .1rem .1rem .1rem;
+                        padding: .1rem .2rem;
                         &.green{
                             background-color: #5ddb44;
                         }

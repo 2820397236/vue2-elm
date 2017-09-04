@@ -459,8 +459,6 @@
                             @include sc(.6rem, #666);
                             line-height: .8rem;
                             padding:0 1rem 0 0rem;
-                            max-height: 3.1rem;
-                            overflow: hidden;
                         }
                         
                     }

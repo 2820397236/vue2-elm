@@ -20,7 +20,6 @@ if ('addEventListener' in document) {
 Vue.use(Vue2Filters)
 Vue.use(VueRouter)
 Vue.use(weixin)
-
 Vue.filter('dateTime', function (value,format) {
     return moment(value).format(format || 'YYYY-MM-DD HH:mm');
 });
@@ -43,6 +42,7 @@ const router = new VueRouter({
 
 
 getJsConfig(location.href).then(function(data){
+    
     data.debug = false;
     weixin.config(data);
 
@@ -51,8 +51,7 @@ getJsConfig(location.href).then(function(data){
         store,
     }).$mount('#app')
 
-    // weixin.ready(function () {
-        
+    // weixin.ready(function () {       
     //     weixin.onMenuShareTimeline({
     //         title: '蜜蜂舆情', // 分享标题
     //         link: 'http://c.icoos.cn', // 分享链接
@@ -67,10 +66,3 @@ getJsConfig(location.href).then(function(data){
     //     });
     // });
 })
-
-
-
-
-
-
-

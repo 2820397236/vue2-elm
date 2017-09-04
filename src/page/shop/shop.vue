@@ -18,15 +18,15 @@
                             <!-- <p class="description_text">商家配送／{{shopDetailData.order_lead_time}}分钟送达／配送费¥{{shopDetailData.float_delivery_fee}}</p>
                             <p class="description_promotion ellipsis">公告：{{promotionInfo}}</p> -->
                         </section>
-                        <section >
+                        <section class="description_more">
                             <router-link class="shop_detail_vip" :to="{path:'/city/1'}" tag="span" >
-                                订阅更多                            
+                                <svg class="icon_style">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#add"></use>
+                                </svg>
+                                <span>订阅更多</span>                            
                             </router-link>
                         </section>
 
-                        <!-- <svg width="14" height="14" xmlns="http://www.w3.org/2000/svg" version="1.1" class="description_arrow" >
-                            <path d="M0 0 L8 7 L0 14"  stroke="#fff" stroke-width="1" fill="none"/>
-                        </svg> -->
                     </div>
                     <!-- <footer class="description_footer" v-if="shopDetailData.activities.length" @click="showActivitiesFun">
                         <p class="ellipsis">
@@ -66,7 +66,7 @@
                                                     <span class="store_name ellipsis">
                                                     <span>{{store.name}}</span>
                                                     <span v-if="store.branchName">({{store.branchName}})</span> 
-                                                    <span class="store_status green" v-if="store.status==0">开业</span>
+                                                    <span class="store_status green" v-if="store.status==0">营业</span>
                                                     <span class="store_status red" v-if="store.status!=0">停业</span>
                                                 </span>
                                                 </h3>
@@ -88,16 +88,9 @@
                     </section>
                 </section>
             </transition>
-            <transition name="fade-choose">
-                <section class="rating_container" id="ratingContainer" v-show="changeShowType =='rating'">
-                    <section v-load-more="loaderMoreRating" type="2">
-                        
-                    </section>
-                </section>
-            </transition>
         </section>
 
-        <foot-guide v-if="storeList.length > 0"></foot-guide>
+        <foot-guide></foot-guide>
 
        <loading v-show="showLoading || loadRatings"></loading>
        <!-- <section class="animation_opactiy shop_back_svg_container" v-if="showLoading">
@@ -729,12 +722,12 @@
                     }
                 }
                 .description_right{
-                    flex: 1;
+                    flex: 2;
                     .description_title{
-                        @include sc(.7rem, #282828);
+                        @include sc(.6rem, #282828);
                         /*font-weight: bold;*/
                         width: 100%;
-                        margin-top:0.5rem;
+                        margin-top:0.6rem;
                         /*margin-bottom: 0.3rem;*/
                     }
                     .description_text{
@@ -746,6 +739,9 @@
                         width: 11.5rem;
                     }
                 }
+                .description_more{
+                    flex:1;
+                }
                 .description_arrow{
                     @include ct;
                     right: 0.3rem;
@@ -753,21 +749,37 @@
                 }
                 .shop_detail_vip{
                     display: inline-block;
-                    color:#fff;
                     font-size: 12px;
                     line-height: 12px;
-                    padding:10px;
-                    padding-left:24px;
+                    padding:.4rem ;
                     margin-top:20px;
+                    float:right;
 
                     background-color:#3d3d3d;
                     /*@include bis('../../images/vip.jpg');*/
-                    background-size: 34px auto;
-                    background-position: 68px center;
+                    /*background-size: 34px auto;
+                    background-position: 68px center;*/
 
                     border-radius: 6px;
                     border:1px solid rgba(0,0,0,0.5);
                     border-width:0 0 0.025rem 0;
+                    span{
+                        color:#fff;
+                        display: inline-block;
+                        vertical-align:middle;
+                        font-size:0.5rem;
+                    }
+                    .icon_style{
+                        width: .5rem;
+                        height:.5rem;
+                        font-size:0.5rem;
+                        color:#fff;
+                        display: inline-block;
+                        vertical-align:middle;
+                        use{
+                            fill:#fff;
+                        }
+                    }
                 }
             }
             .description_footer{
@@ -1036,7 +1048,7 @@
                             .store_status{
                                 background-color: #fc3c3f;
                                 @include sc(.4rem, #fff);
-                                padding: 0rem .1rem .1rem .1rem;
+                                padding: .1rem .2rem;
                                 &.green{
                                     background-color: #5ddb44;
                                 }
