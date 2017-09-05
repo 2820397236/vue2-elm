@@ -103,15 +103,14 @@
             ]),
 
             async initData(){
+                localStorage.clear();
 
                 if(getStore('user')){
 
                     let user = JSON.parse(getStore('user'));
-                    if(user.username == null || user.username == '' || user.username == undefined){
-                        
-                    }else{
-                        this.$router.push({path:'/shop'});
-                    }
+
+                    this.$router.push({path:'/shop'});
+                    return;
                 }
 
                 if(!this.$route.query.code){
