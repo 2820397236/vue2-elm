@@ -90,7 +90,7 @@
             </transition>
         </section>
 
-        <foot-guide></foot-guide>
+        <foot-guide v-if="storeList.length > 0"></foot-guide>
 
        <loading v-show="showLoading || loadRatings"></loading>
        <!-- <section class="animation_opactiy shop_back_svg_container" v-if="showLoading">
