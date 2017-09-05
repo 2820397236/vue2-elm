@@ -242,6 +242,11 @@
                 }
                 this.user = JSON.parse(getStore('user'));
 
+                // alert(user.username);
+                if(user.username==null || user.username == ''){
+                    this.gotoAddress('/login');
+                }
+
                 //获取我的门店
                 let response = await getMyStore(this.user.id);
                 if(response.status == 0){
