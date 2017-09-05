@@ -14,45 +14,19 @@
                已向手机号码：{{phone}} 发送验证码
             </section>
         </form>
-        <form class="loginForm" v-if="loginWay">
-            <section class="input_container phone_number">
-                <input type="text" placeholder="账号密码随便输入" name="phone" maxlength="11" v-model="phoneNumber">
-                <button @click.prevent="getVerifyCode" :class="{right_phone_number:rightPhoneNumber}" v-show="!computedTime">获取验证码</button>
-                <button  @click.prevent v-show="computedTime">已发送({{computedTime}}s)</button>
-            </section>
-            <section class="input_container">
-                <input type="text" placeholder="验证码" name="mobileCode" maxlength="6" v-model="mobileCode">
-            </section>
-        </form>
-        <form class="loginForm" v-else>
-            <section class="input_container">
-                <input type="text" placeholder="输入验证码" v-model.lazy="verify">
-            </section>
-            <!-- <section class="input_container">
-                <input v-if="!showPassword" type="password" placeholder="密码"  v-model="passWord">
-                <input v-else type="text" placeholder="密码"  v-model="passWord">
-                <div class="button_switch" :class="{change_to_text: showPassword}">
-                    <div class="circel_button" :class="{trans_to_right: showPassword}" @click="changePassWordType"></div>
-                    <span>abc</span>
-                    <span>...</span>
-                </div>
-            </section> -->
-            <!-- <section class="input_container captcha_code_container">
-                <input type="text" placeholder="验证码" maxlength="4" v-model="codeNumber">
-                <div class="img_change_img">
-                    <img v-show="captchaCodeImg" :src="captchaCodeImg">
-                    <div class="change_img" @click="getCaptchaCode">
-                        <p>看不清</p>
-                        <p>换一张</p>
-                    </div>
-                </div>
-            </section> -->
-        </form>
-        <p class="login_tips">
-            <span>&nbsp;</span>
-            <span v-if="errorMsg != ''">{{errorMsg}}</span>
+
+        <numKeyboard v-model="input" v-on:pasEnd="inputEnd"></numkeyboard>
+        
+
+        
+        <p class="login_tips"  v-if="errorMsg != ''">
+            <svg class="icon_style">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#codeWarning"></use>
+            </svg>
+                
+            <span>{{errorMsg}}</span>
         </p>
-        <div class="login_container" @click="mobileLogin">确认</div>
+        <!-- <div class="login_container" @click="mobileLogin">确认</div> -->
         <!-- <router-link to="/forget" class="to_forget" v-if="!loginWay">重置密码？</router-link> -->
         <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
     </div>
@@ -65,10 +39,14 @@
     import {mapState, mapMutations} from 'vuex'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import {verifyCode,mobileCode, checkExsis, sendLogin, getcaptchas, accountLogin,accountRegister} from '../../service/getData'
+    import numKeyboard from  '../../components/common/keyboard.vue'
+
 
     export default {
         data(){
             return {
+                weixin:{},
+                input: '',
                 errorMsg:'',
                 phone:'',
                 verify:'',
@@ -94,6 +72,7 @@
         components: {
             headTop,
             alertTip,
+            numKeyboard
         },
         computed: {
             //判断手机号码
@@ -114,8 +93,17 @@
                 this.showPassword = !this.showPassword;
             },
             async initData(){
+
                 this.phone = this.$route.query.phone;
-                console.log(this.$route.query.phone);
+                
+                if(getStore('user') == undefined){
+                     window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
+                    return;
+                }
+
+                this.weixin = JSON.parse(getStore('user'));
+                
+                console.log("verifyCode Get Openid:" + this.weixin.openId);
 
             },
             //获取验证吗，线上环境使用固定的图片，生产环境使用真实的验证码
@@ -128,20 +116,12 @@
                 
             },
             //发送登录信息
-            async mobileLogin(){
-                console.log(this.verify);
+            async mobileLogin(verify){
 
-                if(getStore('user') == undefined){
-                     window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
-                    return;
-                }
+                this.verify = verify;
 
-                let weixin = JSON.parse(getStore('user'));
+                let verifyRes = await verifyCode(this.phone,this.verify, this.weixin.openId);
 
-                //weixin api return openid, but our system returns openId
-                console.log("verifyCode Get Openid:"+user.openId);
-
-                let verifyRes = await verifyCode(this.phone,this.verify, weixin.openId);
                 if(verifyRes.status == -1){
                     this.errorMsg = "验证码输入错误，请重新输入";
                     this.verify = "";
@@ -167,6 +147,10 @@
                 //     this.$router.push({path:'/shop'});
                 // }
                 
+            },
+            inputEnd(value){
+                console.log(value);
+                this.mobileLogin(value);
             },
             closeTip(){
                 this.showAlert = false;
@@ -195,6 +179,7 @@
     .loginForm{
         background-color: #fff;
         margin-top: .6rem;
+        margin-bottom: 3.6rem;
         .title_container{
             display: flex;
             justify-content: center;
@@ -209,9 +194,8 @@
             justify-content: center;
             text-align: center;
             padding: .6rem 1.6rem;
-            border-bottom: 1px solid #f1f1f1;
             font-size:0.6rem;
-            color:#aaa;
+            color:red;
         }
         .input_container{
             display: flex;
@@ -265,8 +249,13 @@
         padding: .4rem .6rem;
         line-height: .5rem;
         text-align: center;
+        .icon_style{
+            @include wh(1rem, 1rem);
+            vertical-align:middle;
+        }
         span{ 
-            @include sc(.5rem, red);
+            @include sc(.6rem, #8b8b8b);
+            vertical-align:middle;
         }
         a{
             color: #3b95e9;

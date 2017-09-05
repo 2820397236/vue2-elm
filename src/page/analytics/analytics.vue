@@ -942,7 +942,7 @@
                 @include sc(0.6rem, #333);
                 background-color: #fff;
                 border: 0.025rem solid #eef3fa;
-                border-width: 0 0.025rem 0.025rem 0;
+                border-width: 0 0.025rem 0.05rem 0;
                 padding: .1rem .5rem;
                 span{
                     line-height: 1.2rem;

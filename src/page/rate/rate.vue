@@ -11,8 +11,8 @@
             <section class="head_login" @click="clickRateType()">
                 <span>{{rateType}}</span>
                 <svg class="icon_style">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#filter"></use>
-                        </svg>
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#filter"></use>
+                </svg>
             </section>
         </header>
         <section class="shop_container main_container">

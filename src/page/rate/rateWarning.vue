@@ -1,12 +1,16 @@
  <template>
     <div>
         <header id='head_top'>
-            <section class="head_option" :class="{red:warningType == 'high',yellow:warningType == 'mid', green:warningType == 'low'}"  @click="clickRateType()">
-                预警等级 {{rateType}}
-            </section>
             <section class="title_head ellipsis"  @click="setRatingType('high')">
                 
-                <span class="title_text">舆情评论监控预警</span>
+                <span class="title_text">餐厅评论监控预警</span>
+            </section>
+
+            <section class="head_option" :class="{red:warningType == 'high',yellow:warningType == 'mid', green:warningType == 'low'}"  @click="clickRateType()">
+                <span>预警 {{rateType}}</span>
+                <svg class="icon_style">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#warning"></use>
+                </svg>
             </section>
             <!-- <section class="head_option" @click="clickRateType()">
                 {{rateType}}
@@ -235,11 +239,11 @@
         margin-left: .4rem;
     }
     .head_option{
-        left: 0.55rem;
+        right: 0.35rem;
         @include sc(0.5rem, #fff);
         @include ct;
         /*background:#ff9501;*/
-        padding:.2rem .8rem .2rem .4rem ;
+        padding:.1rem .3rem .2rem .3rem ;
         border-radius: .2rem;
         .login_span{
             color: #666;
@@ -248,15 +252,27 @@
             fill: #666;
             @include wh(.8rem, .8rem);
         }
+        .icon_style{
+            @include wh(.7rem, .7rem);
+            vertical-align:middle;
+            fill:#fff;
+        }
+        span{
+            vertical-align:middle;
+            padding-left:.1rem;
+            padding-right:.1rem;
+            color:#fff;
+        }
 
         &.green{
-            color:#66d8b4;
+            background-color:#66d8b4;
+            
         }
         &.yellow{
-            color:#ffd819;
+            background-color:#ffd819;
         }
         &.red{
-            color:#ff6d41;
+            background-color:#ff6d41;
         }
     }
     .title_head{
