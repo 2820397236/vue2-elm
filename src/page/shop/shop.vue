@@ -236,7 +236,6 @@
             ]),
             //初始化时获取基本数据
             async initData(){
-
                 if(getStore('user') == undefined){
                     this.gotoAddress('/login');
                 }
