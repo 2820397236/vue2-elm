@@ -108,9 +108,10 @@
 
                     let user = JSON.parse(getStore('user'));
                     if(user.username == null || user.username == '' || user.username == undefined){
-                        return;
+                        
+                    }else{
+                        this.$router.push({path:'/shop'});
                     }
-                    this.$router.push({path:'/shop'});
                 }
 
                 if(!this.$route.query.code){
