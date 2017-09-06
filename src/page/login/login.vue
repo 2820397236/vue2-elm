@@ -15,12 +15,14 @@
             </section>
         </form>
         <p class="login_tips">
-            <span>&nbsp;</span>
+            <svg class="icon_style">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#codeWarning"></use>
+            </svg>
             <span v-if="errorMsg != ''">{{errorMsg}}</span>
         </p>
         <form class="loginForm">
             <section class="input_container">
-                <input type="text" placeholder="请输入您要绑定的手机号码" v-model.lazy="phoneNumber">
+                <input type="number" placeholder="请输入您要绑定的手机号码" v-model.lazy="phoneNumber">
             </section>
             <!-- <section class="input_container">
                 <input v-if="!showPassword" type="password" placeholder="密码"  v-model="passWord">
@@ -105,6 +107,7 @@
             async initData(){
                 
                 //localStorage.clear();
+                // setStore('user','{"id":25,"username":"13788997536","password":"7536","phoneNo":"13788997536","realName":"X","profileImg":"http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJLt9GVR0GqQkjqicrIqibicqaoOFSAQ0u6HFoLcEMwKPdBLzD2mgicCQyumh5JniaH960U0shm17kkjaw/0","isCompany":null,"token":null,"openId":"o8LyKwwyUm6bNkOvHKzqLpu3-0Fg","accessToken":"6HL-hCRhS7aQyBp8bdXUK_1-MBP0CBbIQoOO5U590Jm86q5y1LY3Z5FuviAgHTSLVcdvourLsO_IcNLWf28aFw","city":"","country":"中国"}');
 
                 if(getStore('user')){
 
@@ -116,8 +119,8 @@
 
                 if(!this.$route.query.code){
 
-                    window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
-                    return;
+                    // window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
+                    // return;
 
                 }else{
 
@@ -127,8 +130,8 @@
                     
                     //weixin api return openid, but our system returns openId
                     if(!json.openid){
-                        window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
-                        return;
+                        // window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
+                        // return;
                     }else{
 
                         let userRes = await getUserByOpenId(json.openid);
@@ -164,7 +167,7 @@
 
                 if(this.codeRes.status == -2){
                     this.showError=true;
-                    this.errorMsg = '用户已存在';
+                    this.errorMsg = '该手机号码已被注册';
                     return;
                 }
 
@@ -283,8 +286,13 @@
         padding: .4rem .6rem;
         line-height: .5rem;
         text-align: center;
+        .icon_style{
+            @include wh(1rem, 1rem);
+            vertical-align:middle;
+        }
         span{ 
-            @include sc(.5rem, red);
+            @include sc(.6rem, #8b8b8b);
+            vertical-align:middle;
         }
         a{
             color: #3b95e9;

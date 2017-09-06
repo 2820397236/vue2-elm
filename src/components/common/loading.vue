@@ -1,6 +1,6 @@
  <template>
 	<div class="loading_container">
-	    <div class="load_img" :style="{backgroundPositionY: -(positionY%7)*2.5 + 'rem'}">
+	    <div class="load_img" :style="{backgroundPositionY: -(positionY%1)*2.5 + 'rem'}">
 	    </div>
     	<svg class="load_ellipse" xmlns="http://www.w3.org/2000/svg" version="1.1">
 			<ellipse cx="26" cy="10" rx="26" ry="10" style="fill:#ddd;stroke:none;"></ellipse>
@@ -48,7 +48,7 @@
     }
     .load_img{
     	@include wh(100%, 100%);
-    	background: url(../../images/icon_loading.png) no-repeat 0 0;
+    	background: url(../../images/loading.png) no-repeat 0 0;
     	background-size: 2.5rem auto;
     	transform: translateY(0px);
     	animation: load .6s infinite ease-in-out;

@@ -134,7 +134,7 @@
                     grid: {
                         left: '0%',
                         right: '0%',
-                        bottom: '32px',
+                        bottom: '30px',
                         top: '0%',
                     },
                     tooltip : {
@@ -221,6 +221,7 @@
 
             this.initData();
             this.windowHeight = window.innerHeight;
+            this.windowWeight = window.innerWeight;
         },
         beforeDestroy(){
             // this.foodScroll.removeEventListener('scroll', )
@@ -269,10 +270,11 @@
         },
         methods: {
             ...mapMutations([
-                'RECORD_ADDRESS','ADD_CART','REDUCE_CART','CLEAR_CART','RECORD_SHOPDETAIL'
+               
             ]),
             //初始化时获取基本数据
             async initData(){
+
                 if(getStore('user') == undefined){
                     this.gotoAddress('/login');
                 }
@@ -647,7 +649,7 @@
     }
     .search_submit{
         width:90%;
-        padding: 0 0.25rem;
+        padding: 0.4rem 0.25rem 0.8rem;
         margin: .6rem 0;
         border: 0.025rem solid #ffd101;
         border-width: 0 0 0.025rem 0;
@@ -656,7 +658,7 @@
         @include sc(0.65rem, #292929);
         font-weight: normal;
         text-align: center;
-        line-height: 1.6rem;
+        line-height: 1.2rem;
 
         span{
             color:#111;
@@ -679,13 +681,9 @@
     }
     .chart_container{
         background-color: #fff;
-        border-bottom: 0.025rem solid #f1f1f1;right: 0;
         width: 100%;
-        height: 336px;
-        display: flex;
-        /*flex:1;*/
-        z-index: 13;
-        box-sizing: border-box;
+        height: 306px;
+        padding-bottom:.4rem;
     }
     .sort_container{
         background-color: #fff;
