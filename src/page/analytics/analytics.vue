@@ -222,7 +222,7 @@
             this.initData();
             this.windowHeight = window.innerHeight;
             this.windowWidth = window.innerWidth;
-            alert("w:"+this.windowWidth+",h:"+this.windowHeight);
+            console.log("w:"+this.windowWidth+",h:"+this.windowHeight);
         },
         beforeDestroy(){
             // this.foodScroll.removeEventListener('scroll', )
