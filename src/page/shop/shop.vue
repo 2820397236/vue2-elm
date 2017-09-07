@@ -722,7 +722,7 @@
                     img{
                         @include wh(2.9rem, 2.9rem);
                         display: block;
-                        border-radius: 0.15rem;
+                        border-radius: 3rem;
                     }
                 }
                 .description_right{
@@ -1628,6 +1628,18 @@
         margin:14px 0 0 0;
         border-radius: 4px;
 
+    }
+
+    @media (max-width: 320px) {
+        .chart_container{
+            height: 246px;
+        }
+        .search_submit{
+            padding-bottom: 0.4rem;
+        }
+        .shop_detail_header .description_header .description_top .shop_detail_vip{
+            padding: .3rem .2rem;
+        }
     }
 
 </style>
