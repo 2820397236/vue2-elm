@@ -1640,6 +1640,9 @@
         .shop_detail_header .description_header .description_top .shop_detail_vip{
             padding: .3rem .2rem;
         }
+        .menu_container .menu_right .store_detail_list .store_info .store_head .store_name .store_status{
+            padding: 0 .2rem .1rem;
+        }
     }
 
 </style>

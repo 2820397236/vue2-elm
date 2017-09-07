@@ -13,7 +13,7 @@
                 <input type="submit" name="submit" class="city_submit input_style" @click='postpois' value="提交">
             </div> -->
         </form>
-        <header v-if="historytitle" class="pois_search_history">共{{total | currency('', 0)}}条</header>
+        <!-- <header class="pois_search_history" v-if="selectStores.length > 0">共{{total | currency('', 0)}}条</header> -->
         <ul class="getpois_ul">
             <!-- <li v-for="(item, index) in stores" @click='nextpage(index, item.geohash)' :key="index"> -->
             <li v-for="(item, index) in stores" :key="index" @click='active(item,index)'  >
@@ -38,8 +38,8 @@
         <footer v-if="historytitle&&stores.length" class="clear_all_history" @click="clearAll">清空所有</footer>
         <div class="search_none_place" v-if="placeNone">很抱歉！无搜索结果</div>
         <div class="button_container">
-            <a class="button">全选</a>
-            <a class="button" @click='nextpage(2, selectStores)'>
+            <a class="button" v-if="selectStores.length > 0" >全选</a>
+            <a class="button" v-if="selectStores.length > 0" @click='nextpage(2, selectStores)'>
             {{ selectStores.length > 0 ? '已选'+ selectStores.length + '家' :''}}
             去订阅</a>
         </div>
@@ -257,6 +257,7 @@
             flex:1;
             border: 1px solid $bc;
             padding: 0 0.3rem;
+            background:#eeeeee;
             @include sc(0.65rem, #333);
         }
         .city_submit{

@@ -445,4 +445,11 @@
         }
         
     }
+
+    @media (max-width: 320px) {
+        .head_login{
+                padding: 0rem .2rem .2rem .3rem;
+        }
+    }
+    
 </style>
