@@ -106,7 +106,7 @@
 
             async initData(){
                 
-                localStorage.clear();
+                // localStorage.clear();
                 // setStore('user','{"id":25,"username":"13788997536","password":"7536","phoneNo":"13788997536","realName":"X","profileImg":"http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJLt9GVR0GqQkjqicrIqibicqaoOFSAQ0u6HFoLcEMwKPdBLzD2mgicCQyumh5JniaH960U0shm17kkjaw/0","isCompany":null,"token":null,"openId":"o8LyKwwyUm6bNkOvHKzqLpu3-0Fg","accessToken":"6HL-hCRhS7aQyBp8bdXUK_1-MBP0CBbIQoOO5U590Jm86q5y1LY3Z5FuviAgHTSLVcdvourLsO_IcNLWf28aFw","city":"","country":"中国"}');
 
                 if(getStore('user')){
@@ -137,7 +137,7 @@
                         let userRes = await getUserByOpenId(json.openid);
                         setStore('user',userRes.user);
 
-                        alert(userRes.user.username);
+                        // alert(userRes.user.username);
                         if(user.username){
                             this.$router.push({path:'/shop'});
                             return;
