@@ -6,12 +6,9 @@
                 {{city?city.cityName:"上海"}}
             </router-link>
             <input type="search" name="city" placeholder="请输入要搜索订阅的门店名称" 
-            class="city_input input_style" v-model='inputVaule' @input='postpois(inputVaule)'>
+            class="city_input input_style" v-model='inputVaule'>
             
-            <div class="head_back_left button_style" @click="$router.go(-1)">返回</div>
-            <!-- <div>
-                <input type="submit" name="submit" class="city_submit input_style" @click='postpois' value="提交">
-            </div> -->
+            <div class="head_back_left button_style" @click="clickSearch(inputVaule)">搜索</div>
         </form>
         <!-- <header class="pois_search_history" v-if="selectStores.length > 0">共{{total | currency('', 0)}}条</header> -->
         <ul class="getpois_ul">
@@ -38,7 +35,7 @@
         <footer v-if="historytitle&&stores.length" class="clear_all_history" @click="clearAll">清空所有</footer>
         <div class="search_none_place" v-if="placeNone">很抱歉！无搜索结果</div>
         <div class="button_container">
-            <a class="button" v-if="selectStores.length > 0" >全选</a>
+            <!-- <a class="button" v-if="selectStores.length > 0" >全选</a> -->
             <a class="button" v-if="selectStores.length > 0" @click='nextpage(2, selectStores)'>
             {{ selectStores.length > 0 ? '已选'+ selectStores.length + '家' :''}}
             去订阅</a>
@@ -112,13 +109,18 @@
 
             postpois:debounce(function (keyword) {
               
-              if (keyword && keyword != " ") {
+              
+            }, 1000),
+
+            clickSearch(keyword){
+
+                if (keyword && keyword != " ") {
                     console.log(keyword);
                     let city = this.city.cityName;
 
                     this.searchStore(city,keyword);
                 }
-            }, 1000),
+            },
 
             searchStore(city,keyword,i=0){
                 console.log(city,keyword);
@@ -210,6 +212,8 @@
             border-radius: .2rem;
             margin-left:.8rem;
             margin-right:.8rem;
+            border-bottom:0.25rem solid #ffc691;
+            
             &:first-child{
                 margin-right:0rem;
             }
@@ -346,5 +350,11 @@
     }
     body{
         background-color: #fff!important;
+    }
+
+    @media (max-width: 320px) {
+        .getpois_ul li .pois_detail .store_name .store_status{
+            padding: 0rem .2rem .1rem;
+        }
     }
 </style>

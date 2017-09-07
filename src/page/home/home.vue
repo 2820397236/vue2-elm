@@ -1,13 +1,9 @@
 <template>
   	<div>
-        <head-top>
+        <!-- <head-top>
             <span slot='logo' class="head_logo"  @click="reload">ele.me</span>
-        </head-top>
+        </head-top> -->
         <nav class="city_nav">
-            <div class="city_tip">
-                <span>当前定位城市：</span>
-                <span>定位不准时，请在城市列表中选择</span>
-            </div>
             <div class="guess_city" @click="setCity(guesscity)">
                 <span>{{guesscity.cityName}}</span>
                 <svg class="arrow_right">
@@ -15,28 +11,40 @@
                 </svg>
             </div>  
         </nav>
-        <section id="hot_city_container">
-            <h4 class="city_title">热门城市</h4>
-            <ul class="citylistul clear">
-                <li v-for="item in hotcity" :key="item.id" @click="setCity(item)">
-                    {{item.cityName}}
-                </li>  
-            </ul>
-        </section>
-        <section class="group_city_container">
-            <ul class="letter_classify">
-                <li v-for="(value, key, index) in sortgroupcity" :key="key"  class="letter_classify_li">
-                    <h4 class="city_title">{{key}}
-                        <span v-if="index == 0">（按字母排序）</span>
-                    </h4>
-                    <ul class="groupcity_name_container citylistul clear">
-                        <router-link  tag="li" v-for="item in value" :to="'/city/' + item.id" :key="item.id" class="ellipsis">
-                            {{item.name}}
+        <form class="city_form" v-on:submit.prevent>
+            <router-link to="/home" slot="changecity" class="change_city_right button_style">
+                {{city?city.cityName:"上海"}}
+            </router-link>
+            <input type="search" name="city" placeholder="请输入要搜索订阅的门店名称" 
+            class="city_input input_style" v-model='inputVaule'>
+            
+            <div class="head_back_left button_style" @click="clickSearch(inputVaule)">搜索</div>
+        </form>
 
-                        </router-link>  
-                    </ul>
-                </li>
-            </ul>
+        <section class="">
+            <section id="hot_city_container">
+                
+                <ul class="citylistul clear">
+                    <li v-for="item in hotcity" :key="item.id" @click="setCity(item)">
+                        {{item.cityName}}
+                    </li>  
+                </ul>
+            </section>
+            <section class="group_city_container">
+                <ul class="letter_classify">
+                    <li v-for="(value, key, index) in sortgroupcity" :key="key"  class="letter_classify_li">
+                        <h4 class="city_title">{{key}}
+                            <span v-if="index == 0">（按字母排序）</span>
+                        </h4>
+                        <ul class="groupcity_name_container citylistul clear">
+                            <router-link  tag="li" v-for="item in value" :to="'/city/' + item.id" :key="item.id" class="ellipsis">
+                                {{item.name}}
+
+                            </router-link>  
+                        </ul>
+                    </li>
+                </ul>
+            </section>
         </section>
     </div>
 </template>
@@ -116,7 +124,7 @@ export default {
         @include ct;
     }
     .city_nav{
-        padding-top: 2.35rem;
+        /*padding-top: 2.35rem;*/
         border-top: 1px solid $bc;
         background-color: #fff;
         margin-bottom: 0.4rem;
@@ -138,8 +146,6 @@ export default {
             align-items: center;
             height: 1.8rem;
             padding: 0 0.45rem;
-            border-top: 1px solid $bc;
-            border-bottom: 2px solid $bc;
             @include font(0.75rem, 1.8rem);
             span:nth-of-type(1){
                 color: $blue;
@@ -150,9 +156,47 @@ export default {
             }
         }
     }
+    .city_form{
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        @include wh(100%, 1.95rem);
+        background-color: #fff;
+        border-top: 1px solid $bc;
+        border-bottom: 1px solid $bc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        @include sc(0.65rem, #333);
+        .button_style{
+
+            margin: 0.4rem ;
+        }
+        .input_style{
+            border-radius: 0.1rem;
+            margin: 0.4rem 0;
+            @include wh(100%, 1.4rem);
+        }
+        .city_input{
+            flex:1;
+            border: 1px solid $bc;
+            padding: 0 0.3rem;
+            background:#eeeeee;
+            @include sc(0.65rem, #333);
+        }
+        .city_submit{
+            background-color: $blue;
+            @include sc(0.65rem, #fff);
+        }
+    }
     #hot_city_container{
         background-color: #fff;
         margin-bottom: 0.4rem;
+        width:30%;
+    }
+    .group_city_container{
+        width:70%;
     }
     .citylistul{
         li{
@@ -161,12 +205,12 @@ export default {
             color: $blue;
             border-bottom: 0.025rem solid $bc;
             border-right: 0.025rem solid $bc;
-            @include wh(25%, 1.75rem);
-            @include font(0.6rem, 1.75rem);
+            @include wh(100%, 2rem);
+            @include font(0.6rem, 2rem);
         }
-        li:nth-of-type(4n){
+        /*li:nth-of-type(4n){
             border-right: none;
-        }
+        }*/
     }
     .city_title{
         color: #666;

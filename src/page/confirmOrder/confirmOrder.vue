@@ -604,6 +604,7 @@
         height: 2rem;
         border-radius: .2rem;
         background-color: #ffd101;
+        border-bottom:0.25rem solid #ffc691;
         p{
             line-height: 2rem;
             @include sc(.65rem, #111);
