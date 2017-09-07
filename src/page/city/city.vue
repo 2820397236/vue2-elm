@@ -212,8 +212,8 @@
             border-radius: .2rem;
             margin-left:.8rem;
             margin-right:.8rem;
-            border-bottom:0.25rem solid #ffc691;
-            
+            box-shadow: 0px 3px 5px rgba(255,120,0,.5);
+
             &:first-child{
                 margin-right:0rem;
             }
