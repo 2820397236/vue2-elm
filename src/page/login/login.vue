@@ -15,7 +15,7 @@
             </section>
         </form>
         <p class="login_tips">
-            <svg class="icon_style">
+            <svg v-if="errorMsg != ''" class="icon_style">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#codeWarning"></use>
             </svg>
             <span v-if="errorMsg != ''">{{errorMsg}}</span>
