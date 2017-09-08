@@ -3,42 +3,43 @@
         <!-- <head-top>
             <span slot='logo' class="head_logo"  @click="reload">ele.me</span>
         </head-top> -->
-        
-
         <form class="city_form" v-on:submit.prevent>
             <router-link to="/home" slot="changecity" class="change_city_right button_style">
-                {{city?city.cityName:"上海"}}
+                返回
             </router-link>
-            <div class="city_input"></div>
             
-            <div class="head_back_left button_style" @click="goBack()">返回</div>
         </form>
 
-        <section class="main_container">
+        <nav class="city_nav">
+            <div class="guess_city" @click="setCity(guesscity)">
+                <span>{{guesscity.cityName}}</span>
+                <svg class="arrow_right">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
+                </svg>
+            </div>  
+        </nav>
+        <section id="hot_city_container">
             
-            <div class="form_title">热门城市</div>
-            <section id="hot_city_container">
-                <ul class="citylistul clear">
-                    <li v-for="item in hotcity" :key="item.id" @click="setCity(item)">
-                        {{item.cityName}}
-                    </li>  
-                </ul>
-            </section>
-            <!-- <section class="group_city_container">
-                <ul class="letter_classify">
-                    <li v-for="(value, key, index) in sortgroupcity" :key="key"  class="letter_classify_li">
-                        <h4 class="city_title">{{key}}
-                            <span v-if="index == 0">（按字母排序）</span>
-                        </h4>
-                        <ul class="groupcity_name_container citylistul clear">
-                            <router-link  tag="li" v-for="item in value" :to="'/city/' + item.id" :key="item.id" class="ellipsis">
-                                {{item.name}}
+            <ul class="citylistul clear">
+                <li v-for="item in hotcity" :key="item.id" @click="setCity(item)">
+                    {{item.cityName}}
+                </li>  
+            </ul>
+        </section>
+        <section class="group_city_container">
+            <ul class="letter_classify">
+                <li v-for="(value, key, index) in sortgroupcity" :key="key"  class="letter_classify_li">
+                    <h4 class="city_title">{{key}}
+                        <span v-if="index == 0">（按字母排序）</span>
+                    </h4>
+                    <ul class="groupcity_name_container citylistul clear">
+                        <router-link  tag="li" v-for="item in value" :to="'/city/' + item.id" :key="item.id" class="ellipsis">
+                            {{item.name}}
 
-                            </router-link>  
-                        </ul>
-                    </li>
-                </ul>
-            </section> -->
+                        </router-link>  
+                    </ul>
+                </li>
+            </ul>
         </section>
     </div>
 </template>
@@ -51,10 +52,13 @@ import {getStore, setStore, removeStore} from 'src/config/mUtils'
 export default {
     data(){
         return{
-            city: '',
             hotcity: [],     //热门城市列表
             guesscity:{},
             groupcity: {},   //所有城市列表
+            inputVaule:'',
+            city:null,
+            cityid:'', // 当前城市id
+            cityname:'', // 当前城市名字
         }
     },
 
@@ -103,10 +107,7 @@ export default {
         setCity(city){    
             setStore('city',city);
             this.$router.push({path:'/city/'+city.id});
-        },
-        goBack(){
-            this.$router.go(-1);
-        },
+        }
     },
 }
 
@@ -114,71 +115,6 @@ export default {
 
 <style lang="scss" scoped>
     @import '../../style/mixin';
-    .head_logo{
-        left: 0.4rem;
-        font-weight: 400;
-        @include sc(0.7rem, #fff);
-        @include wh(2.3rem, 0.7rem);
-        @include ct;
-    }
-    .title_head{
-        @include center;
-        width: 50%;
-        color: #fff;
-        text-align: center;
-        line-height: 0.8rem;
-        img{
-            @include wh(1rem, 1rem);
-            vertical-align:middle;
-            display: inline-block;
-        }
-        .title_text{
-            @include sc(0.6rem, #666);
-            text-align: center;
-            vertical-align:middle;
-            /*font-weight: bold;*/
-        }
-    }
-    .main_container{
-        padding-top:2rem;
-    }
-    .city_nav{
-        /*padding-top: 2.35rem;*/
-        border-top: 1px solid $bc;
-        background-color: #fff;
-        .city_tip{
-            @include fj;
-            line-height: 1.45rem;
-            padding: 0 0.45rem;
-            span:nth-of-type(1){
-                @include sc(0.55rem, #666);
-            }
-            span:nth-of-type(2){
-                font-weight: 900;
-                @include sc(0.475rem, #9f9f9f);
-            }
-
-        }
-        .guess_city{
-            @include fj;
-            align-items: center;
-            height: 1.8rem;
-            padding: 0 0.45rem;
-            @include font(0.75rem, 1.8rem);
-            span:nth-of-type(1){
-                color: $blue;
-            }
-            .arrow_right{
-                @include wh(.6rem, .6rem);
-                fill: #999;
-            }
-        }
-    }
-    .form_title{
-        line-height: 1.4rem;
-        @include sc(0.65rem, #333);
-        text-align: center;
-    }
     .city_form{
         position: fixed;
         z-index: 100;
@@ -203,10 +139,9 @@ export default {
         }
         .city_input{
             flex:1;
-            /*border: 1px solid $bc;
+            border: 1px solid $bc;
             padding: 0 0.3rem;
-            background:#eeeeee;*/
-            text-align: center;
+            background:#eeeeee;
             @include sc(0.65rem, #333);
         }
         .city_submit{
@@ -214,13 +149,51 @@ export default {
             @include sc(0.65rem, #fff);
         }
     }
+    .head_logo{
+        left: 0.4rem;
+        font-weight: 400;
+        @include sc(0.7rem, #fff);
+        @include wh(2.3rem, 0.7rem);
+        @include ct;
+    }
+    .city_nav{
+        padding-top: 2.35rem;
+        border-top: 1px solid $bc;
+        background-color: #f2f2f2;
+        margin-bottom: 0.4rem;
+        .city_tip{
+            @include fj;
+            line-height: 1.45rem;
+            padding: 0 0.45rem;
+            span:nth-of-type(1){
+                @include sc(0.55rem, #666);
+            }
+            span:nth-of-type(2){
+                font-weight: 900;
+                @include sc(0.475rem, #9f9f9f);
+            }
+
+        }
+        .guess_city{
+            @include fj;
+            align-items: center;
+            height: 1.8rem;
+            padding: 0 0.45rem;
+            background: #fff;
+            margin-bottom:.5rem;
+            @include font(0.75rem, 1.8rem);
+            span:nth-of-type(1){
+                color: $blue;
+            }
+            .arrow_right{
+                @include wh(.6rem, .6rem);
+                fill: #999;
+            }
+        }
+    }
     #hot_city_container{
         background-color: #fff;
         margin-bottom: 0.4rem;
-        width:100%;
-    }
-    .group_city_container{
-        width:100%;
     }
     .citylistul{
         li{
@@ -229,8 +202,8 @@ export default {
             color: $blue;
             border-bottom: 0.025rem solid $bc;
             border-right: 0.025rem solid $bc;
-            @include wh(33.3%, 2rem);
-            @include font(0.6rem, 2rem);
+            @include wh(33.3%, 1.75rem);
+            @include font(0.6rem, 1.75rem);
         }
         li:nth-of-type(3n){
             border-right: none;

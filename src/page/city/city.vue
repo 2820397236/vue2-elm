@@ -34,9 +34,9 @@
         </ul>
         <footer v-if="historytitle&&stores.length" class="clear_all_history" @click="clearAll">清空所有</footer>
         <div class="search_none_place" v-if="placeNone">很抱歉！无搜索结果</div>
-        <div class="button_container">
+        <div class="button_container" v-if="selectStores.length > 0">
             <!-- <a class="button" v-if="selectStores.length > 0" >全选</a> -->
-            <a class="button" v-if="selectStores.length > 0" @click='nextpage(2, selectStores)'>
+            <a class="button"  @click='nextpage(2, selectStores)'>
             {{ selectStores.length > 0 ? '已选'+ selectStores.length + '家' :''}}
             去订阅</a>
         </div>
