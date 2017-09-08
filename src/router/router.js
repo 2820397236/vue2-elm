@@ -64,7 +64,7 @@ export default [{
             component: login
         },
         {
-            path: '?code=:code',
+            path: '/?code=:code',
             component: login
         },
         //首页城市列表页

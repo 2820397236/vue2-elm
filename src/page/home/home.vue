@@ -7,7 +7,7 @@
 
         <form class="city_form" v-on:submit.prevent>
             <router-link to="/home" slot="changecity" class="change_city_right button_style">
-                {{city?city.cityName:"上海"}}
+                
             </router-link>
             <div class="city_input"></div>
             
@@ -178,6 +178,7 @@ export default {
         line-height: 1.4rem;
         @include sc(0.65rem, #333);
         text-align: center;
+        background:#f2f2f2;
     }
     .city_form{
         position: fixed;

@@ -3,13 +3,13 @@ import VueRouter from 'vue-router'
 import routes from './router/router'
 import store from './store/'
 import {routerMode} from './config/env'
-import './config/rem'
 import FastClick from 'fastclick'
 import Vue2Filters from 'vue2-filters'
-import moment from 'moment/moment.js'
-import weixin from 'weixin-js-sdk'
 import {getJsConfig} from './service/getData'
 import {getStore, setStore, removeStore} from 'src/config/mUtils'
+import moment from 'moment/moment.js'
+import weixin from 'weixin-js-sdk'
+import './config/rem'
 
 if ('addEventListener' in document) {
     document.addEventListener('DOMContentLoaded', function() {

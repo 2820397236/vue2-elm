@@ -191,9 +191,7 @@
 
 <style lang="scss" scoped>
     @import 'src/style/mixin';
-    body{
-        background-color:#fff!important;
-    }
+    
     .button_container{
         position: fixed;
         bottom:0;

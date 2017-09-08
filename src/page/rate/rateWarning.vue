@@ -35,7 +35,7 @@
                                         </div>
                                         <div class="rate_username">
                                                 {{item.storeName}}<br/>
-                                                <span class="rate_time">{{item.ratingTime}}</span>
+                                                <span class="rate_time">{{item.address}}</span>
                                                 <!-- <span class="rate_tag">口味好</span>
                                                 <span class="rate_tag">环境很好</span>
                                                 <span class="rate_tag">服务好</span> -->
@@ -399,7 +399,7 @@
                 word-break: break-word;
                 flex:1;
                 background-color: #fff;
-                padding: .6rem .4rem .6rem 1.2rem ;
+                padding: .6rem .4rem .6rem 1.1rem ;
                 border-bottom: 1px solid #d7d7d7;
                 position: relative;
                 overflow: hidden;
@@ -456,7 +456,7 @@
                             }
                             .rate_username{
                                 @include sc(.6rem, #333);
-                                margin-left:1rem;
+                                margin-left: .5rem;
                                 padding-top: .2rem;
                                 .rate_time{
                                     @include sc(.5rem, #bababa);
