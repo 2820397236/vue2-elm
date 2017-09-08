@@ -328,6 +328,7 @@
                     line-height: .6rem;
                     margin-left: .6rem;
                     color:#aaa;
+                    width:85%;
                 }
                 &::before{
                     text-align: center;
