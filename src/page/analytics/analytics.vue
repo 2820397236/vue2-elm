@@ -5,9 +5,10 @@
                 <span class="title_text" >{{date | dateTime('YYYY年MM月DD日') }}</span>
             </section>
             <section class="head_login" @click="eventSearch()">
-                <svg class="icon_style">
+                <!-- <svg class="icon_style">
                         <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#search"></use>
-                    </svg>
+                    </svg> -->
+                    搜索
             </section>
         </header>
         <section v-if="!showLoading" class="shop_container main_container">
