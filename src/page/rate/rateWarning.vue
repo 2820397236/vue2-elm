@@ -16,7 +16,7 @@
                 {{rateType}}
             </section> -->
         </header>
-        <section class="shop_container main_container">
+        <section v-if="!showLoading" class="shop_container main_container">
             <!-- <nav class="goback" @click="goback">
                 <svg width="4rem" height="100%" xmlns="http://www.w3.org/2000/svg" version="1.1">
                     <polyline points="12,18 4,9 12,0" style="fill:none;stroke:rgb(255,255,255);stroke-width:3"/>
@@ -55,6 +55,7 @@
             </section>
             
         </section>
+        <loading v-show="showLoading"></loading>
         <foot-guide></foot-guide>
 
 
@@ -81,10 +82,12 @@
     import {getUserRate,getMyStore} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import footGuide from '../../components/footer/footGuide'
+    import loading from 'src/components/common/loading'
 
     export default {
         data(){
             return{
+               showLoading: true,
                warningType: 'high',
                showRateType: false,
                rateListOrigin:[],
@@ -107,10 +110,15 @@
         },
         components: {
             headTop,
+            loading,
             footGuide
         },
         mixins:[],
         methods: {
+            //隐藏动画
+            hideLoading(){
+                this.showLoading = false;
+            },
             goBack(){
                 if(this.showRateType){
                     this.showRateType = false;
@@ -183,6 +191,7 @@
                 // if(resCount.status == 0){
                 //     this.rateCount = resCount.rates[0];
                 // }
+                this.hideLoading();
             },
 
             setRatingType(type){

@@ -3,12 +3,15 @@
         
         <form class="city_form" v-on:submit.prevent>
             <router-link to="/home" slot="changecity" class="change_city_right button_style">
-                {{city?city.cityName:"上海"}}
+                <span>{{city?city.cityName:"上海"}}</span>
+                <svg class="arrow_down" data-name="arrow_down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">
+                    <path class="cls-1" d="M8,2.33l-4,4-4-4Z"/>
+                </svg>
             </router-link>
-            <input type="search" name="city" placeholder="请输入要搜索订阅的门店名称" 
-            class="city_input input_style" v-model='inputVaule'>
+            <input type="text" name="city" ref="searchInput" placeholder="请输入要搜索订阅的门店名称" @keyup.enter="inputSearch(inputVaule)"
+            class="city_input input_style" v-model='inputVaule' >
             
-            <div class="head_back_left button_style" @click="clickSearch(inputVaule)">搜索</div>
+            <div class="head_back_left button_style" @click="clickSearch(inputVaule)" >搜索</div>
         </form>
         <!-- <header class="pois_search_history" v-if="selectStores.length > 0">共{{total | currency('', 0)}}条</header> -->
         <ul class="getpois_ul">
@@ -40,6 +43,7 @@
             {{ selectStores.length > 0 ? '已选'+ selectStores.length + '家' :''}}
             去订阅</a>
         </div>
+        <loading v-show="showLoading"></loading>
     </div>
 </template>
 
@@ -47,10 +51,12 @@
     import {mapState, mapMutations} from 'vuex'
     import {currentcity, searchplace} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
+    import loading from 'src/components/common/loading'
     import debounce from 'debounce'
     export default {
     	data(){
             return{
+                showLoading:false,
                 inputVaule:'', // 搜索地址
                 city:null,
                 cityid:'', // 当前城市id
@@ -71,9 +77,15 @@
             //     this.cityname = res.name;
             // })
             this.initData();
+            let _this = this;
+            // setTimeout(function(){
+            //     _this.$refs.searchInput.focus();
+            // },500)
+            
         },
 
         components:{
+            loading,
 
         },
 
@@ -111,21 +123,24 @@
               
               
             }, 1000),
-
+            inputSearch(keyword){
+                this.clickSearch(keyword);
+            },
             clickSearch(keyword){
 
                 if (keyword && keyword != " ") {
-                    console.log(keyword);
                     let city = this.city.cityName;
-
                     this.searchStore(city,keyword);
                 }
             },
 
             searchStore(city,keyword,i=0){
+                
+                this.startLoading();
                 console.log(city,keyword);
                 searchplace(city,keyword).then(res => {
-                        console.log(res);
+                        this.stopLoading();
+
                         if(res.status == -1){
                             return;
                         }
@@ -183,6 +198,12 @@
             clearAll(){
                 removeStore('placeHistory');
                 this.initData();
+            },
+            startLoading(){
+                this.showLoading = true;
+            },
+            stopLoading(){
+                this.showLoading = false;
             }
         }
     }
@@ -246,6 +267,9 @@
         align-items: center;
         justify-content: center;
         @include sc(0.65rem, #333);
+        .arrow_down{
+            @include wh(.4rem, .4rem);
+        }
         .button_style{
 
             margin: 0.4rem ;
@@ -253,7 +277,7 @@
         .input_style{
             border-radius: 0.1rem;
             margin: 0.4rem 0;
-            @include wh(100%, 1.4rem);
+            @include wh(100%, 1.36rem);
         }
         .city_input{
             flex:1;
@@ -261,6 +285,8 @@
             padding: 0 0.3rem;
             background:#eeeeee;
             @include sc(0.65rem, #333);
+            line-height: 1.4rem;
+            -webkit-appearance: none!important;
         }
         .city_submit{
             background-color: $blue;

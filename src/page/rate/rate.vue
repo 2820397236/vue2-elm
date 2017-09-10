@@ -15,7 +15,7 @@
                 </svg>
             </section>
         </header>
-        <section class="shop_container main_container">
+        <section v-if="!showLoading" class="shop_container main_container">
             <!-- <nav class="goback" @click="goback">
                 <svg width="4rem" height="100%" xmlns="http://www.w3.org/2000/svg" version="1.1">
                     <polyline points="12,18 4,9 12,0" style="fill:none;stroke:rgb(255,255,255);stroke-width:3"/>
@@ -69,7 +69,7 @@
                 </li>
             </ul>
         </section>
-            
+        <loading v-show="showLoading"></loading>
     </div>
 </template>
 
@@ -79,10 +79,12 @@
     import {getMyStore,getStoreInfo,getStoreRate,getRateCount} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import {getImgPath} from 'src/components/common/mixin'
+    import loading from 'src/components/common/loading'
 
     export default {
         data(){
             return{
+               showLoading: true, //显示加载动画 
                licenseImg: null,
                showRateType: false,
                rateListOrigin:[],
@@ -104,9 +106,14 @@
         },
         components: {
             headTop,
+            loading
         },
         mixins:[getImgPath],
         methods: {
+            //隐藏动画
+            hideLoading(){
+                this.showLoading = false;
+            },
             goBack(){
                 if(this.showRateType){
                     this.showRateType = false;
@@ -151,6 +158,8 @@
                 if(resCount.status == 0){
                     this.rateCount = resCount.rates[0];
                 }
+
+                this.hideLoading();
             },
 
             setRatingType(type){

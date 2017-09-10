@@ -7,9 +7,13 @@
 
         <form class="city_form" v-on:submit.prevent>
             <router-link to="/home" slot="changecity" class="change_city_right button_style">
-                
+                <span>{{city?city.cityName:"上海"}}</span>
+                <svg class="arrow_down" data-name="arrow_down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">
+                    <path class="cls-1" d="M8,2.33l-4,4-4-4Z"/>
+                </svg>
             </router-link>
-            <div class="city_input"></div>
+            <div @click="setCity(city)" class="city_input input_style">请输入要搜索订阅的门店名称
+            </div>
             
             <div class="head_back_left button_style" @click="goBack()">返回</div>
         </form>
@@ -71,6 +75,12 @@ export default {
             this.guesscity = res.cities[0];
         })
 
+        if(getStore('city')) {
+            this.city = JSON.parse(getStore('city'));
+        }else{
+            this.$router.push({path:'/home'});
+        }
+
         //获取所有城市
         // groupcity().then(res => {
         //     this.groupcity = res;
@@ -102,7 +112,7 @@ export default {
 
         setCity(city){    
             setStore('city',city);
-            this.$router.push({path:'/city/'+city.id});
+            this.$router.push({path:'/city/'+city.dpCityId});
         },
         goBack(){
             this.$router.go(-1);
@@ -193,6 +203,10 @@ export default {
         align-items: center;
         justify-content: center;
         @include sc(0.65rem, #333);
+        .arrow_down{
+            @include wh(.4rem, .4rem);
+            transform:scaleY(-1);
+        }
         .button_style{
 
             margin: 0.4rem ;
@@ -200,15 +214,16 @@ export default {
         .input_style{
             border-radius: 0.1rem;
             margin: 0.4rem 0;
-            @include wh(100%, 1.4rem);
+            @include wh(100%, 1.36rem);
         }
         .city_input{
             flex:1;
-            /*border: 1px solid $bc;
+            border: 1px solid $bc;
             padding: 0 0.3rem;
-            background:#eeeeee;*/
-            text-align: center;
-            @include sc(0.65rem, #333);
+            background:#eeeeee;
+            @include sc(0.65rem, #777);
+            line-height: 1.3rem;
+            -webkit-appearance: none!important;
         }
         .city_submit{
             background-color: $blue;

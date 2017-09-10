@@ -45,8 +45,8 @@
                                         </section>
                                         <section class="menu_food_description">
                                             <h3 class="food_description_head">
-                                                <span class="description_foodname">{{store.name}}</span>
-                                                <span class="description_foodname" v-if="store.branchName !=''">{{store.name}}({{store.branchName}})</span>
+                                                <span class="description_foodname" v-if="!store.branchName">{{store.name}}</span>
+                                                <span class="description_foodname" v-else>{{store.name}}({{store.branchName}})</span>
                                             </h3>
                                             <p class="food_description_content">{{store.regionName}} {{store.priceText}}</p>
                                         </section>
@@ -209,8 +209,8 @@
                         id:0,
                         title:"连续包月",
                         subTitle:"自动续费，可随时取消",
-                        rrpPrice:4,
-                        price:2
+                        rrpPrice:10,
+                        price:5
                     },
                     // {
                     //     id:1,
@@ -402,7 +402,7 @@
                 let user = JSON.parse(getStore('user'));
                 let response = await addToCart(user.id,this.storeIds,this.payWayId);
                 if(response.status == 0){
-                    this.$router.push('/shop');
+                    this.$router.push('/analytics');
                 }
             },
         },

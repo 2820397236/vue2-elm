@@ -95,13 +95,11 @@
     import {getMyStore,getRateAnalytics,getStoreRate} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import loading from 'src/components/common/loading'
-    import {loadMore, getImgPath} from 'src/components/common/mixin'
-    import {imgBaseUrl} from 'src/config/env'
+    import {loadMore} from 'src/components/common/mixin'
     import BScroll from 'better-scroll'
     import footGuide from '../../components/footer/footGuide'
     import IEcharts from 'vue-echarts-v3/src/full.vue'
     import debounce from 'debounce'
-    import 'echarts/lib/component/graphic'
     import theme from './theme.json'
     IEcharts.registerTheme('customer', theme)
 
@@ -228,7 +226,7 @@
         beforeDestroy(){
             // this.foodScroll.removeEventListener('scroll', )
         },
-        mixins: [loadMore, getImgPath],
+        mixins: [loadMore],
         components: {
             loading,
             footGuide,
@@ -236,39 +234,9 @@
         },
         computed: {
             ...mapState([
-                'latitude','longitude','cartList'
+                
             ]),
-            promotionInfo: function (){
-                return this.shopDetailData.promotion_info || '欢迎光临，用餐高峰期请提前下单，谢谢。'
-            },
-            //配送费
-            deliveryFee: function () {
-                if (this.shopDetailData) {
-                    return this.shopDetailData.float_delivery_fee;
-                }else{
-                    return null;
-                }
-            },
-            //还差多少元起送，为负数时显示去结算按钮
-            minimumOrderAmount: function () {
-                if (this.shopDetailData) {
-                    return this.shopDetailData.float_minimum_order_amount - this.totalPrice;
-                }else{
-                    return null;
-                }
-            },
-            //当前商店购物信息
-            shopCart: function (){
-                return {...this.cartList[this.shopId]};
-            },
-            //购物车中总共商品的数量
-            totalNum: function (){
-                let num = 0;
-                this.cartFoodList.forEach(item => {
-                    num += item.num
-                })
-                return num
-            },
+            
         },
         methods: {
             ...mapMutations([
@@ -651,7 +619,7 @@
     }
     .search_submit{
         width:90%;
-        padding: 0.4rem 0.25rem 0.8rem;
+        padding: 0.4rem 0.25rem 0.4rem;
         margin: .6rem 0;
         border: 0.025rem solid #ffd101;
         border-width: 0 0 0.025rem 0;
