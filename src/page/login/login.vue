@@ -126,24 +126,18 @@
 
                     let json = await getOpenId(this.$route.query.code);
                     setStore('user',json);
-                    console.log(json)
-                    console.log(111)
+                    
                     //weixin api return openid, but our system returns openId
                     if(!json.openid){
 
-                        console.log(222)
                         window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
                         return;
                     }else{
 
-                        console.log(3333)
                         let userRes = await getUserByOpenId(json.openid);
                         setStore('user',userRes.user);
 
-                        console.log(userRes.user)
-
-                        // alert(userRes.user.username);
-                        if(user.username){
+                        if(userRes.user.username){
                             this.$router.push({path:'/shop'});
                             return;
                         }
