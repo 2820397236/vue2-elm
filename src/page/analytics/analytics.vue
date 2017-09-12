@@ -64,7 +64,7 @@
                     v-model='inputValue' @input='searchLocal(inputValue)'/>
                 </section>
                 <section class="title_right" @click="eventSearch()">
-                    <span>取消</span>
+                    取消
                 </section>
             </div>
 
@@ -73,6 +73,9 @@
                     <span class="store_name" @click="selectSearchResult(storeListOrigin)">
                         全部 ({{storeListOrigin.length}}家门店)
                     </span>
+                </li>
+                <li  v-for="(name,index) in branchName" :key="index" @click="selectSearchResult(branchList[name])">
+                    <span class="store_name">{{name}} ({{branchList[name].length}}家门店)</span>
                 </li>
                 <li  v-for="(store,index) in storeList" :key="index" @click="selectSearchResult([store])">
                     <span class="store_name">{{store.name}} {{store.branchName}}</span>
@@ -112,6 +115,8 @@
                 storeListOrigin:[],
                 storeList: [],
                 storeIds: [],
+                branchList:{},
+                branchName:[],
                 inputValue:'',
                 chart:null,
                 date:new Date(),
@@ -253,8 +258,18 @@
 
                 let response = await getMyStore(this.user.id);
                 if(response.status == 0){
-                    this.storeList = response.stores;
-                    this.storeListOrigin = response.stores;
+                    let _this = this;
+                    _this.storeList = response.stores;
+                    _this.storeListOrigin = response.stores;
+                    _this.storeListOrigin.map(item=>{
+                        if(!_this.branchList[item.name]){
+                            _this.branchList[item.name]=[];
+                        }
+                        _this.branchList[item.name].push(item);
+                        return item;
+                    })
+                    _this.branchName = Object.keys(_this.branchList);
+                    console.log(_this.branchList,_this.branchName);
                 }
                 
                 this.chartInit(response.stores);
@@ -265,7 +280,7 @@
 
             chartInit(list){
                 console.log('chart init:');
-                console.log(list);
+                // console.log(list);
 
                 this.storeIds = [];
                 this.storeList = list;
@@ -316,7 +331,7 @@
                         }
 
                         if(_this.storeList.length > 1 ){
-                            _this.bar.title.text = _this.storeList[0].name +'等 ('+ _this.storeList.length +'家)门店';
+                            _this.bar.title.text = _this.storeList[0].name +' ('+ _this.storeList.length +'家)门店';
                         }else{
                              _this.bar.title.text = _this.storeList[0].name + ' '+ _this.storeList[0].branchName ;
                         }
@@ -434,6 +449,8 @@
         @include sc(0.6rem, #999);
         @include ct;
         border-radius: .2rem;
+        height: 100%;
+        line-height: 1.9rem;
         .icon_style{
             width:0.8rem;
             height:0.8rem;
@@ -483,16 +500,17 @@
         margin: 0rem .2rem 0 .3rem;
         input{
             background-color: #eee;
-            padding:.4rem .6rem;
+            padding:.3rem .6rem;
             width: 100%;
             border-radius: .2rem;
         }
     }
     .title_right{
-        width:2rem;
-        height:1.6rem;
-        line-height: 1.6rem;
         @include sc(0.6rem, #666);
+        width:2rem;
+        line-height: 1.9rem;
+        padding: 0 0.5rem 0 .3rem;
+        display: block;
         text-align: center;
     }
 
@@ -532,7 +550,7 @@
             border-top-left-radius:0;
             border-top-right-radius:0;
             padding-bottom: .4rem;
-            max-height:12rem;
+            max-height:20rem;
             overflow: scroll;
             li{
                 flex:1;

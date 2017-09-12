@@ -151,10 +151,10 @@
                             </span>
                             <span class="price_rrp">￥{{item.rrpPrice}}/店</span>
                             <span class="price_now">￥{{item.price}}/店</span>
-                            <div class="tri"></div>
+                            <!-- <div class="tri"></div>
                             <svg class="address_empty_right" >
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select"></use>
-                            </svg>
+                            </svg> -->
                         </li>
                     </ul>
                 </div>
@@ -674,7 +674,7 @@
                 }
                 .price_now{
                     text-align: center;
-                    @include sc(.7rem, #ffd001);
+                    @include sc(.7rem, #666);
                 }
                 svg{
                     @include wh(.8rem, .8rem);
@@ -694,8 +694,11 @@
                 }
             }
             .choose{
-                border:0 solid #3d3d3d;
-                background-color:#3d3d3d;
+                /*border:0 solid #3d3d3d;
+                background-color:#3d3d3d;*/
+                border: 0.025rem solid #ccc;
+                background-color: #ddd;
+                box-shadow: 1px 1px 1px #999 inset;
                 overflow: hidden;
                 svg{
                     fill: #ffd101;

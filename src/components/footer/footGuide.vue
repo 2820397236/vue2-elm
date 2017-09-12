@@ -84,7 +84,6 @@
         	<svg class="icon_style">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('shop') !== -1? '#myHomeActive' : '#myHomeActive'"></use>
             </svg>
-            <span>我的</span>
         </section>
     </section>
 </template>
@@ -132,13 +131,20 @@
         box-shadow: 0 -0.026667rem 0.053333rem rgba(0,0,0,.1);
     }
     .guide_item{
-    	flex: 1;
+    	flex: 3;
     	display: flex;
         flex-direction: row;
         justify-content: center;
     	align-items: center;
         position:relative;
         z-index: 1;
+        &:last-child{
+            flex:1;
+            border-left:0.025rem solid #e7e7e7;
+            .icon_style{
+                margin:0;
+            }
+        }
         &.active{
             background-color:#ffd101;
             /* */

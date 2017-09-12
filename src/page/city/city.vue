@@ -139,7 +139,6 @@
                 this.startLoading();
                 console.log(city,keyword);
                 searchplace(city,keyword).then(res => {
-                        this.stopLoading();
 
                         if(res.status == -1){
                             return;
@@ -149,13 +148,21 @@
                         this.total = this.stores.length;
                         this.placeNone = res.pageSize * (res.pageNo+1) > res.total;
                         
-                        if(i>=3) return;
+                        if(i>=3) {
+                            
+                            this.stopLoading();
+                            return;
+                        }
 
                         if(res.stores.length == 0 || res.stores.length <5){
                             
                             setTimeout(()=>{
                                 this.searchStore(city,keyword,++i);
                             },3000 );
+                            
+                        }else{
+
+                            this.stopLoading();
                         }
                     })
             },

@@ -248,7 +248,10 @@
 
                 //获取我的门店
                 let response = await getMyStore(this.user.id);
-                if(response.status == 0){
+                if(response.status == -1){
+                    removeStore('user');
+                    this.gotoAddress('/login');
+                }else if(response.status == 0){
                     this.storeList = response.stores;
                     this.storeListOrigin = response.stores;
                     this.extra = response.extra;
