@@ -76,8 +76,10 @@
                 </li>
                 <li  v-for="(name,index) in branchName" :key="index" @click="selectSearchResult(branchList[name])">
                     <span class="store_name">{{name}} ({{branchList[name].length}}家门店)</span>
+                    <span class="store_address" v-if="branchList[name].length > 1">{{branchList[name][0].branchName}} 等</span>
+                    <span class="store_address" v-else>{{branchList[name][0].branchName?branchList[name][0].branchName:branchList[name][0].name}}</span>
                 </li>
-                <li  v-for="(store,index) in storeList" :key="index" @click="selectSearchResult([store])">
+                <li  v-for="(store,index) in storeList" :key="index" @click="selectSearchResult([store])" v-if="storeList.length<storeListOrigin.length">
                     <span class="store_name">{{store.name}} {{store.branchName}}</span>
                     <span class="store_address">{{store.address}}</span>
                 </li>
@@ -329,9 +331,10 @@
                             _this.dateFormat = _this.date.getTime();
                             console.log(_this.dateFormat);
                         }
-
-                        if(_this.storeList.length > 1 ){
-                            _this.bar.title.text = _this.storeList[0].name +' ('+ _this.storeList.length +'家)门店';
+                        if( _this.storeList.length == _this.storeListOrigin.length){
+                            _this.bar.title.text = '全部('+ _this.storeList.length +'家)门店';
+                        }else if(_this.storeList.length > 1 ){
+                            _this.bar.title.text = _this.storeList[0].name +'('+ _this.storeList.length +'家)门店';
                         }else{
                              _this.bar.title.text = _this.storeList[0].name + ' '+ _this.storeList[0].branchName ;
                         }
@@ -543,8 +546,6 @@
             z-index: 101;
         }
         .search_list{
-            display: flex;
-            flex-direction: column;
             background-color: #fff;
             border-radius: .7rem;
             border-top-left-radius:0;
@@ -553,11 +554,14 @@
             max-height:20rem;
             overflow: scroll;
             li{
-                flex:1;
+                min-height: 49px;
                 text-align: left;
                 padding-left:.4rem;
                 padding: .2rem 0.4rem;
                 border-bottom: 0.02rem solid #ddd;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
                 @include sc(0.5rem, #666);
 
                 span{
