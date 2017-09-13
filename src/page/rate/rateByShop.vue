@@ -6,7 +6,7 @@
             </section>
             <section class="title_head ellipsis">
                 <img class="title_img" :src="storeImg" v-if="storeImg"/>
-                <span class="title_text" v-if="storeImg">{{branchName}}等 (共计{{storeList.length}}家门店)</span>
+                <span class="title_text" v-if="storeImg">{{branchName}}等 (共计{{storeIds.length}}家门店)</span>
             </section>
         </header>
         <section v-if="!showLoading" class="shop_container main_container">

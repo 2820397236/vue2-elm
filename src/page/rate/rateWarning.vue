@@ -26,6 +26,7 @@
             <section class="shoplist_container">
                 <ul v-if="rateList.length > 0">
                     <li v-for="(item,index) in rateList" :key="index">
+                        <div class="rate_time">{{item.ratingTime}}</div>
                         <section class="menu_detail_list">
                             <div class="menu_detail_link">
                                 <div class="rate_head">
@@ -35,7 +36,7 @@
                                         </div>
                                         <div class="rate_username">
                                                 {{item.storeName}}<br/>
-                                                <span class="rate_time">{{item.address}}</span>
+                                                <span class="rate_address">{{item.address}}</span>
                                                 <!-- <span class="rate_tag">口味好</span>
                                                 <span class="rate_tag">环境很好</span>
                                                 <span class="rate_tag">服务好</span> -->
@@ -405,6 +406,12 @@
         ul{
             width: 100%;
             overflow: hidden;
+            .rate_time{
+                background-color: rgba(247,247,247,1);
+                @include sc(.6rem, #999);
+                line-height: 1rem;
+                text-align: center;
+            }
             .menu_detail_list{
                 word-break: break-word;
                 flex:1;
@@ -468,7 +475,7 @@
                                 @include sc(.6rem, #333);
                                 margin-left: .5rem;
                                 padding-top: .2rem;
-                                .rate_time{
+                                .rate_address{
                                     @include sc(.5rem, #bababa);
                                 }
                                 .rate_tag{
