@@ -194,6 +194,8 @@
     export default {
         data(){
             return {
+                storeIds:[],
+                storeList:[],
                 user:null,
                 geohash: '', //geohash位置信息
                 shopId: null, //商店id值
@@ -205,7 +207,6 @@
                 payWayId: 0, //付款方式
                 showAlert: false, //弹出框
                 alertText: null, //弹出框内容
-                storeList:null,
                 payments:[
                     {
                         id:0,
@@ -309,19 +310,31 @@
                 // })
                 // console.log(newArr);
                 // //检验订单是否满足条件
-                this.user = JSON.parse(getStore('user'));
+                let _this =this;
+                _this.user = JSON.parse(getStore('user'));
 
-                let response = await getStoreInfo(this.storeIds);
-                if(response.status == 0 ){
-                    this.storeList = response.stores;
-                    if(this.storeList.length > 0){
-                        this.storeIds = [];
-                        for(var i=0;i<this.storeList.length;i++){
-                            this.storeIds.push(this.storeList[i].id);
+
+                getJsConfig(location.href).then(function(data){
+    
+                    data.debug = false;
+                    weixin.config(data);
+
+                });
+
+                getStoreInfo(_this.storeIds).then(function(response){
+    
+                    if(response.status == 0 ){
+                    _this.storeList = response.stores;
+                        if(_this.storeList.length > 0){
+                            _this.storeIds = [];
+                            for(var i=0;i<_this.storeList.length;i++){
+                                _this.storeIds.push(_this.storeList[i].id);
+                            }
                         }
                     }
-                    
-                }
+
+                });
+                
                 
 
                 // this.SAVE_CART_ID_SIG({cart_id: this.checkoutData.cart.id, sig:  this.checkoutData.sig})
@@ -404,19 +417,14 @@
                  
                  // let json = {"appId":"wx797ef910234a14be","nonceStr":"92dac676060347ce86b1e2d688112644","package":"prepay_id=wx20170914135516792c54141f0486582465","signType":"MD5","timeStamp":"1505368516","paySign":"C772A305F19D559BCA82BD19A9CC43A3"};
                 
-
-                let user = JSON.parse(getStore('user'));
-                let data =await getJsConfig(location.href);
-                data.debug = false;
-                weixin.config(data);
-
-                let json = await getPayConfig(this.user.id);
+                let _this = this;
+                let json = await getPayConfig(_this.user.id);
                 json.timestamp = json.timeStamp;
 
                 json.success = function (res) {
-                    addToCart(user.id,this.storeIds,this.payWayId).success(function(response){
+                    addToCart(_this.user.id,_this.storeIds,_this.payWayId).success(function(response){
                         if(response.status == 0){
-                            this.$router.push('/analytics');
+                            _this.$router.push('/analytics');
                         }
                     })
                 }
