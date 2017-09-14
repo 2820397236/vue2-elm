@@ -289,30 +289,12 @@
             ]),
             //初始化数据
             async initData(){
-                // let newArr = new Array;
-                // Object.values(this.shopCart).forEach(categoryItem => {
-                //     Object.values(categoryItem).forEach(itemValue=> {
-                //         Object.values(itemValue).forEach(item => {
-                //             newArr.push({
-                //                 attrs: [],
-                //                 extra: {},
-                //                 id: item.id,
-                //                 name: item.name,
-                //                 packing_fee: item.packing_fee,
-                //                 price: item.price,
-                //                 quantity: item.num,
-                //                 sku_id: item.sku_id,
-                //                 specs: [item.specs],
-                //                 stock: item.stock,
-                //             })
-                //         })
-                //     })
-                // })
-                // console.log(newArr);
+                
                 // //检验订单是否满足条件
                 let _this =this;
                 _this.user = JSON.parse(getStore('user'));
 
+                _this.showLoading = true;
 
                 getJsConfig(location.href).then(function(data){
     
@@ -322,9 +304,10 @@
                 });
 
                 getStoreInfo(_this.storeIds).then(function(response){
-    
+                    _this.showLoading = false;
+
                     if(response.status == 0 ){
-                    _this.storeList = response.stores;
+                        _this.storeList = response.stores;
                         if(_this.storeList.length > 0){
                             _this.storeIds = [];
                             for(var i=0;i<_this.storeList.length;i++){
@@ -413,16 +396,18 @@
                 // }
                 // this.$router.push({path:'/confirmOrder/payment',query:param});
                 // let json = {"appId":"wx797ef910234a14be","nonceStr":"92dac676060347ce86b1e2d688112644","package":"prepay_id=wx20170914135516792c54141f0486582465","signType":"MD5","timeStamp":"1505368516","paySign":"C772A305F19D559BCA82BD19A9CC43A3"};
-                this.showLoading = true;
+                
 
                 let _this = this;
+                _this.showLoading = true;
+
                 let json = await getPayConfig(_this.user.id);
                 json.timestamp = json.timeStamp;
 
                 json.success = function (res) {
                     addToCart(_this.user.id,_this.storeIds,_this.payWayId).then(function(response){
-                        this.showLoading = false;
-                        
+                        _this.showLoading = false;
+
                         if(response.status == 0){
                             _this.$router.push('/analytics');
                         }else{
