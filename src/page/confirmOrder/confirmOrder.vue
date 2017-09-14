@@ -403,13 +403,16 @@
                  
                  // let json = {"appId":"wx797ef910234a14be","nonceStr":"92dac676060347ce86b1e2d688112644","package":"prepay_id=wx20170914135516792c54141f0486582465","signType":"MD5","timeStamp":"1505368516","paySign":"C772A305F19D559BCA82BD19A9CC43A3"};
                  
-                 let json = await getPayConfig(user.id);
+                let json = await getPayConfig(user.id);
 
-                 json.success = function (res) {
-                    alert(JSON.Stringify(res));
-                 }
-                 
-                 weixin.chooseWXPay(json);
+                // json.success = function (res) {
+                //     alert(JSON.Stringify(res));
+                // }
+
+                console.log(json);
+
+
+                weixin.chooseWXPay(json);
 
                 // let user = JSON.parse(getStore('user'));
                 // addToCart(user.id,this.storeIds,this.payWayId).success(function(response){
