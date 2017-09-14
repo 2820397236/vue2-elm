@@ -406,7 +406,7 @@
                  let json = await getPayConfig(user.id);
                  
 
-                 wx.chooseWXPay({
+                 weixin.chooseWXPay({
                     timestamp: json.timestamp, 
                     nonceStr: json.nonceStr, // 支付签名随机串，不长于 32 位
                     package:  json.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
