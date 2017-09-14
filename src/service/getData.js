@@ -268,7 +268,9 @@ export const addToCart = (userId,storeIds,payment) => fetch('/v1/user/addToCart'
 }, 'POST');
 
 export const getPayConfig = (userId) => fetch('/wx/getPayConfig', {
-	userId
+	userId,
+	storeIds,
+	payment
 }, 'POST');
 
 export const searchplace = (cityName, keywords, pageNo=0, pageSize=10) => fetch('/searchDpStore', {

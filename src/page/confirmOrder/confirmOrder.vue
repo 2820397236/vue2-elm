@@ -210,10 +210,10 @@
                 payments:[
                     {
                         id:0,
-                        title:"连续包月",
-                        subTitle:"自动续费，可随时取消",
-                        rrpPrice:10,
-                        price:5
+                        title:"包年(12个月)",
+                        subTitle:"",
+                        rrpPrice:120,
+                        price:60
                     },
                     // {
                     //     id:1,
@@ -418,11 +418,11 @@
                  // let json = {"appId":"wx797ef910234a14be","nonceStr":"92dac676060347ce86b1e2d688112644","package":"prepay_id=wx20170914135516792c54141f0486582465","signType":"MD5","timeStamp":"1505368516","paySign":"C772A305F19D559BCA82BD19A9CC43A3"};
                 
                 let _this = this;
-                let json = await getPayConfig(_this.user.id);
+                
+                let json = await getPayConfig(_this.user.id,_this.storeIds,_this.payWayId);
                 json.timestamp = json.timeStamp;
-
                 json.success = function (res) {
-                    addToCart(_this.user.id,_this.storeIds,_this.payWayId).success(function(response){
+                    addToCart(_this.user.id,_this.storeIds,_this.payWayId).then(function(response){
                         if(response.status == 0){
                             _this.$router.push('/analytics');
                         }
