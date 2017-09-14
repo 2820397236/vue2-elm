@@ -50,19 +50,4 @@ getJsConfig(location.href).then(function(data){
         router,
         store,
     }).$mount('#app')
-
-    // weixin.ready(function () {       
-    //     weixin.onMenuShareTimeline({
-    //         title: '蜜蜂舆情', // 分享标题
-    //         link: 'http://c.icoos.cn', // 分享链接
-    //         desc: '蜜蜂舆情测试版', // 分享描述
-    //         imgUrl: 'http://opub24jup.bkt.clouddn.com/CBD.jpg', // 分享图标
-    //         success: function () {
-    //             alert('分享成功啦！');
-    //         },
-    //         cancel: function(){
-    //             alert('分享失败');
-    //         }
-    //     });
-    // });
 })
