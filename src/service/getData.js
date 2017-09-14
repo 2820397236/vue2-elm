@@ -261,7 +261,7 @@ export const renewMyStore = (userId,storeIds) => fetch('/v1/user/renewMyStore', 
 	storeIds
 });
 
-export const addToCart = (userId,storeIds,payment) => fetch('/v1/user/addToCart', {
+export const addToCart = (userId,storeIds,payment) => fetch('/wx/addToCart', {
 	userId,
 	storeIds,
 	payment
