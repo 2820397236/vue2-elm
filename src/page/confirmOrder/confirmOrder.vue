@@ -404,25 +404,26 @@
                  // let json = {"appId":"wx797ef910234a14be","nonceStr":"92dac676060347ce86b1e2d688112644","package":"prepay_id=wx20170914135516792c54141f0486582465","signType":"MD5","timeStamp":"1505368516","paySign":"C772A305F19D559BCA82BD19A9CC43A3"};
                  
                  let json = await getPayConfig(user.id);
-                 
 
+                 json.success = function (res) {
+                    alert(JSON.Stringify(res));
+                 }
+                 
                  weixin.chooseWXPay({
                     timestamp: json.timestamp, 
                     nonceStr: json.nonceStr, // 支付签名随机串，不长于 32 位
                     package:  json.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
                     signType: json.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
                     paySign: json.paySign, // 支付签名
-                    success: function (res) {
-
-                        let user = JSON.parse(getStore('user'));
-                        addToCart(user.id,this.storeIds,this.payWayId).success(function(response){
-                            if(response.status == 0){
-                                this.$router.push('/analytics');
-                            }
-                        })
-                        
-                    }
+                    
                 });
+
+                // let user = JSON.parse(getStore('user'));
+                // addToCart(user.id,this.storeIds,this.payWayId).success(function(response){
+                //     if(response.status == 0){
+                //         this.$router.push('/analytics');
+                //     }
+                // })
                 
             },
         },
