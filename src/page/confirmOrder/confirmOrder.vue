@@ -170,8 +170,6 @@
             <!-- <transition name="fade">
                 <div class="cover" v-if="showPayWay" @click="showPayWayFun"></div>
             </transition> -->
-            
-                
         </section>
         <loading v-if="showLoading"></loading>
         <alert-tip v-if="showAlert" @closeTip="showAlert = false" :alertText="alertText"></alert-tip>
@@ -399,15 +397,12 @@
                 
 
                 let _this = this;
-                _this.showLoading = true;
 
                 let json = await getPayConfig(_this.user.id);
                 json.timestamp = json.timeStamp;
 
                 json.success = function (res) {
                     addToCart(_this.user.id,_this.storeIds,_this.payWayId).then(function(response){
-                        _this.showLoading = false;
-
                         if(response.status == 0){
                             _this.$router.push('/analytics');
                         }else{
