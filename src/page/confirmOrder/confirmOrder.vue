@@ -397,12 +397,15 @@
                 
 
                 let _this = this;
+                _this.showLoading = true;
 
-                let json = await getPayConfig(_this.user.id);
+                let json = await getPayConfig(_this.user.id,_this.storeIds,_this.payWayId);
                 json.timestamp = json.timeStamp;
 
                 json.success = function (res) {
                     addToCart(_this.user.id,_this.storeIds,_this.payWayId).then(function(response){
+
+                        _this.showLoading = false;
                         if(response.status == 0){
                             _this.$router.push('/analytics');
                         }else{
