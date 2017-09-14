@@ -186,9 +186,10 @@
     import headTop from 'src/components/header/head'
     import alertTip from 'src/components/common/alertTip'
     import loading from 'src/components/common/loading'
-    import {getStoreInfo, addToCart} from 'src/service/getData'
+    import {getStoreInfo, addToCart,getPayConfig} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import {imgBaseUrl} from 'src/config/env'
+    import weixin from 'weixin-js-sdk'
 
     export default {
         data(){
@@ -399,11 +400,30 @@
                 //     this.$router.push('/confirmOrder/payment');
                 // }
                  // this.$router.push({path:'/confirmOrder/payment',query:param});
-                let user = JSON.parse(getStore('user'));
-                let response = await addToCart(user.id,this.storeIds,this.payWayId);
-                if(response.status == 0){
-                    this.$router.push('/analytics');
-                }
+                 
+                 // let json = {"appId":"wx797ef910234a14be","nonceStr":"92dac676060347ce86b1e2d688112644","package":"prepay_id=wx20170914135516792c54141f0486582465","signType":"MD5","timeStamp":"1505368516","paySign":"C772A305F19D559BCA82BD19A9CC43A3"};
+                 
+                 let json = await getPayConfig(user.id);
+                 
+
+                 wx.chooseWXPay({
+                    timestamp: json.timestamp, 
+                    nonceStr: json.nonceStr, // 支付签名随机串，不长于 32 位
+                    package:  json.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+                    signType: json.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+                    paySign: json.paySign, // 支付签名
+                    success: function (res) {
+
+                        let user = JSON.parse(getStore('user'));
+                        addToCart(user.id,this.storeIds,this.payWayId).success(function(response){
+                            if(response.status == 0){
+                                this.$router.push('/analytics');
+                            }
+                        })
+                        
+                    }
+                });
+                
             },
         },
         watch: {

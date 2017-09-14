@@ -23,7 +23,7 @@ export const hotcity = () => fetch('/v1/cities', {
  * 获取首页所有城市
  */
 
-export const groupcity = () => fetch('/v1/cities', {
+export const groupcity = () => fetch('/v1/cities/getCityFromBigMap', {
 	type: 'group'
 });
 
@@ -265,6 +265,10 @@ export const addToCart = (userId,storeIds,payment) => fetch('/v1/user/addToCart'
 	userId,
 	storeIds,
 	payment
+}, 'POST');
+
+export const getPayConfig = (userId) => fetch('/v1/user/getPayConfig', {
+	userId
 }, 'POST');
 
 export const searchplace = (cityName, keywords, pageNo=0, pageSize=10) => fetch('/searchDpStore', {

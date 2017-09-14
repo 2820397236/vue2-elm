@@ -7,7 +7,7 @@ import FastClick from 'fastclick'
 import Vue2Filters from 'vue2-filters'
 import {getJsConfig} from './service/getData'
 import {getStore, setStore, removeStore} from 'src/config/mUtils'
-import moment from 'moment/moment.js'
+import moment from 'moment/min/moment-with-locales'
 import weixin from 'weixin-js-sdk'
 import './config/rem'
 

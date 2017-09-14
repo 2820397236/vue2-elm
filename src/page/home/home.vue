@@ -28,6 +28,42 @@
                     </li>  
                 </ul>
             </section>
+
+            <div class="form_title" v-if="cityList['直辖市']">直辖市</div>
+            <section id="hot_city_container" v-if="cityList['直辖市']">
+                <ul class="citylistul clear">
+                    <li v-for="item in cityList['直辖市']" :key="item.id" @click="setCity(item)">
+                        {{item.cityName}}
+                    </li>  
+                </ul>
+            </section>
+
+            <div class="form_title" v-if="cityList['港澳台']">港澳台</div>
+            <section id="hot_city_container" v-if="cityList['港澳台']">
+                <ul class="citylistul clear">
+                    <li v-for="item in cityList['港澳台']" :key="item.id" @click="setCity(item)">
+                        {{item.cityName}}
+                    </li>
+                    <li v-if="cityList['港澳台'].length ==11">
+                        更多...
+                    </li>
+                </ul>
+            </section>
+
+            <section v-for="group in inChina" v-if="group != '直辖市' && group != '港澳台'">
+                
+                <div class="form_title">{{group}}</div>
+                <section id="hot_city_container">
+                    <ul class="citylistul clear">
+                        <li v-for="item in cityList[group]" :key="item.id" @click="setCity(item)">
+                            {{item.cityName}}
+                        </li> 
+                        <li v-if="cityList[group].length ==11">
+                            更多...
+                        </li> 
+                    </ul>
+                </section>
+            </section>
             <!-- <section class="group_city_container">
                 <ul class="letter_classify">
                     <li v-for="(value, key, index) in sortgroupcity" :key="key"  class="letter_classify_li">
@@ -59,6 +95,9 @@ export default {
             hotcity: [],     //热门城市列表
             guesscity:{},
             groupcity: {},   //所有城市列表
+            inChina:[],
+            outChina:[],
+            cityList:[]
         }
     },
 
@@ -75,11 +114,17 @@ export default {
             this.guesscity = res.cities[0];
         })
 
+        groupcity().then(res => {
+            this.inChina = res.inChina;
+            this.outCina = res.outCina;
+            this.cityList = res.cityList;
+        });
+
         if(getStore('city')) {
             this.city = JSON.parse(getStore('city'));
         }else{
             this.$router.push({path:'/home'});
-        }
+        };
 
         //获取所有城市
         // groupcity().then(res => {
@@ -232,7 +277,6 @@ export default {
     }
     #hot_city_container{
         background-color: #fff;
-        margin-bottom: 0.4rem;
         width:100%;
     }
     .group_city_container{
