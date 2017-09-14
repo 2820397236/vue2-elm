@@ -186,7 +186,7 @@
     import headTop from 'src/components/header/head'
     import alertTip from 'src/components/common/alertTip'
     import loading from 'src/components/common/loading'
-    import {getStoreInfo, addToCart,getPayConfig} from 'src/service/getData'
+    import {getStoreInfo, addToCart,getPayConfig,getJsConfig} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import {imgBaseUrl} from 'src/config/env'
     import weixin from 'weixin-js-sdk'
