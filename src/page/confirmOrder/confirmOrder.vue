@@ -194,6 +194,7 @@
     export default {
         data(){
             return {
+                user:null,
                 geohash: '', //geohash位置信息
                 shopId: null, //商店id值
                 showLoading: true, //显示加载动画
@@ -308,7 +309,7 @@
                 // })
                 // console.log(newArr);
                 // //检验订单是否满足条件
-                // let user = JSON.parse(getStore('user'));
+                this.user = JSON.parse(getStore('user'));
 
                 let response = await getStoreInfo(this.storeIds);
                 if(response.status == 0 ){
@@ -403,7 +404,7 @@
                  
                  // let json = {"appId":"wx797ef910234a14be","nonceStr":"92dac676060347ce86b1e2d688112644","package":"prepay_id=wx20170914135516792c54141f0486582465","signType":"MD5","timeStamp":"1505368516","paySign":"C772A305F19D559BCA82BD19A9CC43A3"};
                  
-                let json = await getPayConfig(user.id);
+                let json = await getPayConfig(this.user.id);
 
                 // json.success = function (res) {
                 //     alert(JSON.Stringify(res));
