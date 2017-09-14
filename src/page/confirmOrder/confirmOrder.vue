@@ -380,7 +380,7 @@
             },
             //确认订单
             async confrimOrder(){
-                //用户未登录时弹出提示框
+                // //用户未登录时弹出提示框
                 // if (!(this.userInfo && this.userInfo.user_id)) {
                 //     this.showAlert = true;
                 //     this.alertText = '请登录';
@@ -391,16 +391,14 @@
                 //     this.alertText = '请添加一个收获地址';
                 //     return
                 // }
-                //保存订单
-                let param = {
-                    userId: 13788997536,//this.userInfo.user_id,
-                    cartId: 1,
-                    description: 'test',
-                    ids: this.storeIds,
-                    payment: this.payWayId
-                };
-                // // window.alert(JSON.stringify(param));
-
+                // //保存订单
+                // let param = {
+                //     userId: 13788997536,//this.userInfo.user_id,
+                //     cartId: 1,
+                //     description: 'test',
+                //     ids: this.storeIds,
+                //     payment: this.payWayId
+                // };
                 // this.SAVE_ORDER_PARAM(param);
                 // //发送订单信息
                 // // let orderRes = await placeOrders(this.userInfo.user_id, this.checkoutData.cart.id, this.choosedAddress.id, this.remarklist, this.checkoutData.cart.groups, this.geohash, this.checkoutData.sig);
@@ -413,18 +411,22 @@
                 //     this.ORDER_SUCCESS(orderRes);
                 //     this.$router.push('/confirmOrder/payment');
                 // }
-                 // this.$router.push({path:'/confirmOrder/payment',query:param});
-                 
-                 // let json = {"appId":"wx797ef910234a14be","nonceStr":"92dac676060347ce86b1e2d688112644","package":"prepay_id=wx20170914135516792c54141f0486582465","signType":"MD5","timeStamp":"1505368516","paySign":"C772A305F19D559BCA82BD19A9CC43A3"};
-                
+                // this.$router.push({path:'/confirmOrder/payment',query:param});
+                // let json = {"appId":"wx797ef910234a14be","nonceStr":"92dac676060347ce86b1e2d688112644","package":"prepay_id=wx20170914135516792c54141f0486582465","signType":"MD5","timeStamp":"1505368516","paySign":"C772A305F19D559BCA82BD19A9CC43A3"};
+                this.showLoading = true;
+
                 let _this = this;
-                
-                let json = await getPayConfig(_this.user.id,_this.storeIds,_this.payWayId);
+                let json = await getPayConfig(_this.user.id);
                 json.timestamp = json.timeStamp;
+
                 json.success = function (res) {
                     addToCart(_this.user.id,_this.storeIds,_this.payWayId).then(function(response){
+                        this.showLoading = false;
+                        
                         if(response.status == 0){
                             _this.$router.push('/analytics');
+                        }else{
+                            alert(response);
                         }
                     })
                 }
