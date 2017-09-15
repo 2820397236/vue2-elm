@@ -1,6 +1,7 @@
 import App from '../App'
 
 const home = r => require.ensure([], () => r(require('../page/home/home')), 'home')
+const index = r => require.ensure([], () => r(require('../page/login/index')), 'index')
 const city = r => require.ensure([], () => r(require('../page/city/city')), 'city')
 const msite = r => require.ensure([], () => r(require('../page/msite/msite')), 'msite')
 const search = r => require.ensure([], () => r(require('../page/search/search')), 'search')
@@ -61,7 +62,7 @@ export default [{
         //地址为空时跳转home页面
         {
             path: '',
-            component: login
+            component: index
         },
         {
             path: '/?code=:code',
