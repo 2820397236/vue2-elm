@@ -62,7 +62,7 @@ export default [{
         //地址为空时跳转home页面
         {
             path: '',
-            component: index
+            component: login
         },
         {
             path: '/?code=:code',
