@@ -18,16 +18,17 @@
             <!-- <li v-for="(item, index) in stores" @click='nextpage(index, item.geohash)' :key="index"> -->
             <li v-for="(item, index) in stores" :key="index" @click='active(item,index)'  >
                 <a class="add_icon">
-                    <svg @touchstart="" :class="{active: selectStores.indexOf(item.id) > -1}">
-                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select"></use>
+                    <svg @touchstart="" :class="{active: selectStores.indexOf(item.id) > -1}" >
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select" v-if="shopIds.indexOf(item.id) == -1"></use>
                     </svg>
                 </a>
                 <img :src="item.defaultPic">
                 <div class="pois_detail">
                     <h4 class="store_name ellipsis">
                         <span>{{item.name}} {{item.branchName}}</span>
-                        <span class="store_status green" v-if="item.status==0">营业</span>
+                        <!-- <span class="store_status green" v-if="item.status==0">营业</span> -->
                         <span class="store_status red" v-if="item.status!=0">停业</span>
+                        <span class="store_status" v-if="shopIds.indexOf(item.id) != -1" style="float:right">已订阅</span>
                     </h4>
                     <p class="pois_address ellipsis">
                     {{item.priceText}}&nbsp;&nbsp;{{item.regionName}}&nbsp;&nbsp;
@@ -90,15 +91,18 @@
         },
 
         computed:{
-
+            
         },
 
         methods:{
             ...mapMutations([
-                'RECORD_ADDRESS','ADD_CART','REDUCE_CART','CLEAR_CART','RECORD_SHOPDETAIL'
+                // 'RECORD_ADDRESS','ADD_CART','REDUCE_CART','CLEAR_CART','RECORD_SHOPDETAIL'
             ]),
 
             initData(){
+                this.shopIds = JSON.parse(getStore('shopIds'));
+                console.log(this.shopIds);
+
                 //获取搜索历史记录
                 if (getStore('placeHistory')) {
                     this.stores = JSON.parse(getStore('placeHistory'));
@@ -148,7 +152,7 @@
                         this.total = this.stores.length;
                         this.placeNone = res.pageSize * (res.pageNo+1) > res.total;
                         
-                        if(i>=3) {
+                        if(i>=1) {
                             
                             this.stopLoading();
                             return;
@@ -193,7 +197,11 @@
                 
             },
             active(item,index){
-                
+
+                if(this.shopIds.indexOf(item.id) != -1){
+                    return;
+                }
+
                 if(this.selectStores.indexOf(item.id) == -1){
                     this.selectStores.push(item.id);
                 }else{
@@ -347,7 +355,7 @@
                         vertical-align:middle;
                    }
                    .store_status{
-                        background-color: #fc3c3f;
+                        background-color: #ddd;
                         @include sc(.4rem, #fff);
                         padding: .1rem .2rem;
                         &.green{

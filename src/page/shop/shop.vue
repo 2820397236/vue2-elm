@@ -191,7 +191,7 @@
         beforeDestroy(){
             // this.foodScroll.removeEventListener('scroll', )
         },
-        mixins: [loadMore, getImgPath],
+        // mixins: [loadMore, getImgPath],
         components: {
             loading,
             footGuide,
@@ -199,7 +199,7 @@
         },
         computed: {
             ...mapState([
-                'shopList'
+                'shopIds'
             ]),
             // promotionInfo: function (){
             //     return this.shopDetailData.promotion_info || '欢迎光临，用餐高峰期请提前下单，谢谢。'
@@ -236,7 +236,7 @@
         // props: ['alertText','alertSubText','alertTime','alertImg'],
         methods: {
             ...mapMutations([
-               'RECORD_SHOPLIST'
+               'RECORD_MYSHOPS'
             ]),
             //初始化时获取基本数据
             async initData(){
@@ -291,7 +291,7 @@
                     }
                 }
 
-                this.RECORD_SHOPLIST(this.storeListOrigin);
+                this.RECORD_MYSHOPS(this.storeListOrigin.map(item=>item.id));
                 
                 //隐藏加载动画
                 this.hideLoading();
@@ -724,7 +724,7 @@
         position: absolute;
         right: 0;
         left: 0;
-        height: 100%;
+        min-height: 100%;
     }
     .goback{
         position: fixed;
@@ -1146,12 +1146,12 @@
                     }
                     .store_content{
                         @include sc(.6rem, #969696);
-                        line-height: 1rem;
+                        line-height: .8rem;
                     }
                     .store_time{
-                        line-height: .8rem;
+                        line-height: .6rem;
                         span{
-                            @include sc(.4rem, #d5d5d5);
+                            @include sc(.48rem, #d5d5d5);
                         }
                         .cancel{
                             background-color: #fc997a;

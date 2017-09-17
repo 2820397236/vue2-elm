@@ -28,7 +28,7 @@ import {
 	SAVE_QUESTION,
 	ADD_ADDRESS,
 	BUY_CART,
-	RECORD_SHOPLIST 
+	RECORD_MYSHOPS
 } from './mutation-types.js'
 
 import {setStore, getStore} from '../config/mUtils'
@@ -123,9 +123,9 @@ export default {
 		setStore('buyCart', state.cartList);
 	},
 	// 记录用户信息
-	[RECORD_SHOPLIST](state, list) {
+	[RECORD_MYSHOPS](state, list) {
 		state.shopList = list;
-		setStore('shopList', list);
+		setStore('shopIds', list);
 	},
 	// 记录用户信息
 	[RECORD_USERINFO](state, info) {

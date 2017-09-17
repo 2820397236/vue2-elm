@@ -28,4 +28,4 @@ export const SAVE_QUESTION = 'SAVE_QUESTION'
 export const ADD_ADDRESS = 'ADD_ADDRESS'
 export const BUY_CART = 'BUY_CART'
 
-export const RECORD_SHOPLIST = 'RECORD_SHOPLIST'
+export const RECORD_MYSHOPS = 'RECORD_MYSHOPS'
