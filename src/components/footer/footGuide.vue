@@ -149,7 +149,7 @@
             background-color:#ffd101;
             /* */
             span{
-                @include sc(.55rem, #111);
+                @include sc(.7rem, #111);
             }
             svg{
                 fill:#111!important;
@@ -159,11 +159,12 @@
 		.icon_style{
 			@include wh(.8rem, .8rem);
 			margin-bottom: .2rem;
-			margin-top: .3rem;
+			margin-top: .15rem;
             margin-right: .4rem;
 		}
 		span{
-			@include sc(.55rem, #666);
+			@include sc(.7rem, #666);
+            line-height: .8rem;
 		}
     }
 

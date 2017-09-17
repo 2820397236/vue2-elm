@@ -280,8 +280,9 @@ export const searchplace = (cityName, keywords, pageNo=0, pageSize=10) => fetch(
 	pageSize:pageSize
 });
 
-export const mobileCode = phone => fetch('/v1/user/sendCode', {
-	phone: phone
+export const mobileCode = (phone,invite) => fetch('/v1/user/sendCode', {
+	phone,
+	invite
 }, 'POST');
 
 export const verifyCode = (phone,code,openId) => fetch('/v1/user/verifyCode', {

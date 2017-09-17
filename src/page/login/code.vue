@@ -1,8 +1,7 @@
 <template>
     <div class="loginContainer">
-        <!-- <head-top :head-title="loginWay? '登录':'密码登录'" goBack="true">
-            <div slot="changeLogin" class="change_login" @click="changeLoginWay">{{loginWay? "密码登录":"短信登录"}}</div>
-        </head-top> -->
+        <head-top  goBack="true">
+        </head-top>
         <form class="loginForm">
             <section class="title_container">
               
@@ -183,7 +182,7 @@
         .title_container{
             display: flex;
             justify-content: center;
-            padding: .6rem .8rem;
+            padding: .6rem .8rem .3rem;
             img{
                 width:5rem;
                 height:5rem;

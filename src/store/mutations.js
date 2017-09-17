@@ -28,6 +28,7 @@ import {
 	SAVE_QUESTION,
 	ADD_ADDRESS,
 	BUY_CART,
+	RECORD_SHOPLIST 
 } from './mutation-types.js'
 
 import {setStore, getStore} from '../config/mUtils'
@@ -122,10 +123,15 @@ export default {
 		setStore('buyCart', state.cartList);
 	},
 	// 记录用户信息
+	[RECORD_SHOPLIST](state, list) {
+		state.shopList = list;
+		setStore('shopList', list);
+	},
+	// 记录用户信息
 	[RECORD_USERINFO](state, info) {
 		state.userInfo = info;
 		state.login = true;
-		setStore('user_id', info.user_id);
+		setStore('user_id', info.id);
 	},
 	//获取用户信息存入vuex
 	[GET_USERINFO](state, info) {
@@ -135,7 +141,7 @@ export default {
 		if (!state.login) {
 			return
 		}
-		if (!info.message) {
+		if (!info.username) {
 			state.userInfo = {...info};
 		} else {
 			state.userInfo = null;

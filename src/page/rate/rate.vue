@@ -11,7 +11,7 @@
             <section class="head_login" @click="clickRateType()">
                 <span>{{rateType}}</span>
                 <svg class="icon_style">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#filter"></use>
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#filter"></use>
                 </svg>
             </section>
         </header>
@@ -263,6 +263,7 @@
     }
     .main_container{
         padding-top:1.95rem;
+        padding-bottom:1.95rem;
     }
     .shop_container{
         &.bg-gray{

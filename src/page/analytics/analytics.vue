@@ -5,10 +5,9 @@
                 <span class="title_text" >{{date | dateTime('YYYY年MM月DD日') }}</span>
             </section>
             <section class="head_login" @click="eventSearch()">
-                <!-- <svg class="icon_style">
-                        <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#search"></use>
-                    </svg> -->
-                    搜索
+                <svg class="icon_style">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#search"></use>
+                </svg>
             </section>
         </header>
         <section v-if="!showLoading" class="shop_container main_container">
@@ -19,14 +18,14 @@
             <section class="detail_container">
                 <div class="search_submit"  v-if="storeIds.length > 1"  @click="gotoAddress({path:'/rateByShop',query:{ids:storeIds,date:dateFormat}})">
                     <svg class="icon_style">
-                        <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#more"></use>
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#more"></use>
                     </svg>
                     <span>查看详情</span>
                 </div>
 
                 <div class="search_submit" v-else  @click="gotoAddress({'path': 'rate', 'query':{storeId:storeIds[0]}})">
                     <svg class="icon_style">
-                        <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#more"></use>
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#more"></use>
                     </svg>
                     <span>查看详情</span>
                 </div>
@@ -91,6 +90,8 @@
        </section> -->
        <transition name="router-slid" mode="out-in">
             <router-view></router-view>
+
+
         </transition>
     </div>
 </template>
@@ -100,14 +101,21 @@
     import {getMyStore,getRateAnalytics,getStoreRate} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import loading from 'src/components/common/loading'
-    import {loadMore} from 'src/components/common/mixin'
-    import BScroll from 'better-scroll'
+    // import {loadMore} from 'src/components/common/mixin'
+    // import BScroll from 'better-scroll'
     import footGuide from '../../components/footer/footGuide'
-    import IEcharts from 'vue-echarts-v3/src/full.vue'
+    import IEcharts from 'vue-echarts-v3/src/lite.vue'
+
+    import echarts from 'vue-echarts-v3/node_modules/echarts/lib/echarts'
+    import 'vue-echarts-v3/node_modules/echarts/lib/chart/line'
+    import 'vue-echarts-v3/node_modules/echarts/lib/component/graphic'
+    import 'vue-echarts-v3/node_modules/echarts/lib/component/dataZoom'
+    import 'vue-echarts-v3/node_modules/echarts/lib/component/tooltip'
+    import 'vue-echarts-v3/node_modules/echarts/lib/component/title'
+
     import debounce from 'debounce'
     import theme from './theme.json'
     IEcharts.registerTheme('customer', theme)
-
 
     export default {
         data(){
@@ -196,18 +204,54 @@
                     }],
                     series : [
                         {
+                            type:'line',
                             name:'好评',
-                            type:'line',
-                            areaStyle: {normal: {opacity : 0.1}}
+                            lineStyle:{normal:{color:'#6ea593'}},
+                            areaStyle: {
+                                normal: {
+                                    color: new echarts.graphic.LinearGradient(
+                                        0, 0, 0, 1,
+                                        [
+                                            {offset: 0, color: '#6ea593'},
+                                            {offset: 0.9, color: '#eafff1'},
+                                            {offset: 1, color: '#fff'}
+                                        ]
+                                    )
+                                }
+                            }
                         },{
-                            name:'中评',
                             type:'line',
-                            areaStyle: {normal: {opacity : 0.1}}
+                            name:'中评',
+                            lineStyle:{normal:{color:'#f8d555'}},
+                            areaStyle: {
+                                normal: {
+                                    color: new echarts.graphic.LinearGradient(
+                                        0, 0, 0, 1,
+                                        [
+                                            {offset: 0, color: '#f8d555'},
+                                            {offset: 0.9, color: '#fcf8dd'},
+                                            {offset: 1, color: '#fff'}
+                                        ]
+                                    )
+                                }
+                            },
                         },
                         {
-                            name:'差评',
                             type:'line',
-                            areaStyle: {normal: {opacity : 0.1}}
+                            name:'差评',
+                            lineStyle:{normal:{color:'#eda994'}},
+                            areaStyle: {
+                                normal: {
+                                    color: new echarts.graphic.LinearGradient(
+                                        0, 0, 0, 1,
+                                        [
+                                            {offset: 0, color: '#eda994'},
+                                            {offset: 0.9, color: '#ffe3e2'},
+                                            {offset: 1, color: '#fff'}
+                                        ]
+                                    )
+                                }
+                            }
                         }
                     ]
                 }
@@ -233,7 +277,7 @@
         beforeDestroy(){
             // this.foodScroll.removeEventListener('scroll', )
         },
-        mixins: [loadMore],
+        // mixins: [loadMore],
         components: {
             loading,
             footGuide,
@@ -448,16 +492,16 @@
         margin-left: .4rem;
     }
     .head_login{
-        right: 0.55rem;
+        right: 0rem;
+        @include wh(2rem,100%);
         @include sc(0.6rem, #999);
         @include ct;
         border-radius: .2rem;
-        height: 100%;
-        line-height: 1.9rem;
+        text-align: center;
+        line-height: 2.3rem;
         .icon_style{
             width:0.8rem;
             height:0.8rem;
-            padding-top:.2rem;
         }
         .login_span{
             color: #666;
@@ -503,9 +547,10 @@
         margin: 0rem .2rem 0 .3rem;
         input{
             background-color: #eee;
-            padding:.3rem .6rem;
+            padding:.3rem .5rem;
             width: 100%;
             border-radius: .2rem;
+            @include sc(0.6rem, #666);
         }
     }
     .title_right{
@@ -641,22 +686,20 @@
     }
     .search_submit{
         width:90%;
-        padding: 0.4rem 0.25rem 0.4rem;
         margin: .6rem 0;
-        border: 0.025rem solid #ffd101;
-        border-width: 0 0 0.025rem 0;
+        padding: .4rem 0;
         border-radius: 0.125rem;
         background-color: #ffd101;
-        @include sc(0.65rem, #292929);
+        box-shadow: 0px 3px 5px rgba(255,120,0,.5);
+        @include sc(0.7rem, #292929);
         font-weight: normal;
         text-align: center;
-        line-height: 1.2rem;
 
         span{
             color:#111;
             display: inline-block;
             vertical-align:middle;
-            font-size:0.6rem;
+            font-size:0.65rem;
         }
         .icon_style{
             width: .8rem;
@@ -1062,7 +1105,7 @@
             height: 246px;
         }
         .search_submit{
-            padding-bottom: 0.4rem;
+            
         }
     }
     

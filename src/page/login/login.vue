@@ -16,12 +16,13 @@
         </form>
         <p class="login_tips">
             <svg v-if="errorMsg != ''" class="icon_style">
-                <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#codeWarning"></use>
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#codeWarning"></use>
             </svg>
             <span v-if="errorMsg != ''">{{errorMsg}}</span>
         </p>
         <form class="loginForm">
             <section class="input_container">
+                <input type="number" placeholder="请输入邀请码" v-model.lazy="inviteCode">
                 <input type="number" placeholder="请输入您要绑定的手机号码" v-model.lazy="phoneNumber">
             </section>
             <!-- <section class="input_container">
@@ -44,10 +45,12 @@
                 </div>
             </section> -->
         </form>
-        <p class="login_tips">
-            <!-- 注册过的用户可凭账号密码登录 -->
-        </p>
-        <div class="login_container" @click="getVerifyCode" v-if="!lock">获取验证码</div>
+        <div class="login_container" @click="getVerifyCode" v-if="!lock">
+            <svg class="icon_style">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#verifyCode"></use>
+            </svg>
+            <span>获取验证码</span>
+        </div>
         <div class="login_container"  v-if="lock">发送中，请稍后</div>
 
         <!-- <router-link to="/forget" class="to_forget" v-if="!loginWay">重置密码？</router-link> -->
@@ -70,6 +73,7 @@
                 lock:false,
                 loginWay: false, //登录方式，默认短信登录
                 showPassword: false, // 是否显示密码
+                inviteCode:'',
                 phoneNumber: '', //电话号码
                 validate_token: null, //获取短信时返回的验证值，登录时需要
                 computedTime: 0, //倒数记时
@@ -107,42 +111,8 @@
             async initData(){
                 
                 // localStorage.clear();
+
                 // setStore('user','{"id":25,"username":"13788997536","password":"7536","phoneNo":"13788997536","realName":"X","profileImg":"http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJLt9GVR0GqQkjqicrIqibicqaoOFSAQ0u6HFoLcEMwKPdBLzD2mgicCQyumh5JniaH960U0shm17kkjaw/0","isCompany":null,"token":null,"openId":"o8LyKwwyUm6bNkOvHKzqLpu3-0Fg","accessToken":"6HL-hCRhS7aQyBp8bdXUK_1-MBP0CBbIQoOO5U590Jm86q5y1LY3Z5FuviAgHTSLVcdvourLsO_IcNLWf28aFw","city":"","country":"中国"}');
-                // alert(111);
-                
-                //缓存登录
-                // if(getStore('user')){
-                //     let user = JSON.parse(getStore('user'));
-                //     this.$router.push({path:'/shop'});
-                //     return;
-                // }
-
-                if(!this.$route.query.code){
-
-                    window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
-                    return;
-
-                }else{
-
-                    let json = await getOpenId(this.$route.query.code);
-                    setStore('user',json);
-
-                    //weixin api return openid, but our system returns openId
-                    if(!json.openid){
-
-                        window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
-                        return;
-                    }else{
-
-                        let userRes = await getUserByOpenId(json.openid);
-                        setStore('user',userRes.user);
-
-                        if(userRes.user.username){
-                            this.$router.push({path:'/shop'});
-                            return;
-                        }
-                    }
-                }
 
             },
 
@@ -155,7 +125,7 @@
                 }
 
                 this.lock = true;
-                this.codeRes = await mobileCode(this.phoneNumber);
+                this.codeRes = await mobileCode(this.phoneNumber,this.inviteCode);
                 this.lock = false;
 
                 if(this.codeRes.status == -1){
@@ -232,13 +202,14 @@
         }
         .input_container{
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
             input{
                 flex:1;
                 @include sc(.6rem, #666);
                 padding: .5rem .4rem;
-                margin:0 .5rem;
-                border:0.025rem solid #ededed;
+                margin:.2rem .5rem;
+                border:0.025rem solid #b7b7b7;
                 text-align: center;
             }
             button{
@@ -282,15 +253,15 @@
         }
     }
     .login_tips{
-        padding: .4rem .6rem;
-        line-height: .5rem;
+        padding: 0rem .6rem;
+        height:1.4rem;
         text-align: center;
         .icon_style{
             @include wh(1rem, 1rem);
             vertical-align:middle;
         }
         span{ 
-            @include sc(.6rem, #8b8b8b);
+            @include sc(.6rem, red);
             vertical-align:middle;
         }
         a{
@@ -298,13 +269,20 @@
         }
     }
     .login_container{
-        margin: 0 .5rem 1rem;
+        margin: .2rem .5rem 1rem;
         @include sc(.6rem, #fff);
         background-color: #fdd02f;
         padding: .5rem 0;
         border: 1px;
         border-radius: 0.15rem;
         text-align: center;
+        .icon_style{
+            @include wh(.8rem, .8rem);
+            vertical-align:middle;
+        }
+        span{ 
+            vertical-align:middle;
+        }
     }
     .button_switch{
         background-color: #ccc;

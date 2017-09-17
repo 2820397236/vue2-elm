@@ -73,13 +73,10 @@
     import {getMyStore,getRateByDate} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import loading from 'src/components/common/loading'
-    import {loadMore, getImgPath} from 'src/components/common/mixin'
-    import {imgBaseUrl} from 'src/config/env'
-    import BScroll from 'better-scroll'
+    // import {loadMore, getImgPath} from 'src/components/common/mixin'
+    // import {imgBaseUrl} from 'src/config/env'
+    // import BScroll from 'better-scroll'
     import footGuide from '../../components/footer/footGuide'
-    import IEcharts from 'vue-echarts-v3/src/full.vue';
-    import theme from '../analytics/theme.json'
-    IEcharts.registerTheme('customer', theme)
     export default {
         data(){
             return{
@@ -103,11 +100,10 @@
         beforeDestroy(){
             // this.foodScroll.removeEventListener('scroll', )
         },
-        mixins: [loadMore, getImgPath],
+        // mixins: [loadMore, getImgPath],
         components: {
             loading,
-            footGuide,
-            IEcharts,
+            footGuide
         },
         computed: {
           

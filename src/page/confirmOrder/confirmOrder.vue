@@ -128,7 +128,7 @@
                     </div> -->
                 </header>
                 <div class="choose_type_Container">
-                    <header>会员测试期，购买<span class="highlight">5折起</span></header>
+                    <header>产品推广期，订阅费<span class="highlight">五折</span></header>
                     <ul>
                       <!--  <li v-for="item in payments" :key="item.id" :class="{choose: payWayId == item.id}" 
                         @click="choosePayWay(item.is_online_payment, item.id)">

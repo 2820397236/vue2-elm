@@ -9,7 +9,7 @@
             <section class="head_option" :class="{red:warningType == 'high',yellow:warningType == 'mid', green:warningType == 'low'}"  @click="clickRateType()">
                 <span>预警 {{rateType}}</span>
                 <svg class="icon_style">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#warning"></use>
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#warning"></use>
                 </svg>
             </section>
             <!-- <section class="head_option" @click="clickRateType()">
@@ -249,11 +249,11 @@
         margin-left: .4rem;
     }
     .head_option{
-        right: 0.35rem;
         @include sc(0.5rem, #fff);
         @include ct;
-        /*background:#ff9501;*/
-        padding:.1rem .3rem .2rem .3rem ;
+        right: 0.35rem;
+        line-height: 1rem;
+        padding:0 .2rem;
         border-radius: .2rem;
         .login_span{
             color: #666;
@@ -263,9 +263,10 @@
             @include wh(.8rem, .8rem);
         }
         .icon_style{
-            @include wh(.7rem, .7rem);
+            @include wh(.6rem, .6rem);
             vertical-align:middle;
             fill:#fff;
+            margin-top:-.1rem;
         }
         span{
             vertical-align:middle;
@@ -305,6 +306,7 @@
     }
     .main_container{
         padding-top:1.95rem;
+        padding-bottom:1.95rem;
     }
     .shop_container{
         &.bg-gray{

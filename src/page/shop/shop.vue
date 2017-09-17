@@ -6,7 +6,7 @@
                     <polyline points="12,18 4,9 12,0" style="fill:none;stroke:rgb(255,255,255);stroke-width:3"/>
                 </svg>
             </nav> -->
-            <header class="shop_detail_header" ref="shopheader" style="z-index:0">
+            <header class="shop_detail_header" ref="shopheader">
                 <!-- <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"> -->
                 <section class="description_header" :class="storeList.length == 0  && storeListOrigin.length == 0 ?'empty':''">
                     <div class="description_top">
@@ -21,7 +21,7 @@
                         <section class="description_more">
                             <router-link class="shop_detail_vip" :to="{path:'/city/1'}" tag="span" >
                                 <svg class="icon_style">
-                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" href="#add"></use>
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#add"></use>
                                 </svg>
                                 <span>订阅更多</span>                            
                             </router-link>
@@ -45,7 +45,11 @@
 
             <section class="food_container emptyShop" v-if="storeList.length == 0">
                 <div class="start_button" @click = "gotoAddress('/city/1')">
-                    立即体验订阅评论监控
+                    <svg class="icon_style">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#buyNow"></use>
+                    </svg>
+                    <span>立即体验订阅评论监控</span>
+                    
                 </div>
             </section>
 
@@ -92,7 +96,7 @@
 
         <foot-guide v-if="storeList.length > 0"></foot-guide>
 
-       <loading v-show="showLoading || loadRatings"></loading>
+       <loading v-show="showLoading"></loading>
        <!-- <section class="animation_opactiy shop_back_svg_container" v-if="showLoading">
            <img src="../../images/shop_back_svg.svg">
        </section> -->
@@ -195,67 +199,81 @@
         },
         computed: {
             ...mapState([
-                'latitude','longitude','cartList'
+                'shopList'
             ]),
-            promotionInfo: function (){
-                return this.shopDetailData.promotion_info || '欢迎光临，用餐高峰期请提前下单，谢谢。'
-            },
-            //配送费
-            deliveryFee: function () {
-                if (this.shopDetailData) {
-                    return this.shopDetailData.float_delivery_fee;
-                }else{
-                    return null;
-                }
-            },
-            //还差多少元起送，为负数时显示去结算按钮
-            minimumOrderAmount: function () {
-                if (this.shopDetailData) {
-                    return this.shopDetailData.float_minimum_order_amount - this.totalPrice;
-                }else{
-                    return null;
-                }
-            },
-            //当前商店购物信息
-            shopCart: function (){
-                return {...this.cartList[this.shopId]};
-            },
-            //购物车中总共商品的数量
-            totalNum: function (){
-                let num = 0;
-                this.cartFoodList.forEach(item => {
-                    num += item.num
-                })
-                return num
-            },
+            // promotionInfo: function (){
+            //     return this.shopDetailData.promotion_info || '欢迎光临，用餐高峰期请提前下单，谢谢。'
+            // },
+            // //配送费
+            // deliveryFee: function () {
+            //     if (this.shopDetailData) {
+            //         return this.shopDetailData.float_delivery_fee;
+            //     }else{
+            //         return null;
+            //     }
+            // },
+            // //还差多少元起送，为负数时显示去结算按钮
+            // minimumOrderAmount: function () {
+            //     if (this.shopDetailData) {
+            //         return this.shopDetailData.float_minimum_order_amount - this.totalPrice;
+            //     }else{
+            //         return null;
+            //     }
+            // },
+            // //当前商店购物信息
+            // shopCart: function (){
+            //     return {...this.cartList[this.shopId]};
+            // },
+            // //购物车中总共商品的数量
+            // totalNum: function (){
+            //     let num = 0;
+            //     this.cartFoodList.forEach(item => {
+            //         num += item.num
+            //     })
+            //     return num
+            // },
         },
         // props: ['alertText','alertSubText','alertTime','alertImg'],
         methods: {
             ...mapMutations([
-                // 'RECORD_ADDRESS','ADD_CART','REDUCE_CART','INIT_BUYCART','CLEAR_CART','RECORD_SHOPDETAIL'
+               'RECORD_SHOPLIST'
             ]),
             //初始化时获取基本数据
             async initData(){
+                
                 if(getStore('user') == undefined){
                     this.gotoAddress('/login');
                 }
                 this.user = JSON.parse(getStore('user'));
 
-                // alert(user.username);
-                // if(user.username==null || user.username == ''){
-                //     this.gotoAddress('/login');
-                // }
+                //提示绑定
+                if(this.user.username==null || this.user.username == ''){
+                    this.checkPhoneNumber();
+                }
+
+
+                if(this.shopList){
+                    this.storeList = this.shopList;
+                    this.storeListOrigin = this.shopList;
+                }
 
                 //获取我的门店
                 let response = await getMyStore(this.user.id);
                 if(response.status == -1){
+
                     removeStore('user');
                     this.gotoAddress('/login');
+
                 }else if(response.status == 0){
                     this.storeList = response.stores;
                     this.storeListOrigin = response.stores;
                     this.extra = response.extra;
                 }
+
+
+                // this.storeList = [];
+                // this.storeListOrigin = [];
+                // this.extra = [];
 
                 //整合数据
                 for(var i=0;i<this.extra.length;i++){
@@ -272,9 +290,13 @@
                         }
                     }
                 }
+
+                this.RECORD_SHOPLIST(this.storeListOrigin);
                 
                 //隐藏加载动画
                 this.hideLoading();
+
+                
             },
             async cancelStore(store,index){
 
@@ -320,6 +342,7 @@
             closeTip(){
                 this.$emit('closeTip')
             },
+
             alert(store,index){
 
                 this.showAlert = true;
@@ -348,6 +371,24 @@
                     }
                 }
                 
+            },
+
+            checkPhoneNumber(){
+                console.log(this.user.profileImg);
+
+                this.showAlert = true;
+
+                this.alertText = this.user.realName;
+
+                this.alertSubText = '欢迎使用蜜蜂点评，请先绑定手机';
+                this.alertTime = new Date();
+                this.alertImg = this.user.profileImg;
+
+                this.confirmBtn = "立刻绑定";
+                this.format = 'YYYY年MM月DD日';
+                this.alertFunc = ()=>{
+                   this.$router.push({path:'/login'});
+                }
             },
             //获取食品列表的高度，存入shopListTop
             getFoodListHeight(){
@@ -547,23 +588,23 @@
             },
             //商品、评论切换状态
             changeShowType: function (value){
-                if (value === 'rating') {
-                    this.$nextTick(() => {
-                        this.ratingScroll = new BScroll('#ratingContainer', {
-                            probeType: 3,
-                            deceleration: 0.003,
-                            bounce: false,
-                            swipeTime: 2000,
-                            click: true,
-                        });
-                        this.ratingScroll.on('scroll', (pos) => {
-                            if (Math.abs(Math.round(pos.y)) >=  Math.abs(Math.round(this.ratingScroll.maxScrollY))) {
-                                this.loaderMoreRating();
-                                this.ratingScroll.refresh();
-                            }
-                        })
-                    })
-                }
+                // if (value === 'rating') {
+                //     this.$nextTick(() => {
+                //         this.ratingScroll = new BScroll('#ratingContainer', {
+                //             probeType: 3,
+                //             deceleration: 0.003,
+                //             bounce: false,
+                //             swipeTime: 2000,
+                //             click: true,
+                //         });
+                //         this.ratingScroll.on('scroll', (pos) => {
+                //             if (Math.abs(Math.round(pos.y)) >=  Math.abs(Math.round(this.ratingScroll.maxScrollY))) {
+                //                 this.loaderMoreRating();
+                //                 this.ratingScroll.refresh();
+                //             }
+                //         })
+                //     })
+                // }
             }
         }
     }
@@ -696,8 +737,11 @@
         padding-left: 0.2rem;
     }
     .shop_detail_header{
+        @include wh(100%, auto);
         overflow: hidden;
         position: relative;
+        position:fixed;
+        z-index:1;
         .header_cover_img{
             width: 100%;
             position: absolute;
@@ -714,7 +758,7 @@
             background:-webkit-gradient(linear,0 0%,100% 100%,from(#fdcb2e),to(#fbba2a));/*Old gradient for webkit*/  
             background:-webkit-linear-gradient(bottom,#fdcb2e,#fbba2a);/*new gradient for Webkit*/  
             background:-o-linear-gradient(bottom,#fdcb2e,#fbba2a); /*Opera11*/ 
-            padding: 0.6rem 0.8rem 0.6rem 0.8rem;
+            padding: 0.2rem 0.8rem 0.6rem 0.8rem;
             width: 100%;
             overflow: hidden;
             .description_top{
@@ -729,7 +773,7 @@
                     }
                 }
                 .description_right{
-                    flex: 2;
+                    flex: 3;
                     .description_title{
                         @include sc(.6rem, #282828);
                         /*font-weight: bold;*/
@@ -747,7 +791,7 @@
                     }
                 }
                 .description_more{
-                    flex:1;
+                    flex:2;
                 }
                 .description_arrow{
                     @include ct;
@@ -758,10 +802,9 @@
                     display: inline-block;
                     font-size: 12px;
                     line-height: 12px;
-                    padding:.4rem ;
-                    margin-top:20px;
+                    margin-top:14px;
                     float:right;
-
+                    padding: .4rem .4rem .4rem .8rem;
                     background-color:#3d3d3d;
                     /*@include bis('../../images/vip.jpg');*/
                     /*background-size: 34px auto;
@@ -826,7 +869,7 @@
                         display: none;
                     }
                     .description_title {
-                        @include sc(.9rem, #fff);
+                        @include sc(.9rem, #282828);
                     }
                 }
             }
@@ -893,31 +936,34 @@
         }
     }
     .emptyShop{
-        @include bis('../../images/empty.png');
+        @include bis('../../images/empty1.png');
         background-color:#fff;
-        background-size: auto 100%;
-        background-position: center 0;
+        background-size: 100% auto;
+        background-position: center bottom;
+        padding-bottom:1rem!important;
         display: flex;
         align-items: flex-end;
         justify-content: center;
         .start_button{
             @include wh(90%, auto);
-            @include sc(.6rem, #312f26);
             text-align: center;
             background-color:#ffd101;
-            padding:.6rem 0;
+            padding:.4rem 0 .6rem 0;
             border-radius: .2rem;
+            span{
+                @include sc(.7rem, #312f26);
+            }
+            .icon_style{
+                @include wh(.7rem, .7rem);
+            }
         }
     }
     .food_container{
-        display: flex;
-        flex: 1;
-        padding-bottom: 2rem;
+        padding-top:7rem;
+        padding-bottom: 1.95rem;
+        min-height: 100%;
     }
     .menu_container{
-        display: flex;
-        flex: 1;
-        overflow-y: hidden;
         position: relative;
         .menu_left{
             width: 3.8rem;
@@ -1623,9 +1669,9 @@
     .search_container{
         background-color:#fff;
         
-        @include wh(100%, 1.4rem);
+        @include wh(100%, auto);
+        padding:.4rem 0;
         @include sc(.6rem, #ccc);
-        line-height: 1.4rem;
         text-align: center;
         font-weight: normal;
         margin:14px 0 0 0;
@@ -1641,7 +1687,7 @@
             padding-bottom: 0.4rem;
         }
         .shop_detail_header .description_header .description_top .shop_detail_vip{
-            padding: .3rem .2rem;
+            padding: .4rem .4rem .4rem .8rem;
         }
         .menu_container .menu_right .store_detail_list .store_info .store_head .store_name .store_status{
             padding: 0 .2rem .1rem;

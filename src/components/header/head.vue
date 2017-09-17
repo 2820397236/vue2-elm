@@ -3,10 +3,9 @@
         <slot name='logo'></slot>
         <slot name='search'></slot>
         <section class="head_goback" v-if="goBack" @click="$router.go(-1)">
-            <!-- <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" version="1.1">
-                <polyline points="12,18 4,9 12,0" style="fill:none;stroke:rgb(255,255,255);stroke-width:2"/>
-            </svg> -->
-            取消
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                <polyline points="12,18 4,9 12,0" style="fill:none;stroke:rgb(200,200,200);stroke-width:2"/>
+            </svg> 
         </section>
         <router-link :to="userInfo? '/profile':'/login'" v-if='signinUp' class="head_login">
             <svg class="user_avatar" v-if="userInfo">
@@ -67,10 +66,11 @@
     }
     .head_goback{
         left: 0.4rem;
-        @include wh(1.95rem, auto);
+        @include wh(1.95rem, 1.95rem);
         @include sc(0.6rem, #666);
         line-height: 1.95rem;
         margin-left: .4rem;
+        padding-top: .5rem;
     }
     .head_login{
         right: 0.55rem;

@@ -206,12 +206,12 @@
             margin:0 .5rem;
             > input {
                 width: 100%;
-                height: 100%;
+                height: 45px;
                 font-size: 18px;
                 text-align: center;
                 display: block;
                 background: #fff;
-                border:0.025rem solid #ddd;
+                border:0.025rem solid #aaa;
                 border-radius: 0.1rem;
             }
         }
