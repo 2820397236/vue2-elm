@@ -242,7 +242,7 @@
             async initData(){
                 
                 if(getStore('user') == undefined){
-                    this.gotoAddress('/login');
+                    this.gotoAddress('/');
                 }
                 this.user = JSON.parse(getStore('user'));
 
@@ -262,7 +262,7 @@
                 if(response.status == -1){
 
                     removeStore('user');
-                    this.gotoAddress('/login');
+                    this.gotoAddress('/');
 
                 }else if(response.status == 0){
                     this.storeList = response.stores;
@@ -406,7 +406,10 @@
                 this.confirmBtn = "立刻重置";
                 this.format = 'YYYY年MM月DD日';
                 this.alertFunc = ()=>{
-                   window.localStorage.clear();
+
+                   this.user.username = "";
+                   this.user.phoneNo  = "";
+                   setStore('user',JSON.stringify(this.user));
                    this.$router.push({path:'/login'});
                 }
             },
