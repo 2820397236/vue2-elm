@@ -11,7 +11,7 @@
                 <section class="description_header" :class="storeList.length == 0  && storeListOrigin.length == 0 ?'empty':''">
                     <div class="description_top">
                         <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
-                            <img :src="user.profileImg">
+                            <img :src="user.profileImg" @click="signout">
                         </section>
                         <section class="description_right">
                             <h4 class="description_title ellipsis">您好，<br/>{{user.realName}}</h4>
@@ -390,6 +390,27 @@
                    this.$router.push({path:'/login'});
                 }
             },
+
+
+            signout(){
+                console.log(this.user.profileImg);
+
+                this.showAlert = true;
+
+                this.alertText = this.user.realName;
+
+                this.alertSubText = '是否重置账号';
+                this.alertTime = new Date();
+                this.alertImg = this.user.profileImg;
+
+                this.confirmBtn = "立刻重置";
+                this.format = 'YYYY年MM月DD日';
+                this.alertFunc = ()=>{
+                   window.localStorage.clear();
+                   this.$router.push({path:'/login'});
+                }
+            },
+
             //获取食品列表的高度，存入shopListTop
             getFoodListHeight(){
                 // const listContainer = this.$refs.menuFoodList;
