@@ -724,6 +724,7 @@
         position: absolute;
         right: 0;
         left: 0;
+        height:100%;
         min-height: 100%;
     }
     .goback{
