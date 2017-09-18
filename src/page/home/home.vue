@@ -105,6 +105,12 @@ export default {
     },
 
 	mounted(){
+
+        if(getStore('user') == undefined){
+            this.$router.push('/');
+        }
+        this.user = JSON.parse(getStore('user'));
+                
         // 获取当前城市
         // cityGuess().then(res => {
         //     this.guessCity = res.name;

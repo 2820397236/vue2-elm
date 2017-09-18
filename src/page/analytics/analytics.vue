@@ -297,10 +297,9 @@
             async initData(){
 
                 if(getStore('user') == undefined){
-                    this.gotoAddress('/login');
+                    this.$router.push('/');
                 }
-                
-                this.user =  JSON.parse(getStore('user'));
+                this.user = JSON.parse(getStore('user'));
 
                 let response = await getMyStore(this.user.id);
                 if(response.status == 0){

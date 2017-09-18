@@ -61,11 +61,11 @@
                                 <li v-for="(store,index) in storeList" :key="index">
 
                                     <section class="store_detail_list">
-                                            <section class="store_img" @click="alert(store,index)">
+                                            <section class="store_img" @click="gotoAddress('rate?storeId='+store.id)">
                                                 <img :src="store.defaultPic">
                                             </section>
 
-                                            <section  @click="alert(store,index)" class="store_info">
+                                            <section  @click="gotoAddress('rate?storeId='+store.id)" class="store_info">
                                                 <h3 class="store_head">
                                                     <span class="store_name ellipsis">
                                                     <span>{{store.name}}</span>
@@ -399,11 +399,11 @@
 
                 this.alertText = this.user.realName;
 
-                this.alertSubText = '是否重置账号';
+                this.alertSubText = '是否重新绑定手机';
                 this.alertTime = new Date();
                 this.alertImg = this.user.profileImg;
 
-                this.confirmBtn = "立刻重置";
+                this.confirmBtn = "立刻绑定";
                 this.format = 'YYYY年MM月DD日';
                 this.alertFunc = ()=>{
 

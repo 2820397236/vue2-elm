@@ -115,7 +115,11 @@
             //初始化时获取基本数据
             async initData(){
 
-                this.user =  JSON.parse(getStore('user'));
+                if(getStore('user') == undefined){
+                    this.$router.push('/');
+                }
+                this.user = JSON.parse(getStore('user'));
+
                 let response = await getMyStore(this.user.id);
                 if(response.status == 0){
                     this.storeList = response.stores;

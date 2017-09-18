@@ -131,10 +131,13 @@
                 this.showRateType = !this.showRateType;
             },
             async initData(){
-                
+                if(getStore('user') == undefined){
+                    this.$router.push('/');
+                }
+                this.user = JSON.parse(getStore('user'));
+
                 this.storeId = this.$route.query.storeId;
                 this.storeName = this.$route.query.storeName;
-                this.user = JSON.parse(getStore('user'));
 
 
                 //获取我的门店

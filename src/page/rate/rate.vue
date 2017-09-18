@@ -93,7 +93,7 @@
                storeName:'',
                storeImg:'',
                store:null,
-               rateType:'全部评论',
+               rateType:'负面评论',
             }
         },
         mounted(){
@@ -125,10 +125,13 @@
                 this.showRateType = !this.showRateType;
             },
             async initData(){
-                
+                if(getStore('user') == undefined){
+                    this.$router.push('/');
+                }
+                this.user = JSON.parse(getStore('user'));
+
                 this.storeId = this.$route.query.storeId;
                 this.storeName = this.$route.query.storeName;
-                this.user = JSON.parse(getStore('user'));
 
                 let resStore = await getStoreInfo([this.storeId]);
                 if(resStore.status == 0){
@@ -159,6 +162,7 @@
                     this.rateCount = resCount.rates[0];
                 }
 
+                this.setRatingType('low');
                 this.hideLoading();
             },
 
