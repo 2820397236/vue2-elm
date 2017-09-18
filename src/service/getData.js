@@ -276,8 +276,8 @@ export const getPayConfig = (userId,storeIds,payment) => fetch('/wx/getPayConfig
 export const searchplace = (cityName, keywords,cityId, pageNo=0, pageSize=10) => fetch('/searchDpStore', {
 	cityName: cityName,
 	keywords: keywords,
+	cityId:parseInt(cityId),
 	pageNo:pageNo,
-	cityId:cityId,
 	pageSize:pageSize
 });
 
