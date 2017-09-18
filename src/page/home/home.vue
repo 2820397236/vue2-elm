@@ -19,7 +19,7 @@
         </form>
 
         <section class="main_container">
-            <section v-for="area in areaList">
+            <section v-for="area in areaList" v-if=" area != '国外热门'">
                 <div class="form_title">{{area}}</div>
                 <section id="hot_city_container">
                     <ul class="citylistul clear">
@@ -110,7 +110,7 @@ export default {
             this.$router.push('/');
         }
         this.user = JSON.parse(getStore('user'));
-                
+
         // 获取当前城市
         // cityGuess().then(res => {
         //     this.guessCity = res.name;
