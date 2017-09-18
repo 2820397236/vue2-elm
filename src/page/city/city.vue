@@ -60,7 +60,7 @@
                 showLoading:false,
                 inputVaule:'', // 搜索地址
                 city:null,
-                cityid:'', // 当前城市id
+                cityId:'', // 当前城市id
                 cityname:'', // 当前城市名字
                 stores:[], // 搜索城市列表
                 selectStores:[],
@@ -100,6 +100,7 @@
             ]),
 
             initData(){
+                //已订阅
                 this.shopIds = JSON.parse(getStore('shopIds'));
                 console.log(this.shopIds);
 
@@ -141,8 +142,8 @@
             searchStore(city,keyword,i=0){
                 
                 this.startLoading();
-                console.log(city,keyword);
-                searchplace(city,keyword).then(res => {
+                console.log(city,keyword,this.$route.params.cityid);
+                searchplace(city,keyword,this.$route.params.cityid).then(res => {
 
                         if(res.status == -1){
                             return;

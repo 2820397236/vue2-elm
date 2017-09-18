@@ -22,7 +22,7 @@
         </p>
         <form class="loginForm">
             <section class="input_container">
-                <input type="text" placeholder="请输入邀请码" v-model.lazy="inviteCode">
+                <input type="text" placeholder="请输入邀请码(选填)" v-model.lazy="inviteCode">
                 <input type="number" placeholder="请输入您要绑定的手机号码" v-model.lazy="phoneNumber">
             </section>
             <!-- <section class="input_container">

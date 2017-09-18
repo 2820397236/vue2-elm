@@ -19,17 +19,18 @@
         </form>
 
         <section class="main_container">
-            
-            <div class="form_title">热门城市</div>
-            <section id="hot_city_container">
-                <ul class="citylistul clear">
-                    <li v-for="item in hotcity" :key="item.id" @click="setCity(item)">
-                        {{item.cityName}}
-                    </li>  
-                </ul>
+            <section v-for="area in areaList">
+                <div class="form_title">{{area}}</div>
+                <section id="hot_city_container">
+                    <ul class="citylistul clear">
+                        <li v-for="item in areaMap[area]" :key="item.id" @click="setCity(item)">
+                            {{item.cityName}}
+                        </li>  
+                    </ul>
+                </section>
             </section>
 
-            <div class="form_title" v-if="cityList['直辖市']">直辖市</div>
+            <!-- <div class="form_title" v-if="cityList['直辖市']">直辖市</div>
             <section id="hot_city_container" v-if="cityList['直辖市']">
                 <ul class="citylistul clear">
                     <li v-for="item in cityList['直辖市']" :key="item.id" @click="setCity(item)">
@@ -63,7 +64,7 @@
                         </li> 
                     </ul>
                 </section>
-            </section>
+            </section> -->
             <!-- <section class="group_city_container">
                 <ul class="letter_classify">
                     <li v-for="(value, key, index) in sortgroupcity" :key="key"  class="letter_classify_li">
@@ -93,6 +94,8 @@ export default {
         return{
             city: '',
             hotcity: [],     //热门城市列表
+            areaList:[],
+            areaMap:{},
             guesscity:{},
             groupcity: {},   //所有城市列表
             inChina:[],
@@ -110,15 +113,28 @@ export default {
 
         //获取热门城市
         hotcity().then(res => {
+            let _this = this;
             this.hotcity = res.cities;
             this.guesscity = res.cities[0];
+
+            this.hotcity.map(item=>{
+                if( _this.areaList.indexOf(item.areaName) == -1 ){
+                    _this.areaList.push(item.areaName);
+                    _this.areaMap[item.areaName] = new Array();
+                }
+                _this.areaMap[item.areaName].push(item);
+                return item;
+            })
+
+            console.log(_this.areaMap);
+            console.log(_this.areaList);
         })
 
-        groupcity().then(res => {
-            this.inChina = res.inChina;
-            this.outCina = res.outCina;
-            this.cityList = res.cityList;
-        });
+        // groupcity().then(res => {
+        //     this.inChina = res.inChina;
+        //     this.outCina = res.outCina;
+        //     this.cityList = res.cityList;
+        // });
 
         if(getStore('city')) {
             this.city = JSON.parse(getStore('city'));
