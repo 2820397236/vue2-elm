@@ -94,7 +94,7 @@
             </transition>
         </section>
 
-        <foot-guide v-if="storeList.length > 0"></foot-guide>
+        <foot-guide v-if="seletedCity"></foot-guide>
 
        <loading v-show="showLoading"></loading>
        <!-- <section class="animation_opactiy shop_back_svg_container" v-if="showLoading">
@@ -176,6 +176,7 @@
                 alertFunc:null,
                 confirmBtn:null,
                 format:'',
+                seletedCity:false
             }
         },
         created(){
@@ -244,6 +245,10 @@
                 if(getStore('user') == undefined){
                     this.gotoAddress('/');
                 }
+
+                if(getStore('city') != undefined){
+                    this.seletedCity = true;
+                }
                 this.user = JSON.parse(getStore('user'));
 
                 //提示绑定
@@ -274,6 +279,10 @@
                 // this.storeList = [];
                 // this.storeListOrigin = [];
                 // this.extra = [];
+
+                if(this.storeList.length ==0){
+                    this.seletedCity = false;
+                }
 
                 //整合数据
                 for(var i=0;i<this.extra.length;i++){

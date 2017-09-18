@@ -105,7 +105,7 @@
                     this.$router.push('/');
                 }
                 this.user = JSON.parse(getStore('user'));
-                
+
                 this.shopIds = JSON.parse(getStore('shopIds'));
                 console.log(this.shopIds);
 
