@@ -70,8 +70,8 @@
                                                     <span class="store_name ellipsis">
                                                     <span>{{store.name}}</span>
                                                     <span v-if="store.branchName">({{store.branchName}})</span> 
-                                                    <span class="store_status green" v-if="store.status==0">营业</span>
-                                                    <span class="store_status red" v-if="store.status!=0">停业</span>
+                                                    <!-- <span class="store_status green" v-if="store.status==0">营业</span>
+                                                    <span class="store_status red" v-if="store.status!=0">停业</span> -->
                                                 </span>
                                                 </h3>
                                                 <p class="store_content ellipsis" v-if="store.address == ''">
