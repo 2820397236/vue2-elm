@@ -414,179 +414,179 @@
                 }
             },
 
-            //获取食品列表的高度，存入shopListTop
-            getFoodListHeight(){
-                // const listContainer = this.$refs.menuFoodList;
-                // const listArr = Array.from(listContainer.children[0].children);
-                // listArr.forEach((item, index) => {
-                //     this.shopListTop[index] = item.offsetTop;
-                // });
-                // this.listenScroll(listContainer)
-            },
-            //当滑动食品列表时，监听其scrollTop值来设置对应的食品列表标题的样式
-            listenScroll(element){
-                // this.foodScroll = new BScroll(element, {
-                //     probeType: 3,
-                //     deceleration: 0.001,
-                //     bounce: false,
-                //     swipeTime: 2000,
-                //     click: true,
-                // });
+            // //获取食品列表的高度，存入shopListTop
+            // getFoodListHeight(){
+            //     // const listContainer = this.$refs.menuFoodList;
+            //     // const listArr = Array.from(listContainer.children[0].children);
+            //     // listArr.forEach((item, index) => {
+            //     //     this.shopListTop[index] = item.offsetTop;
+            //     // });
+            //     // this.listenScroll(listContainer)
+            // },
+            // //当滑动食品列表时，监听其scrollTop值来设置对应的食品列表标题的样式
+            // listenScroll(element){
+            //     // this.foodScroll = new BScroll(element, {
+            //     //     probeType: 3,
+            //     //     deceleration: 0.001,
+            //     //     bounce: false,
+            //     //     swipeTime: 2000,
+            //     //     click: true,
+            //     // });
 
-                // const wrapperMenu = new BScroll('#wrapper_menu', {
-                //     click: true,
-                // });
+            //     // const wrapperMenu = new BScroll('#wrapper_menu', {
+            //     //     click: true,
+            //     // });
 
-                // const wrapMenuHeight = this.$refs.wrapperMenu.clientHeight;
-                // this.foodScroll.on('scroll', (pos) => {
-                //     if (!this.$refs.wrapperMenu) {
-                //         return 
-                //     }
-                //     this.shopListTop.forEach((item, index) => {
-                //         if (this.menuIndexChange && Math.abs(Math.round(pos.y)) >= item) {
-                //             this.menuIndex = index;
-                //             const storeList=this.$refs.wrapperMenu.querySelectorAll('.activity_menu');
-                //             const el = storeList[0];
-                //             wrapperMenu.scrollToElement(el, 800, 0, -(wrapMenuHeight/2 - 50));
-                //         }
-                //     })
-                // })
-            },
-            //控制活动详情页的显示隐藏
-            showActivitiesFun(){
-                this.showActivities = !this.showActivities;
-            },
-            //点击左侧食品列表标题，相应列表移动到最顶层
-            chooseMenu(index){
-                this.menuIndex = index;
-                //menuIndexChange解决运动时listenScroll依然监听的bug
-                this.menuIndexChange = false;
-                this.foodScroll.scrollTo(0, -this.shopListTop[index], 400);
-                this.foodScroll.on('scrollEnd', () => {
-                    this.menuIndexChange = true;
-                })
-            },
-            showTitleDetail(index){
-                if (this.TitleDetailIndex == index) {
-                    this.TitleDetailIndex = null;
-                }else{
-                    this.TitleDetailIndex = index;
-                }
-            },
-            //加入购物车，所需7个参数，商铺id，食品分类id，食品id，食品规格id，食品名字，食品价格，食品规格
-            addToCart(category_id, item_id, food_id, name, price, specs){
-                this.ADD_CART({shopid: this.shopId, category_id, item_id, food_id, name, price, specs});
-            },
-            //移出购物车，所需7个参数，商铺id，食品分类id，食品id，食品规格id，食品名字，食品价格，食品规格
-            removeOutCart(category_id, item_id, food_id, name, price, specs){
-                this.REDUCE_CART({shopid: this.shopId, category_id, item_id, food_id, name, price, specs});
-            },
-            /**
-             * 初始化和shopCart变化时，重新获取购物车改变过的数据，赋值 categoryNum，totalPrice，cartFoodList，整个数据流是自上而下的形式，所有的购物车数据都交给vuex统一管理，包括购物车组件中自身的商品数量，使整个数据流更加清晰
-             */
+            //     // const wrapMenuHeight = this.$refs.wrapperMenu.clientHeight;
+            //     // this.foodScroll.on('scroll', (pos) => {
+            //     //     if (!this.$refs.wrapperMenu) {
+            //     //         return 
+            //     //     }
+            //     //     this.shopListTop.forEach((item, index) => {
+            //     //         if (this.menuIndexChange && Math.abs(Math.round(pos.y)) >= item) {
+            //     //             this.menuIndex = index;
+            //     //             const storeList=this.$refs.wrapperMenu.querySelectorAll('.activity_menu');
+            //     //             const el = storeList[0];
+            //     //             wrapperMenu.scrollToElement(el, 800, 0, -(wrapMenuHeight/2 - 50));
+            //     //         }
+            //     //     })
+            //     // })
+            // },
+            // //控制活动详情页的显示隐藏
+            // showActivitiesFun(){
+            //     this.showActivities = !this.showActivities;
+            // },
+            // //点击左侧食品列表标题，相应列表移动到最顶层
+            // chooseMenu(index){
+            //     this.menuIndex = index;
+            //     //menuIndexChange解决运动时listenScroll依然监听的bug
+            //     this.menuIndexChange = false;
+            //     this.foodScroll.scrollTo(0, -this.shopListTop[index], 400);
+            //     this.foodScroll.on('scrollEnd', () => {
+            //         this.menuIndexChange = true;
+            //     })
+            // },
+            // showTitleDetail(index){
+            //     if (this.TitleDetailIndex == index) {
+            //         this.TitleDetailIndex = null;
+            //     }else{
+            //         this.TitleDetailIndex = index;
+            //     }
+            // },
+            // //加入购物车，所需7个参数，商铺id，食品分类id，食品id，食品规格id，食品名字，食品价格，食品规格
+            // addToCart(category_id, item_id, food_id, name, price, specs){
+            //     this.ADD_CART({shopid: this.shopId, category_id, item_id, food_id, name, price, specs});
+            // },
+            // //移出购物车，所需7个参数，商铺id，食品分类id，食品id，食品规格id，食品名字，食品价格，食品规格
+            // removeOutCart(category_id, item_id, food_id, name, price, specs){
+            //     this.REDUCE_CART({shopid: this.shopId, category_id, item_id, food_id, name, price, specs});
+            // },
+            // /**
+            //  * 初始化和shopCart变化时，重新获取购物车改变过的数据，赋值 categoryNum，totalPrice，cartFoodList，整个数据流是自上而下的形式，所有的购物车数据都交给vuex统一管理，包括购物车组件中自身的商品数量，使整个数据流更加清晰
+            //  */
             
-            //控制购物列表是否显示
-            toggleCartList(){
-                this.cartFoodList.length ? this.showCartList = !this.showCartList : true;
-            },
-            //清除购物车
-            clearCart(){
-                this.toggleCartList();
-                this.CLEAR_CART(this.shopId);
-            },
-            //监听圆点是否进入购物车
-            listenInCart(){
-                if (!this.receiveInCart) {
-                    this.receiveInCart = true;
-                    this.$refs.cartContainer.addEventListener('animationend', () => {
-                        this.receiveInCart = false;
-                    })
-                    this.$refs.cartContainer.addEventListener('webkitAnimationEnd', () => {
-                        this.receiveInCart = false;
-                    })
-                }
-            },
-            //获取不同类型的评论列表
-            async changeTgeIndex(index, name){
-                this.ratingTageIndex = index;
-                this.ratingOffset = 0;
-                this.ratingTagName = name;
-                let res = await getRatingList(this.shopId, this.ratingOffset, name);
-                this.ratingList = [...res];
-                this.$nextTick(() => {
-                    this.ratingScroll.refresh();
-                })
-            },
-            //加载更多评论
-            async loaderMoreRating(){
-                if (this.preventRepeatRequest) {
-                    return
-                }
-                this.loadRatings = true;
-                this.preventRepeatRequest = true;
-                this.ratingOffset += 10;
-                let ratingDate = await getRatingList(this.shopId, this.ratingOffset, this.ratingTagName);
-                this.ratingList = [...this.ratingList,...ratingDate];
-                this.loadRatings = false;
-                if (ratingDate.length >= 10) {
-                    this.preventRepeatRequest = false;
-                }
-            },
+            // //控制购物列表是否显示
+            // toggleCartList(){
+            //     this.cartFoodList.length ? this.showCartList = !this.showCartList : true;
+            // },
+            // //清除购物车
+            // clearCart(){
+            //     this.toggleCartList();
+            //     this.CLEAR_CART(this.shopId);
+            // },
+            // //监听圆点是否进入购物车
+            // listenInCart(){
+            //     if (!this.receiveInCart) {
+            //         this.receiveInCart = true;
+            //         this.$refs.cartContainer.addEventListener('animationend', () => {
+            //             this.receiveInCart = false;
+            //         })
+            //         this.$refs.cartContainer.addEventListener('webkitAnimationEnd', () => {
+            //             this.receiveInCart = false;
+            //         })
+            //     }
+            // },
+            // //获取不同类型的评论列表
+            // async changeTgeIndex(index, name){
+            //     this.ratingTageIndex = index;
+            //     this.ratingOffset = 0;
+            //     this.ratingTagName = name;
+            //     let res = await getRatingList(this.shopId, this.ratingOffset, name);
+            //     this.ratingList = [...res];
+            //     this.$nextTick(() => {
+            //         this.ratingScroll.refresh();
+            //     })
+            // },
+            // //加载更多评论
+            // async loaderMoreRating(){
+            //     if (this.preventRepeatRequest) {
+            //         return
+            //     }
+            //     this.loadRatings = true;
+            //     this.preventRepeatRequest = true;
+            //     this.ratingOffset += 10;
+            //     let ratingDate = await getRatingList(this.shopId, this.ratingOffset, this.ratingTagName);
+            //     this.ratingList = [...this.ratingList,...ratingDate];
+            //     this.loadRatings = false;
+            //     if (ratingDate.length >= 10) {
+            //         this.preventRepeatRequest = false;
+            //     }
+            // },
             //隐藏动画
             hideLoading(){
                 this.showLoading = false;
             },
-            //显示规格列表
-            showChooseList(foods){
-                if (foods) {
-                    this.choosedFoods = foods;
-                }
-                this.showSpecs = !this.showSpecs;
-                this.specsIndex = 0;
-            },
-            //记录当前所选规格的索引值
-            chooseSpecs(index){
-                this.specsIndex = index;
-            },
-            //多规格商品加入购物车
-            addSpecs(category_id, item_id, food_id, name, price, specs, packing_fee, sku_id, stock){
-                this.ADD_CART({shopid: this.shopId, category_id, item_id, food_id, name, price, specs, packing_fee, sku_id, stock});
-                this.showChooseList();
-            },
-            //显示提示，无法减去商品
-            showReduceTip(){
-                this.showDeleteTip = true;
-                clearTimeout(this.timer);
-                this.timer = setTimeout(() => {
-                    clearTimeout(this.timer);
-                    this.showDeleteTip = false;
-                }, 3000);
-            },
-            //显示下落圆球
-            showMoveDotFun(showMoveDot, elLeft, elBottom){
-                this.showMoveDot = [...this.showMoveDot, ...showMoveDot];
-                this.elLeft = elLeft;
-                this.elBottom = elBottom;
-            },
-            beforeEnter(el){
-                el.style.transform = `translate3d(0,${37 + this.elBottom - this.windowHeight}px,0)`;
-                el.children[0].style.transform = `translate3d(${this.elLeft - 30}px,0,0)`;
-                el.children[0].style.opacity = 0;
-            },
-            afterEnter(el){
-                el.style.transform = `translate3d(0,0,0)`;
-                el.children[0].style.transform = `translate3d(0,0,0)`;
-                el.style.transition = 'transform .55s cubic-bezier(0.3, -0.25, 0.7, -0.15)';
-                el.children[0].style.transition = 'transform .55s linear';
-                this.showMoveDot = this.showMoveDot.map(item => false);
-                el.children[0].style.opacity = 1;
-                el.children[0].addEventListener('transitionend', () => {
-                    this.listenInCart();
-                })
-                el.children[0].addEventListener('webkitAnimationEnd', () => {
-                    this.listenInCart();
-                })
-            },
+            // //显示规格列表
+            // showChooseList(foods){
+            //     if (foods) {
+            //         this.choosedFoods = foods;
+            //     }
+            //     this.showSpecs = !this.showSpecs;
+            //     this.specsIndex = 0;
+            // },
+            // //记录当前所选规格的索引值
+            // chooseSpecs(index){
+            //     this.specsIndex = index;
+            // },
+            // //多规格商品加入购物车
+            // addSpecs(category_id, item_id, food_id, name, price, specs, packing_fee, sku_id, stock){
+            //     this.ADD_CART({shopid: this.shopId, category_id, item_id, food_id, name, price, specs, packing_fee, sku_id, stock});
+            //     this.showChooseList();
+            // },
+            // //显示提示，无法减去商品
+            // showReduceTip(){
+            //     this.showDeleteTip = true;
+            //     clearTimeout(this.timer);
+            //     this.timer = setTimeout(() => {
+            //         clearTimeout(this.timer);
+            //         this.showDeleteTip = false;
+            //     }, 3000);
+            // },
+            // //显示下落圆球
+            // showMoveDotFun(showMoveDot, elLeft, elBottom){
+            //     this.showMoveDot = [...this.showMoveDot, ...showMoveDot];
+            //     this.elLeft = elLeft;
+            //     this.elBottom = elBottom;
+            // },
+            // beforeEnter(el){
+            //     el.style.transform = `translate3d(0,${37 + this.elBottom - this.windowHeight}px,0)`;
+            //     el.children[0].style.transform = `translate3d(${this.elLeft - 30}px,0,0)`;
+            //     el.children[0].style.opacity = 0;
+            // },
+            // afterEnter(el){
+            //     el.style.transform = `translate3d(0,0,0)`;
+            //     el.children[0].style.transform = `translate3d(0,0,0)`;
+            //     el.style.transition = 'transform .55s cubic-bezier(0.3, -0.25, 0.7, -0.15)';
+            //     el.children[0].style.transition = 'transform .55s linear';
+            //     this.showMoveDot = this.showMoveDot.map(item => false);
+            //     el.children[0].style.opacity = 1;
+            //     el.children[0].addEventListener('transitionend', () => {
+            //         this.listenInCart();
+            //     })
+            //     el.children[0].addEventListener('webkitAnimationEnd', () => {
+            //         this.listenInCart();
+            //     })
+            // },
             goback(){
                 this.$router.go(-1);
             }
@@ -601,35 +601,35 @@
                     })
                 }
             },
-            shopCart: function (value){
-                this.initCategoryNum();
-            },
-            //购物车列表发生变化，没有商铺时，隐藏
-            cartFoodList: function (value){
-                if(!value.length){
-                    this.showCartList = false;
-                }
-            },
-            //商品、评论切换状态
-            changeShowType: function (value){
-                // if (value === 'rating') {
-                //     this.$nextTick(() => {
-                //         this.ratingScroll = new BScroll('#ratingContainer', {
-                //             probeType: 3,
-                //             deceleration: 0.003,
-                //             bounce: false,
-                //             swipeTime: 2000,
-                //             click: true,
-                //         });
-                //         this.ratingScroll.on('scroll', (pos) => {
-                //             if (Math.abs(Math.round(pos.y)) >=  Math.abs(Math.round(this.ratingScroll.maxScrollY))) {
-                //                 this.loaderMoreRating();
-                //                 this.ratingScroll.refresh();
-                //             }
-                //         })
-                //     })
-                // }
-            }
+            // shopCart: function (value){
+            //     this.initCategoryNum();
+            // },
+            // //购物车列表发生变化，没有商铺时，隐藏
+            // cartFoodList: function (value){
+            //     if(!value.length){
+            //         this.showCartList = false;
+            //     }
+            // },
+            // //商品、评论切换状态
+            // changeShowType: function (value){
+            //     // if (value === 'rating') {
+            //     //     this.$nextTick(() => {
+            //     //         this.ratingScroll = new BScroll('#ratingContainer', {
+            //     //             probeType: 3,
+            //     //             deceleration: 0.003,
+            //     //             bounce: false,
+            //     //             swipeTime: 2000,
+            //     //             click: true,
+            //     //         });
+            //     //         this.ratingScroll.on('scroll', (pos) => {
+            //     //             if (Math.abs(Math.round(pos.y)) >=  Math.abs(Math.round(this.ratingScroll.maxScrollY))) {
+            //     //                 this.loaderMoreRating();
+            //     //                 this.ratingScroll.refresh();
+            //     //             }
+            //     //         })
+            //     //     })
+            //     // }
+            // }
         }
     }
 </script>
@@ -748,7 +748,7 @@
         position: absolute;
         right: 0;
         left: 0;
-        height:100%;
+        height:auto;
         min-height: 100%;
     }
     .goback{
@@ -969,6 +969,7 @@
         display: flex;
         align-items: flex-end;
         justify-content: center;
+        flex:1;
         .start_button{
             @include wh(90%, auto);
             text-align: center;
@@ -1226,443 +1227,7 @@
             }
         }
     }
-    .buy_cart_container{
-        position: absolute;
-        background-color: #3d3d3f;
-        bottom: 0;
-        left: 0;
-        z-index: 13;
-        display: flex;
-        @include wh(100%, 2rem);
-        .cart_icon_num{
-            flex: 1;
-            .cart_icon_container{
-                display: flex;
-                background-color: #3d3d3f;
-                position: absolute;
-                padding: .4rem;
-                border: 0.18rem solid #444;
-                border-radius: 50%;
-                left: .5rem;
-                top: -.7rem;
-                .cart_icon{
-                    @include wh(1.2rem, 1.2rem);
-                }
-                .cart_list_length{
-                    position: absolute;
-                    top: -.25rem;
-                    right: -.25rem;
-                    background-color: #ff461d;
-                    line-height: .7rem;
-                    text-align: center;
-                    border-radius: 50%;
-                    border: 0.025rem solid #ff461d;
-                    min-width: .7rem;
-                    height: .7rem;
-                    @include sc(.5rem, #fff);
-                    font-family: Helvetica Neue,Tahoma,Arial;
-                }
-            }
-            .move_in_cart{
-                animation: mymove .5s ease-in-out;
-            }
-            .cart_icon_activity{
-                 background-color: #3190e8;
-            }
-            .cart_num{
-                @include ct;
-                left: 3.5rem;
-
-                div{
-                    color: #fff;
-                }
-                div:nth-of-type(1){
-                    font-size: .8rem;
-                    font-weight: bold;
-                    margin-bottom: .1rem;
-                }
-                div:nth-of-type(2){
-                    font-size: .4rem;
-                }
-            }
-        }
-        .gotopay{
-            position: absolute;
-            right: 0;
-            background-color: #535356;
-            @include wh(5rem, 100%);
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            .gotopay_button_style{
-                @include sc(.7rem, #fff);
-                font-weight: bold;
-            }
-        }
-        .gotopay_acitvity{
-            background-color: #4cd964;
-        }
-    }
-    .cart_food_list{
-        position: fixed;
-        width: 100%;
-        padding-bottom: 2rem;
-        z-index: 12;
-        bottom: 0;
-        left: 0;
-        background-color: #fff;
-        header{
-            @include fj;
-            align-items: center;
-            padding: .3rem .6rem;
-            background-color: #eceff1;
-            svg{
-                @include wh(.6rem,.6rem);
-                vertical-align: middle;
-            }
-            h4{
-                @include sc(.7rem, #666);
-            }
-            .clear_cart{
-                @include sc(.6rem, #666);
-            }
-        }
-        .cart_food_details{
-            background-color: #fff;
-            max-height: 20rem;
-            overflow-y: auto;
-            .cart_food_li{
-                @include fj;
-                padding: .6rem .5rem;
-                .cart_list_num{
-                    width: 55%;
-                    p:nth-of-type(1){
-                        @include sc(.7rem, #666);
-                        font-weight: bold;
-                    }
-                    p:nth-of-type(2){
-                        @include sc(.4rem, #666);
-                    }
-                }
-                .cart_list_price{
-                    font-size: 0;
-                    span:nth-of-type(1){
-                        @include sc(.6rem, #f60);
-                        font-family: Helvetica Neue,Tahoma;
-
-                    }
-                    span:nth-of-type(2){
-                        @include sc(.7rem, #f60);
-                        font-family: Helvetica Neue,Tahoma;
-                        font-weight: bold;
-                    }
-                }
-                .cart_list_control{
-                    display: flex;
-                    align-items: center;
-                    span{
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                    }
-                    svg{
-                        @include wh(.9rem, .9rem);
-                        fill: #3190e8;
-                    }
-                    .specs_reduce_icon{
-                        fill: #999;
-                    }
-                    .cart_num{
-                        @include sc(.65rem, #666);
-                        min-width: 1rem;
-                        text-align: center;
-                        font-family: Helvetica Neue,Tahoma;
-                    }
-                }
-            }
-        }
-    }
-    .screen_cover{
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: rgba(0,0,0,.3);
-        z-index: 11;
-    }
-    .change_show_type{
-        display: flex;
-        /*background-color: #fff;*/
-        background:-moz-linear-gradient(left,#fa5c5d,#fcaf9b);/*Mozilla*/  
-        background:-webkit-gradient(linear,0 50%,100% 50%,from(#fa5c5d),to(#fcaf9b));/*Old gradient for webkit*/  
-        background:-webkit-linear-gradient(left,#fa5c5d,#fcaf9b);/*new gradient for Webkit*/  
-        background:-o-linear-gradient(left,#fa5c5d,#fcaf9b); /*Opera11*/ 
-        padding: .3rem 0 .6rem;
-        border-bottom: 1px solid #ebebeb;
-        div{
-            flex: 1;
-            text-align: center;
-            span{
-                @include sc(.65rem, #fac6bb);
-                padding: .2rem .1rem;
-                border-bottom: 0rem solid #fff;
-            }
-            .activity_show{
-                color: #fff;
-                border-width:0.12rem;
-            }
-        }
-    }
-    .rating_container{
-        flex: 1;
-        overflow-y: hidden;
-        flex-direction: column;
-        p, span, li, time{
-            font-family: Helvetica Neue,Tahoma,Arial;
-        }
-        .rating_header{
-            display: flex;
-            background-color: #fff;
-            padding: .8rem .5rem;
-            margin-bottom: 0.5rem;
-            .rating_header_left{
-                flex: 3;
-                text-align: center;
-                p:nth-of-type(1){
-                    @include sc(1.2rem, #f60);
-                }
-                p:nth-of-type(2){
-                    @include sc(.65rem, #666);
-                    margin-bottom: .1rem;
-                }
-                p:nth-of-type(3){
-                    @include sc(.4rem, #999);
-                }
-            }
-            .rating_header_right{
-                flex: 4;
-                p{
-                    font-size: .65rem;
-                    line-height: 1rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-start;
-                    span:nth-of-type(1){
-                        color: #666;
-                        margin-right: .5rem;
-                    }
-                    .rating_num{
-                        width: 3rem;
-                        @include sc(.55rem, #f60);
-                    }
-                    .delivery_time{
-                        @include sc(.4rem, #999);
-                    }
-                }
-            }
-        }
-        .tag_list_ul{
-            display: flex;
-            flex-wrap: wrap;
-            background-color: #fff;
-            padding: .5rem;
-            li{
-                @include sc(.6rem, #6d7885);
-                padding: .3rem .3rem;
-                background-color: #ebf5ff;
-                border-radius: 0.2rem;
-                border: 1px;
-                margin: 0 .4rem .2rem 0;
-            }
-            .unsatisfied{
-                background-color: #f5f5f5;
-                color: #aaa;
-            }
-            .tagActivity{
-                background-color: #3190e8;
-                color: #fff;
-            }
-        }
-        .rating_list_ul{
-            background-color: #fff;
-            padding: 0 .5rem;
-            .rating_list_li{
-                border-top: 1px solid #f1f1f1;
-                display: flex;
-                padding: .6rem 0;
-                .user_avatar{
-                    @include wh(1.5rem, 1.5rem);
-                    border: 0.025rem;
-                    border-radius: 50%;
-                    margin-right: .8rem;
-                }
-                .rating_list_details{
-                    flex: 1;
-                    header{
-                        display: flex;
-                        flex: 1;
-                        justify-content: space-between;
-                        margin-bottom: .3rem;
-                        .username_star{
-                            @include sc(.55rem, #666);
-                            .username{
-                                color: #666;
-                                margin-bottom: .2rem;
-                            }
-                            .star_desc{
-                                display: flex;
-                                align-items: center;
-                                .time_spent_desc{
-                                    @include sc(.55rem, #666)
-                                    margin-left: .15rem;
-                                }
-                            }
-                        }
-                        .rated_at{
-                            @include sc(.4rem, #999);
-                        }
-                    }
-                    .food_img_ul{
-                        display: flex;
-                        flex-wrap: wrap;
-                        margin-bottom: .4rem;
-                        li{
-                            img{
-                                @include wh(3rem, 3rem);
-                                margin-right: .4rem;
-                                display: block;
-                            }
-                        }
-                    }
-                    .food_name_ul{
-                        display: flex;
-                        flex-wrap: wrap;
-                        li{
-                            @include sc(.55rem, #999);
-                            width: 2.2rem;
-                            padding: .2rem;
-                            border: 0.025rem solid #ebebeb;
-                            border-radius: 0.15rem;
-                            margin-right: .3rem;
-                            margin-bottom: 4px;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    .specs_cover{
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0,0,0,.4);
-        z-index: 17;
-    }
-    .specs_list{
-        position: fixed;
-        top: 35%;
-        left: 15%;
-        width: 70%;
-        background-color: #fff;
-        z-index: 18;
-        border: 1px;
-        border-radius: 0.2rem;
-        .specs_list_header{
-            h4{
-                @include sc(.7rem, #222);
-                font-weight: normal;
-                text-align: center;
-                padding: .5rem;
-            }
-            .specs_cancel{
-                position: absolute;
-                right: .5rem;
-                top: .5rem;
-            }
-        }
-        .specs_details{
-            padding: .5rem;
-            .specs_details_title{
-                @include sc(.6rem, #666);
-            }
-            ul{
-                display: flex;
-                flex-wrap: wrap;
-                padding: .4rem 0;
-                li{
-                    font-size: .6rem;
-                    padding: .3rem .5rem;
-                    border: 0.025rem solid #ddd;
-                    border-radius: .2rem;
-                    margin-right: .5rem;
-                    margin-bottom: .2rem;
-                }
-                .specs_activity{
-                    border-color: #3199e8;
-                    color: #3199e8;
-                }
-            }
-        }
-        .specs_footer{
-            @include fj;
-            align-items: center;
-            background-color: #f9f9f9;
-            padding: 0.5rem;
-            border: 1px;
-            border-bottom-left-radius: .2rem;
-            border-bottom-right-radius: .2rem;
-            .specs_price{
-                span{
-                    color: #ff6000;
-                }
-                span:nth-of-type(1){
-                    font-size: .5rem;
-                }
-                span:nth-of-type(2){
-                    font-size: .8rem;
-                    font-weight: bold;
-                    font-family: Helvetica Neue,Tahoma;
-                }
-            }
-            .specs_addto_cart{
-                @include wh(4rem, 1.3rem);
-                background-color: #3199e8;
-                border: 1px;
-                border-radius: 0.15rem;
-                @include sc(.6rem, #fff);
-                text-align: center;
-                line-height: 1.3rem;
-            }
-        }
-    }
-    .show_delete_tip{
-        position: fixed;
-        top: 50%;
-        left: 15%;
-        width: 70%;
-        transform: translateY(-50%);
-        background-color: rgba(0,0,0,.8);
-        z-index: 18;
-        @include sc(.65rem, #fff);
-        text-align: center;
-        padding: .5rem 0;
-        border: 1px;
-        border-radius: 0.25rem;
-    }
-    .move_dot{
-        position: fixed;
-        bottom: 30px;
-        left: 30px;
-
-        svg{
-            @include wh(.9rem, .9rem);
-            fill: #3190e8;
-        }
-    }
+    
     .fade-enter-active, .fade-leave-active {
         transition: opacity .5s;
     }
