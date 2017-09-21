@@ -148,7 +148,7 @@
                 
                 this.startLoading();
                 console.log(city,keyword,this.$route.params.cityid);
-                searchplace(city,keyword,this.$route.params.cityid).then(res => {
+                searchplace(city,keyword,this.city.dpCityId).then(res => {
 
                         if(res.status == -1){
                             return;
