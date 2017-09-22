@@ -11,7 +11,7 @@
             蜜蜂点评
             </section>
             <section class="subtitle_container">
-               帮助您自动收集所有互联网平台实时真实的用户评论，协助您改善餐厅
+               为您自动收集全网平台真实消费者评论<br/>协助您改善餐厅客户满意度
             </section>
         </form>
         <p class="login_tips">
@@ -22,8 +22,8 @@
         </p>
         <form class="loginForm">
             <section class="input_container">
-                <input type="text" placeholder="请输入邀请码(选填)" v-model.lazy="inviteCode">
                 <input type="number" placeholder="请输入您要绑定的手机号码" v-model.lazy="phoneNumber">
+                <input type="text" placeholder="请填写您的推荐码(非必填项)" v-model.lazy="inviteCode">
             </section>
             <!-- <section class="input_container">
                 <input v-if="!showPassword" type="password" placeholder="密码"  v-model="passWord">
@@ -52,6 +52,8 @@
             <span>获取验证码</span>
         </div>
         <div class="login_container"  v-if="lock">发送中，请稍后</div>
+
+        <div class="policy">注册即表示同意并了解《<span @click="goto('policy')">蜜蜂点评用户协议</span>》</div>
 
         <!-- <router-link to="/forget" class="to_forget" v-if="!loginWay">重置密码？</router-link> -->
         <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
@@ -157,6 +159,10 @@
             },
             closeTip(){
                 this.showAlert = false;
+            },
+            goto(path){
+                console.log(path);
+                this.$router.push(path);
             }
         }
     }
@@ -165,7 +171,16 @@
 
 <style lang="scss" scoped>
     @import '../../style/mixin';
-
+    .policy{
+        @include sc(.6rem, #333);
+        @include wh(100%, auto);
+        text-align: center;
+        position: fixed;
+        bottom:1rem;
+        span{
+            @include sc(.6rem, #c83ae5);
+        }
+    }
     .loginContainer{
         padding-top: 1.95rem;
         p, span, input{

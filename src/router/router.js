@@ -10,6 +10,7 @@ const rate = r => require.ensure([], () => r(require('../page/rate/rate')), 'rat
 const rateByShop = r => require.ensure([], () => r(require('../page/rate/rateByShop')), 'rateByShop')
 const warning = r => require.ensure([], () => r(require('../page/rate/rateWarning')), 'rateWarning')
 const login = r => require.ensure([], () => r(require('../page/login/login')), 'login')
+const policy = r => require.ensure([], () => r(require('../page/login/policy')), 'policy')
 const code = r => require.ensure([], () => r(require('../page/login/code')), 'code')
 // const profile = r => require.ensure([], () => r(require('../page/profile/profile')), 'profile')
 // const forget = r => require.ensure([], () => r(require('../page/forget/forget')), 'forget')
@@ -158,6 +159,10 @@ export default [{
         {
             path: '/login',
             component: login
+        },
+        {
+            path: '/policy',
+            component: policy
         },
         //验证码
         {

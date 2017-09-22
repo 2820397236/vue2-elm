@@ -66,7 +66,7 @@
                     <span>预警等级：高 <br/>有任何负面情绪都将作为预警推送</span>
                 </li>
                 <li class="yellow" :class="{active:warningType == 'mid'}" @click="setRatingType('mid')">
-                    <span>预警等级：中 <br/>有负面评论，会根据规则讲将部分个人情感因素负面排除</span>
+                    <span>预警等级：中 <br/>有负面评论，会根据规则将部分个人情感因素负面排除</span>
                 </li>
                 <li class="red" :class="{active:warningType == 'low'}" @click="setRatingType('low')">
                     <span>预警等级：低 <br/>只有重复的负面评论，才会作为预警推送</span>
