@@ -330,7 +330,7 @@
                                 _this.storeIds.push(_this.storeList[i].id);
                             }
 
-                            if( _this.storeList.length > _this.storeLimit){
+                            if( _this.storeList.length > _this.storeLimit && _this.payments.length >1){
                                 _this.payWayIndex = 1;
                             }
                         }
