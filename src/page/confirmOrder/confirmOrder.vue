@@ -143,26 +143,26 @@
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select"></use>
                             </svg>
                         </li> -->
-                        <li  v-for="item in payments" :key="item.id" :class="{choose: payWayId == item.id}"
-                        @click="choosePayWay(item.id)">
+                        <li  v-for="(item,index) in payments" :key="item.id" :class="{choose: payWayIndex == index}"
+                        @click="choosePayWay(item.paymentType,index)">
                             <span class="pay_way_title">
                                 {{item.title}}<br/>
                                 <span class="pay_way_subtitle" v-if="item.subTitle">{{item.subTitle}}</span>
                             </span>
-                            <span class="price_rrp">￥{{item.rrpPrice}}/店</span>
-                            <span class="price_now">￥{{item.price}}/店</span>
-                            <!-- <div class="tri"></div>
+                            <span class="price_rrp">{{item.rrpPrice}}</span>
+                            <span class="price_now">{{item.priceDesc}}</span>
+                            <div class="tri"></div>
                             <svg class="address_empty_right" >
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select"></use>
-                            </svg> -->
+                            </svg>
                         </li>
                     </ul>
                 </div>
                 <section class="hongbo">
                     <span>*备注：请核对订阅信息，信息订阅后不可退款。</span>
                 </section>
-                <section class="confrim_order" @click="confrimOrder">
-                    <p>总计 {{storeList.length}} 家门店，共计 ¥{{storeList.length * payments[payWayId].price}}</p>
+                <section class="confrim_order" @click="confrimOrder" v-if="payments.length >0">
+                    <p>总计 {{storeList.length}} 家门店，共计 ¥{{storeList.length * payments[payWayIndex].price}}</p>
                     <p>确认订单</p>
                 </section>
             </section>
@@ -184,7 +184,7 @@
     import headTop from 'src/components/header/head'
     import alertTip from 'src/components/common/alertTip'
     import loading from 'src/components/common/loading'
-    import {getStoreInfo, addToCart,getPayConfig,getJsConfig} from 'src/service/getData'
+    import {getStoreInfo, addToCart,getPayConfig,getJsConfig,getPayment} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import {imgBaseUrl} from 'src/config/env'
     import weixin from 'weixin-js-sdk'
@@ -202,31 +202,32 @@
                 shopCart: null,//购物车数据
                 imgBaseUrl, //图片域名
                 showPayWay: false,//显示付款方式
-                payWayId: 0, //付款方式
+                payWayId: 'A', //付款方式
+                payWayIndex: 0,
                 showAlert: false, //弹出框
                 alertText: null, //弹出框内容
                 payments:[
-                    {
-                        id:0,
-                        title:"包年(12个月)",
-                        subTitle:"",
-                        rrpPrice:120,
-                        price:60
-                    },
                     // {
-                    //     id:1,
-                    //     title:"1个月",
+                    //     id:0,
+                    //     title:"包年(12个月)",
                     //     subTitle:"",
-                    //     rrpPrice:4,
-                    //     price:3
+                    //     rrpPrice:120,
+                    //     price:60
                     // },
-                    // {
-                    //     id:2,
-                    //     title:"3个月",
-                    //     subTitle:"",
-                    //     rrpPrice:16,
-                    //     price:8
-                    // }
+                    // // {
+                    // //     id:1,
+                    // //     title:"1个月",
+                    // //     subTitle:"",
+                    // //     rrpPrice:4,
+                    // //     price:3
+                    // // },
+                    // // {
+                    // //     id:2,
+                    // //     title:"3个月",
+                    // //     subTitle:"",
+                    // //     rrpPrice:16,
+                    // //     price:8
+                    // // }
                 ]
             }
         },
@@ -237,6 +238,18 @@
             }else{
                 this.storeIds = [this.$route.query.ids];
             }
+
+            this.user = JSON.parse(getStore('user'));
+            if(this.user == null){
+                this.$router.push('/');
+            }
+
+            let _this = this;
+            getPayment(this.user.id).then(function(response){
+                console.log(response);
+                _this.payments = response.cart;
+                _this.payWayId = response.cart[0].paymentType;
+            })
             // //获取上个页面传递过来的geohash值
             // this.geohash = this.$route.query.geohash;
             // //获取上个页面传递过来的shopid值
@@ -346,10 +359,12 @@
                 this.showPayWay = !this.showPayWay;
             },
             //选择付款方式
-            choosePayWay(id){
+            choosePayWay(type,index){
                 // if (is_online_payment) {
                     // this.showPayWay = !this.showPayWay;
-                    this.payWayId = id;
+                    this.payWayId = type;
+                    this.payWayIndex = index;
+                    console.log(this.payWayId);
                 // }
             },
             //地址备注颜色
@@ -668,6 +683,7 @@
                 position:relative;
                 border:0.025rem solid #e5e5e5;
                 display: flex;
+                background-color: #ddd;
                 span{
                     @include sc(.6rem, #fff);
                     margin-right:.2rem;
@@ -712,9 +728,13 @@
                 /*border:0 solid #3d3d3d;
                 background-color:#3d3d3d;*/
                 border: 0.025rem solid #ccc;
-                background-color: #ddd;
+                background-color: rgba(61,61,61,1);
                 box-shadow: 1px 1px 1px #999 inset;
                 overflow: hidden;
+                .price_now{
+                    text-align: center;
+                    @include sc(.7rem, rgba(255,209,1,1));
+                }
                 svg{
                     fill: #ffd101;
                     position:absolute;

@@ -267,6 +267,10 @@ export const addToCart = (userId,storeIds,payment) => fetch('/v1/user/addToCart'
 	payment
 }, 'POST');
 
+export const getPayment = (userId) =>fetch('/v1/user/getPayment',{
+	userId
+});
+
 export const getPayConfig = (userId,storeIds,payment) => fetch('/wx/getPayConfig', {
 	userId,
 	storeIds,
