@@ -204,7 +204,7 @@
                 shopCart: null,//购物车数据
                 imgBaseUrl, //图片域名
                 showPayWay: false,//显示付款方式
-                payWayId: 'A', //付款方式
+                payWayId: null, //付款方式
                 payWayIndex: 0,
                 showAlert: false, //弹出框
                 alertText: null, //弹出框内容
@@ -332,6 +332,7 @@
 
                             if( _this.storeList.length > _this.storeLimit && _this.payments.length >1){
                                 _this.payWayIndex = 1;
+                                _this.payWayId = _this.payments[1].paymentType;
                             }
                         }
                     }
