@@ -144,6 +144,7 @@
                             </svg>
                         </li> -->
                         <li  v-for="(item,index) in payments" :key="item.id" :class="{choose: payWayIndex == index}"
+                        v-show="item.paymentType=='A' || (item.paymentType=='B' && storeList.length <= storeLimit)"
                         @click="choosePayWay(item.paymentType,index)">
                             <span class="pay_way_title">
                                 {{item.title}}<br/>
@@ -159,7 +160,7 @@
                     </ul>
                 </div>
                 <section class="hongbo">
-                    <span>*备注：请核对订阅信息，信息订阅后不可退款。</span>
+                    <span>* 备注：请核对订阅信息，信息订阅后暂不可退订。</span>
                 </section>
                 <section class="confrim_order" @click="confrimOrder" v-if="payments.length >0">
                     <p>总计 {{storeList.length}} 家门店，共计 ¥{{storeList.length * payments[payWayIndex].price}}</p>
@@ -194,6 +195,7 @@
             return {
                 storeIds:[],
                 storeList:[],
+                storeLimit:0,
                 user:null,
                 geohash: '', //geohash位置信息
                 shopId: null, //商店id值
@@ -249,6 +251,9 @@
                 console.log(response);
                 _this.payments = response.cart;
                 _this.payWayId = response.cart[0].paymentType;
+                _this.payWayIndex = 0;
+                _this.storeLimit = response.limit;
+                console.log('limit:'+response.limit);
             })
             // //获取上个页面传递过来的geohash值
             // this.geohash = this.$route.query.geohash;
@@ -324,6 +329,10 @@
                             for(var i=0;i<_this.storeList.length;i++){
                                 _this.storeIds.push(_this.storeList[i].id);
                             }
+
+                            if( _this.storeList.length > _this.storeLimit){
+                                _this.payWayIndex = 1;
+                            }
                         }
                     }
 
@@ -366,13 +375,6 @@
                     this.payWayIndex = index;
                     console.log(this.payWayId);
                 // }
-            },
-            //地址备注颜色
-            iconColor(name){
-                switch(name){
-                    case '公司': return '#4cd964';
-                    case '学校': return '#3190e8';
-                }
             },
             //确认订单
             async confrimOrder(){
@@ -420,8 +422,9 @@
                 json.success = function (res) {
                     addToCart(_this.user.id,_this.storeIds,_this.payWayId).then(function(response){
 
-                        _this.showLoading = false;
                         if(response.status == 0){
+
+                            _this.showLoading = false;
                             _this.$router.push('/analytics');
                         }else{
                             alert(response);
