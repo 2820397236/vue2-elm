@@ -163,7 +163,7 @@
                     <span>* 备注：请核对订阅信息，信息订阅后暂不可退订。</span>
                 </section>
                 <section class="confrim_order" @click="confrimOrder" v-if="payments.length >0">
-                    <p>总计 {{storeList.length}} 家门店，共计 ¥{{storeList.length * payments[payWayIndex].price}}</p>
+                    <p>总计 {{storeList.length}} 家门店，共计 ¥{{storeList.length * payments[payWayIndex].price /100}}</p>
                     <p>确认订单</p>
                 </section>
             </section>
