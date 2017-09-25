@@ -162,7 +162,10 @@
                     <span>* 备注：请核对订阅信息，信息订阅后暂不可退订。</span>
                 </section>
                 <section class="confrim_order" @click="confrimOrder" v-if="payments.length >0">
-                    <p>总计 {{storeList.length}} 家门店，共计 ¥{{storeList.length * payments[payWayIndex].price /100}}</p>
+                    <p v-if="payWayId == 'A'">
+                    总计 {{storeList.length}} 家门店，共计 ¥{{storeList.length * payments[payWayIndex].price /100}}</p>
+                    <p v-if="payWayId == 'B'">
+                    总计 {{storeList.length}} 家门店，共计 ¥{{payments[payWayIndex].price/100}}</p>
                     <p>确认订单</p>
                 </section>
             </section>
@@ -409,7 +412,7 @@
                 // this.$router.push({path:'/confirmOrder/payment',query:param});
                 // let json = {"appId":"wx797ef910234a14be","nonceStr":"92dac676060347ce86b1e2d688112644","package":"prepay_id=wx20170914135516792c54141f0486582465","signType":"MD5","timeStamp":"1505368516","paySign":"C772A305F19D559BCA82BD19A9CC43A3"};
                 
-                
+
                 if( this.payWayId == 'B' && this.storeIds.length > 10){
                     this.showAlert = true;
                     this.alertText = '15天产品试用体验最高10家门店';
