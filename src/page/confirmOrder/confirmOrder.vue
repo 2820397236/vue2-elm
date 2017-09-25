@@ -144,7 +144,6 @@
                             </svg>
                         </li> -->
                         <li  v-for="(item,index) in payments" :key="item.id" :class="{choose: payWayIndex == index}"
-                        v-show="item.paymentType=='A' || (item.paymentType=='B' && storeList.length <= storeLimit)"
                         @click="choosePayWay(item.paymentType,index)">
                             <span class="pay_way_title">
                                 {{item.title}}<br/>
@@ -330,10 +329,7 @@
                                 _this.storeIds.push(_this.storeList[i].id);
                             }
 
-                            if( _this.storeList.length > _this.storeLimit && _this.payments.length >1){
-                                _this.payWayIndex = 1;
-                                _this.payWayId = _this.payments[1].paymentType;
-                            }
+                            
                         }
                     }
 
@@ -413,6 +409,12 @@
                 // this.$router.push({path:'/confirmOrder/payment',query:param});
                 // let json = {"appId":"wx797ef910234a14be","nonceStr":"92dac676060347ce86b1e2d688112644","package":"prepay_id=wx20170914135516792c54141f0486582465","signType":"MD5","timeStamp":"1505368516","paySign":"C772A305F19D559BCA82BD19A9CC43A3"};
                 
+                
+                if( this.payWayId == 'B' && this.storeIds.length > 10){
+                    this.showAlert = true;
+                    this.alertText = '15天产品试用体验最高10家门店';
+                    return
+                }
 
                 let _this = this;
                 _this.showLoading = true;

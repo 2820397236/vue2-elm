@@ -46,6 +46,7 @@
         right: 0;
         bottom: 0;
         z-index: 200;
+        background:rgba(0,0,0,.4);
     }
     .tip_text_container{
         position: absolute;
@@ -55,7 +56,7 @@
         margin-left: -6rem;
         width: 12rem;
         animation: tipMove .4s ;
-        background-color: rgba(255,255,255,1);
+        background-color: #f5f5f5;
         border: 1px;
         padding-top: .6rem;
         display: flex;
@@ -92,14 +93,13 @@
             padding: 0 .4rem;
         }
         .confrim{
-            @include sc(.8rem, #fff);
-            font-weight: bold;
+            @include sc(.7rem, #111);
             margin-top: .8rem;
-            background-color: #4cd964;
+            background-color: #f5f5f5;
             width: 100%;
             text-align: center;
             line-height: 1.8rem;
-            border: 1px;
+            border-top:.005rem solid #dbdbdb;
             border-bottom-left-radius: 0.25rem;
             border-bottom-right-radius: 0.25rem;
         }
