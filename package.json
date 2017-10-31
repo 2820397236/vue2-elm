@@ -17,6 +17,7 @@
     "iscroll": "^5.2.0",
     "showdown": "^1.7.4",
     "vue": "^2.4.4",
+    "vue-datepicker-simple": "^1.5.1",
     "vue-echarts-v3": "^1.0.5",
     "vue-router": "^2.1.1",
     "vuex": "^2.4.0"

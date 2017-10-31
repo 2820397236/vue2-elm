@@ -1,6 +1,6 @@
  <template>
     <div>
-        <header id='head_top'>
+        <!-- <header id='head_top'>
             <section class="title_head ellipsis"  @click="setRatingType('high')">
                 
                 <span class="title_text">餐厅评论监控预警</span>
@@ -12,10 +12,20 @@
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#warning"></use>
                 </svg>
             </section>
-            <!-- <section class="head_option" @click="clickRateType()">
-                {{rateType}}
-            </section> -->
-        </header>
+        </header> -->
+        <section class="description_header">
+            <div>已处理预警</div>
+            <div class="description_top">
+               <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
+                    <img :src="user.profileImg" @click="signout">
+                </section> -->
+                <!-- <section class="description_right">
+                    <h4 class="description_title ellipsis">您已订阅19家门店</h4>
+                </section> -->
+
+            </div>
+
+        </section>
         <section v-if="!showLoading" class="shop_container main_container">
             <!-- <nav class="goback" @click="goback">
                 <svg width="4rem" height="100%" xmlns="http://www.w3.org/2000/svg" version="1.1">
@@ -26,7 +36,7 @@
             <section class="shoplist_container">
                 <ul v-if="rateList.length > 0">
                     <li v-for="(item,index) in rateList" :key="index">
-                        <div class="rate_time">{{item.ratingTime}}</div>
+                        <!-- <div class="rate_time">{{item.ratingTime}}</div> -->
                         <section class="menu_detail_list">
                             <div class="menu_detail_link">
                                 <div class="rate_head">
@@ -36,7 +46,7 @@
                                         </div>
                                         <div class="rate_username">
                                                 {{item.storeName}}<br/>
-                                                <span class="rate_address">{{item.address}}</span>
+                                                <span class="rate_address">{{item.ratingTime}}</span>
                                                 <!-- <span class="rate_tag">口味好</span>
                                                 <span class="rate_tag">环境很好</span>
                                                 <span class="rate_tag">服务好</span> -->
@@ -308,9 +318,110 @@
         }
     }
     .main_container{
-        padding-top:1.95rem;
+        padding-top:2.4rem;
         padding-bottom:1.95rem;
     }
+    .description_header{
+            position: fixed;
+            z-index: 10;
+            background-color: rgba(255,255,255,1);
+            padding: 0.8rem 0.8rem 0.6rem 0.8rem;
+            width: 100%;
+            overflow: hidden;
+            .description_top{
+                display: flex;
+                margin-top:0.2rem;
+                .description_left{
+                    margin-right: 0.5rem;
+                    img{
+                        @include wh(2.9rem, 2.9rem);
+                        display: block;
+                        border-radius: 3rem;
+                    }
+                }
+                .description_right{
+                    flex: 3;
+                    .description_title{
+                        @include sc(.6rem, #949aac);
+                        line-height: 1.4rem;
+                        /*font-weight: bold;*/
+                        width: 100%;
+                        /*margin-bottom: 0.3rem;*/
+                    }
+                    .description_text{
+                        @include sc(.5rem, #282828);
+                        /*margin-bottom: 0.3rem;*/
+                    }
+                    .description_promotion{
+                        @include sc(.5rem, #282828);
+                        width: 11.5rem;
+                    }
+                }
+                .description_more{
+                    flex:2;
+                }
+                .description_arrow{
+                    @include ct;
+                    right: 0.3rem;
+                    z-index: 11;
+                }
+                .shop_detail_vip{
+                    display: inline-block;
+                    line-height: 1.1rem;
+                    float:right;
+                    padding: 0rem .4rem 0rem .8rem;
+                    /*@include bis('../../images/vip.jpg');*/
+                    /*background-size: 34px auto;
+                    background-position: 68px center;*/
+
+                    /*border-radius: 6px;
+                    border:1px solid rgba(0,0,0,0.5);
+                    border-width:0 0 0.025rem 0;*/
+                    span{
+                        @include sc(.6rem, #0f83e7);
+                        display: inline-block;
+                        vertical-align:middle;
+                    }
+                    .icon_style{
+                        width: .5rem;
+                        height:.5rem;
+                        font-size:0.5rem;
+                        color:#0f83e7;
+                        display: inline-block;
+                        vertical-align:middle;
+                        use{
+                            fill:#0f83e7;
+                        }
+                    }
+                }
+            }
+            .description_footer{
+                @include fj;
+                margin-top: 0.5rem;
+                padding-right: 1rem;
+                p{
+                    @include sc(.5rem, #fff);
+                    span{
+                        color: #fff;
+                    }
+                    .tip_icon{
+                        padding: 0 .04rem;
+                        border: 0.025rem solid #fff;
+                        border-radius: 0.1rem;
+                        font-size: .4rem;
+                        display: inline-block;
+                    }
+                }
+                .ellipsis{
+                    width: 84%;
+                }
+                .footer_arrow{
+                    @include wh(.45rem, .45rem);
+                    position: absolute;
+                    right: .3rem;
+                }
+            }
+        }
     .shop_container{
         &.bg-gray{
             background-color: rgba(0,0,0,0.5);
@@ -411,6 +522,7 @@
         ul{
             width: 100%;
             overflow: hidden;
+            padding: 0rem .6rem 0rem .8rem ;
             .rate_time{
                 background-color: rgba(247,247,247,1);
                 @include sc(.6rem, #999);
@@ -421,8 +533,8 @@
                 word-break: break-word;
                 flex:1;
                 background-color: #fff;
-                padding: .6rem .4rem .6rem 1.1rem ;
-                border-bottom: 1px solid #d7d7d7;
+                padding: .6rem 0rem .6rem 0rem ;
+                border-bottom: .015rem solid #f0f3f6;
                 position: relative;
                 overflow: hidden;
                 .menu_detail_link{
@@ -430,7 +542,7 @@
                     flex-direction:column;
                     .rate_head{
                         @include fj;
-                        margin-bottom: .4rem;
+                        margin-bottom: .2rem;
                         .user_profile{
                             display:flex;
                             flex-direction:row;
@@ -496,7 +608,7 @@
                         .rate_content{
                             @include sc(.6rem, #666);
                             line-height: .8rem;
-                            padding:0 1rem 0 0rem;
+                            padding:0 0rem 0 4rem;
                         }
                         
                     }

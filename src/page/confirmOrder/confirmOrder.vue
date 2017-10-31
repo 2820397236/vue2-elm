@@ -1,7 +1,7 @@
 <template>
     <div class="confirmOrderContainer">
         <section v-if="!showLoading">
-            <head-top head-title="确认订阅门店" goBack="true"></head-top>
+            <!-- <head-top head-title="确认订阅门店" goBack="true"></head-top> -->
             <!-- <router-link :to='{path: "/confirmOrder/chooseAddress", query: {id: checkoutData.cart.id, sig: checkoutData.sig}}' class="address_container">
                 <div class="address_empty_left">
                     <svg class="location_icon">
@@ -31,7 +31,21 @@
                     <p v-if="checkoutData.cart.is_deliver_by_fengniao">蜂鸟专送</p>
                 </section>
             </section> -->
+            <header class="shop_detail_header" ref="shopheader">
+                <!-- <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"> -->
+                <section class="description_header">
+                    <div>门店列表</div>
+                    <div class="description_top">
+                       <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
+                            <img :src="user.profileImg" @click="signout">
+                        </section> -->
+                        <section class="description_right">
+                            <h4 class="description_title ellipsis">您已选择2家门店</h4>
+                        </section>
+                    </div>
 
+                </section>
+            </header>
             
             <section class="food_container">
                 <section class="menu_container">
@@ -119,7 +133,7 @@
             </section> -->
             <section class="pay_way container_style">
                 <header class="header_style">
-                    <span>选择订阅套餐</span>
+                    <span>选择订阅周期</span>
                     <!-- <div class="more_type" @click="showPayWayFun">
                         <span>在线支付</span>
                         <svg class="address_empty_right">
@@ -128,7 +142,7 @@
                     </div> -->
                 </header>
                 <div class="choose_type_Container">
-                    <header>产品推广期，订阅费<span class="highlight">五折</span></header>
+                    
                     <ul>
                       <!--  <li v-for="item in payments" :key="item.id" :class="{choose: payWayId == item.id}" 
                         @click="choosePayWay(item.is_online_payment, item.id)">
@@ -143,13 +157,14 @@
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select"></use>
                             </svg>
                         </li> -->
-                        <li  v-for="(item,index) in payments" :key="item.id" :class="{choose: payWayIndex == index}"
+                        <!-- <li  v-for="(item,index) in payments" :key="item.id" :class="{choose: payWayIndex == index}" -->
+                        <li  v-for="(item,index) in payments" :key="item.id"
                         @click="choosePayWay(item.paymentType,index)">
                             <span class="pay_way_title">
                                 {{item.title}}<br/>
                                 <span class="pay_way_subtitle" v-if="item.subTitle">{{item.subTitle}}</span>
                             </span>
-                            <span class="price_rrp">{{item.rrpPrice}}</span>
+                           <!--  <span class="price_rrp">{{item.rrpPrice}}</span> -->
                             <span class="price_now">{{item.priceDesc}}</span>
                             <div class="tri"></div>
                             <svg class="address_empty_right" >
@@ -158,15 +173,15 @@
                         </li>
                     </ul>
                 </div>
-                <section class="hongbo">
+                <!-- <section class="hongbo">
                     <span>* 备注：请核对订阅信息，信息订阅后暂不可退订。</span>
-                </section>
+                </section> -->
                 <section class="confrim_order" @click="confrimOrder" v-if="payments.length >0">
                     <p v-if="payWayId == 'A'">
-                    总计 {{storeList.length}} 家门店，共计 ¥{{storeList.length * payments[payWayIndex].price /100}}</p>
+                    <!-- 总计 {{storeList.length}} 家门店， -->共计: ¥{{storeList.length * payments[payWayIndex].price /100}}, 确认订阅</p>
                     <p v-if="payWayId == 'B'">
-                    总计 {{storeList.length}} 家门店，共计 ¥{{payments[payWayIndex].price/100}}</p>
-                    <p>确认订单</p>
+                    <!-- 总计 {{storeList.length}} 家门店， -->共计: ¥{{payments[payWayIndex].price/100}}, 确认订阅</p>
+                    
                 </section>
             </section>
             
@@ -422,21 +437,23 @@
                 let _this = this;
                 _this.showLoading = true;
 
-                let json = await getPayConfig(_this.user.id,_this.storeIds,_this.payWayId);
-                json.timestamp = json.timeStamp;
+                // let json = await getPayConfig(_this.user.id,_this.storeIds,_this.payWayId);
+                // json.timestamp = json.timeStamp;
 
-                json.success = function (res) {
-                    addToCart(_this.user.id,_this.storeIds,_this.payWayId).then(function(response){
+                // json.success = function (res) {
+                    
+                // }
 
-                        if(response.status == 0){
+                addToCart(_this.user.id,_this.storeIds,_this.payWayId).then(function(response){
 
-                            _this.showLoading = false;
-                            _this.$router.push('/analytics');
-                        }else{
-                            alert(response);
-                        }
-                    })
-                }
+                    if(response.status == 0){
+
+                        _this.showLoading = false;
+                        _this.$router.push('/analytics');
+                    }else{
+                        alert(response);
+                    }
+                })
 
                 console.log(json);
 
@@ -461,8 +478,6 @@
     
     .confirmOrderContainer{
         background-color: #fff;
-        padding-top: 1.95rem;
-        padding-bottom: 13.4rem;
         height: 100%;
         overflow: scroll;
         p, span{
@@ -471,7 +486,101 @@
     }
     .container_style{
         background-color: #fff;
-        padding: 0 .7rem;
+    }
+    .shop_detail_header{
+        @include wh(100%, auto);
+        overflow: hidden;
+        position: relative;
+        position:fixed;
+        z-index:1;
+        .header_cover_img{
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 9;
+            filter: blur(10px);
+        }
+        .description_header{
+            position: relative;
+            z-index: 10;
+            background-color: rgba(255,255,255,1);
+            padding: 0.8rem 0.8rem 0.6rem 0.8rem;
+            width: 100%;
+            overflow: hidden;
+            .description_top{
+                display: flex;
+                margin-top:0.2rem;
+                .description_left{
+                    margin-right: 0.5rem;
+                    img{
+                        @include wh(2.9rem, 2.9rem);
+                        display: block;
+                        border-radius: 3rem;
+                    }
+                }
+                .description_right{
+                    flex: 3;
+                    .description_title{
+                        @include sc(.6rem, #949aac);
+                        line-height: 1.4rem;
+                        /*font-weight: bold;*/
+                        width: 100%;
+                        /*margin-bottom: 0.3rem;*/
+                    }
+                    .description_text{
+                        @include sc(.5rem, #282828);
+                        /*margin-bottom: 0.3rem;*/
+                    }
+                    .description_promotion{
+                        @include sc(.5rem, #282828);
+                        width: 11.5rem;
+                    }
+                }
+                
+            }
+            .description_footer{
+                @include fj;
+                margin-top: 0.5rem;
+                padding-right: 1rem;
+                p{
+                    @include sc(.5rem, #fff);
+                    span{
+                        color: #fff;
+                    }
+                    .tip_icon{
+                        padding: 0 .04rem;
+                        border: 0.025rem solid #fff;
+                        border-radius: 0.1rem;
+                        font-size: .4rem;
+                        display: inline-block;
+                    }
+                }
+                .ellipsis{
+                    width: 84%;
+                }
+                .footer_arrow{
+                    @include wh(.45rem, .45rem);
+                    position: absolute;
+                    right: .3rem;
+                }
+            }
+
+            &.empty{
+                padding: 1rem 0.8rem 1rem 0.8rem;
+                .description_top{
+                    img{
+                        @include wh(3.4rem, 3.4rem);
+                    }
+                    .shop_detail_vip{
+                        display: none;
+                    }
+                    .description_title {
+                        @include sc(.9rem, #282828);
+                    }
+                }
+            }
+        }
     }
     .address_container{
         min-height: 3.5rem;
@@ -596,12 +705,14 @@
         left:0;
         right:0;
         padding-top:.5rem;
-        padding-bottom:1rem;
+        padding-bottom:.6rem;
         .header_style{
             @include fj;
-            line-height: 1rem;
+            line-height: 1.3rem;
+            margin: 0 .7rem;
             span:nth-of-type(1){
-                @include sc(.7rem, #333);
+                @include sc(.6rem, #333);
+                font-weight: bold;
             }
             .more_type{
                 span:nth-of-type(1){
@@ -641,22 +752,15 @@
     .confrim_order{
         display: flex;
         height: 2rem;
-        border-radius: .2rem;
+        border-radius: 1rem;
         background-color: #ffd101;
-        box-shadow: 0px 3px 5px rgba(255,120,0,.5);
+        margin-left:5%;
+        width:90%;
         p{
+            flex:1;
             line-height: 2rem;
-            @include sc(.65rem, #111);
+            @include sc(.65rem, #fff);
             border-radius: .2rem;
-        }
-        p:nth-of-type(1){
-            background-color: #ffd101;
-            flex: 5;
-            padding-left: .7rem;
-        }
-        p:nth-of-type(2){
-            flex: 2;
-            background-color: #ffd101;
             text-align: center;
         }
     }
@@ -670,15 +774,18 @@
         z-index: 203;
     }
     .choose_type_Container{
-        min-height: 4rem;
+        padding: 0rem 0 1rem;
         background-color: #fff;
+        margin: 0 .7rem .6rem;
+        border-bottom:0.025rem solid #e5e5e5;
         
         header{
-            @include sc(.5rem, #858585);
+            
             text-align: left;
             line-height: 1rem;
-            .highlight{
-                color:#ff6d40;
+            .span{
+                @include sc(.5rem, #858585);
+                font-weight: bold;
             }
         }
         ul{
@@ -692,29 +799,30 @@
                 position:relative;
                 border:0.025rem solid #e5e5e5;
                 display: flex;
-                background-color: #ddd;
+                background-color: #fbfbfb;
                 span{
-                    @include sc(.6rem, #fff);
+                    @include sc(.6rem, #343640);
                     margin-right:.2rem;
                 }
                 .pay_way_title{
                     width:50%;
-                    color:#fff;
+                    color:#343640;
                     line-height: .8rem;
                     .pay_way_subtitle{
 
-                        @include sc(.5rem, #fff);
+                        @include sc(.5rem, #343640);
                     }
                 }
                 .price_rrp{
                     text-align: center;
                     text-decoration: line-through;
-                    @include sc(.6rem, #fff);
+                    @include sc(.6rem, #343640);
 
                 }
                 .price_now{
                     text-align: center;
-                    @include sc(.7rem, #666);
+                    @include sc(.6rem, #FFA73F);
+                    font-weight: bold;
                 }
                 svg{
                     @include wh(.8rem, .8rem);
@@ -780,6 +888,7 @@
     .food_container{
         display: flex;
         flex: 1;
+        padding-top:4rem;
     }
     .menu_container{
         display: flex;
@@ -911,6 +1020,7 @@
                             margin-bottom: .2rem;
                             .description_foodname{
                                 @include sc(.7rem, #333);
+                                font-weight: bold;
                             }
                             .attributes_ul{
                                 display: flex;

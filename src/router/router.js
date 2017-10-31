@@ -1,6 +1,7 @@
 import App from '../App'
 
 const home = r => require.ensure([], () => r(require('../page/home/home')), 'home')
+const setting = r => require.ensure([], () => r(require('../page/home/setting')), 'setting')
 const index = r => require.ensure([], () => r(require('../page/login/index')), 'index')
 const city = r => require.ensure([], () => r(require('../page/city/city')), 'city')
 // const msite = r => require.ensure([], () => r(require('../page/msite/msite')), 'msite')
@@ -73,6 +74,10 @@ export default [{
         {
             path: '/home',
             component: home
+        },
+        {
+            path: '/setting',
+            component: setting
         },
         //当前选择城市页
         {

@@ -8,24 +8,29 @@
             </nav> -->
             <header class="shop_detail_header" ref="shopheader">
                 <!-- <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"> -->
-                <section class="description_header" :class="storeList.length == 0  && storeListOrigin.length == 0 ?'empty':''">
+                <section class="description_header">
+                    <div>门店列表</div>
                     <div class="description_top">
-                        <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
+                       <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
                             <img :src="user.profileImg" @click="signout">
-                        </section>
+                        </section> -->
                         <section class="description_right">
-                            <h4 class="description_title ellipsis">您好，<br/>{{user.realName}}</h4>
-                            <!-- <p class="description_text">商家配送／{{shopDetailData.order_lead_time}}分钟送达／配送费¥{{shopDetailData.float_delivery_fee}}</p>
-                            <p class="description_promotion ellipsis">公告：{{promotionInfo}}</p> -->
+                            <h4 class="description_title ellipsis">您已订阅19家门店</h4>
                         </section>
-                        <section class="description_more">
-                            <router-link class="shop_detail_vip" :to="{path:'/city/1'}" tag="span" >
-                                <svg class="icon_style">
-                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#add"></use>
-                                </svg>
-                                <span>订阅更多</span>                            
+                       <!--  <section class="description_more">
+                            <router-link class="shop_detail_vip" :to="{path:'/city/1'}" tag="span" >  
+                                <svg width="10px" height="14px" viewBox="0 0 10 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <g id="订阅" transform="translate(-311.000000, -86.000000)" fill="#007BE6">
+                                            <g id="Group-3" transform="translate(311.000000, 83.000000)">
+                                                <path d="M6.57470729,15.6197674 C6.34022724,15.9456103 5.65784475,16.9935084 5,16.9999685 C4.32404953,17.0066064 3.6723327,15.9628596 3.43234287,15.6295617 C1.14411429,12.4516694 0,10.4610812 0,8.59254939 C0,5.20970967 2.23857625,3 5,3 C7.76142375,3 10,5.20970967 10,8.59254939 C10,10.4591612 8.85823576,12.4464847 6.57470729,15.6197674 Z M5,10.0838959 C6.1045695,10.0838959 7,9.17773354 7,8.05992563 C7,6.94211773 6.1045695,6.03595538 5,6.03595538 C3.8954305,6.03595538 3,6.94211773 3,8.05992563 C3,9.17773354 3.8954305,10.0838959 5,10.0838959 Z" id="Combined-Shape"></path>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>  
+                                <span>上海</span>                       
                             </router-link>
-                        </section>
+                        </section> -->
 
                     </div>
                     <!-- <footer class="description_footer" v-if="shopDetailData.activities.length" @click="showActivitiesFun">
@@ -57,8 +62,23 @@
                 <section v-show="changeShowType =='food'" class="food_container">
                     <section class="menu_container">
                         <section class="menu_right" ref="menuFoodList">
-                            <ul>
-                                <li v-for="(store,index) in storeList" :key="index">
+                            <ul v-for="(branch,i) in branchList">
+                                <li>
+                                    <header class="menu_detail_header" >
+                                        <section class="menu_detail_header_left">
+                                            <span class="menu_item_title">{{branch}}</span>
+                                            <span class="menu_item_description">共{{branchMap[branch].length}}家门店</span>
+                                            <span class="menu_item_open">
+                                                -
+                                            </span>
+                                            <span class="menu_item_close">
+                                                +
+                                            </span>
+                                        </section>
+                                    </header>
+                                </li>
+
+                                <li v-for="(store,index) in branchMap[branch]" :key="index">
 
                                     <section class="store_detail_list">
                                             <section class="store_img" @click="gotoAddress('rate?storeId='+store.id)">
@@ -78,12 +98,12 @@
                                                     {{store.regionName}}&nbsp;&nbsp;{{store.priceText}}
                                                 </p>
                                                 <p class="store_content ellipsis" v-else>{{store.address}}</p>
-                                                <p class="store_time">
+                                                <!-- <p class="store_time">
                                                     <span v-if="store.isCancel == false">
                                                         {{store.createTime | dateTime('自YYYY年MM月DD日订阅')}}</span>
                                                     <span v-if="store.isCancel == true" class="cancel">
                                                         {{store.expireTime | dateTime('将于YYYY年MM月DD日取消订阅')}}</span>
-                                                </p>
+                                                </p> -->
                                             </section>
                                     </section>
                                 </li>
@@ -176,7 +196,9 @@
                 alertFunc:null,
                 confirmBtn:null,
                 format:'',
-                seletedCity:false
+                seletedCity:false,
+                branchMap:{},
+                branchList:[],
             }
         },
         created(){
@@ -200,7 +222,7 @@
         },
         computed: {
             ...mapState([
-                'shopIds'
+                'shopIds',
             ]),
             // promotionInfo: function (){
             //     return this.shopDetailData.promotion_info || '欢迎光临，用餐高峰期请提前下单，谢谢。'
@@ -292,13 +314,24 @@
                             this.storeList[j].createTime = this.extra[i].createTime;
                             this.storeList[j].expireTime = new Date(new Date().setMonth(new Date(this.extra[i].createTime).getMonth() + 1));
                             this.storeList[j].isCancel = this.extra[i].isCancel;
-
-                            this.storeListOrigin[j].createTime = this.extra[i].createTime;
-                            this.storeListOrigin[j].expireTime = new Date(new Date().setMonth(new Date(this.extra[i].createTime).getMonth() + 1));
-                            this.storeListOrigin[j].isCancel = this.extra[i].isCancel;
                         }
                     }
                 }
+
+                this.storeListOrigin = JSON.parse(JSON.stringify(this.storeList));
+
+                let _self = this;
+                _self.branchMap = {};
+                this.storeList.map(s=>{
+                    if( false == _self.branchMap[s.name] instanceof Array){
+                        _self.branchMap[s.name] = [];
+                        _self.branchList.push(s.name);
+                    }
+                    _self.branchMap[s.name].push(s);
+                });
+
+
+                console.log(_self.branchMap);
 
                 this.RECORD_MYSHOPS(this.storeListOrigin.map(item=>item.id));
                 
@@ -787,17 +820,13 @@
         .description_header{
             position: relative;
             z-index: 10;
-            /*background-color: rgba(119,103,137,.43);*/
-            background:-moz-linear-gradient(bottom,#fdcb2e,#fbba2a);/*Mozilla*/  
-            background:-webkit-gradient(linear,0 0%,100% 100%,from(#fdcb2e),to(#fbba2a));/*Old gradient for webkit*/  
-            background:-webkit-linear-gradient(bottom,#fdcb2e,#fbba2a);/*new gradient for Webkit*/  
-            background:-o-linear-gradient(bottom,#fdcb2e,#fbba2a); /*Opera11*/ 
-            padding: 0.2rem 0.8rem 0.6rem 0.8rem;
+            background-color: rgba(255,255,255,1);
+            padding: 0.8rem 0.8rem 0.6rem 0.8rem;
             width: 100%;
             overflow: hidden;
             .description_top{
                 display: flex;
-                margin-top:0.6rem;
+                margin-top:0.2rem;
                 .description_left{
                     margin-right: 0.5rem;
                     img{
@@ -809,10 +838,10 @@
                 .description_right{
                     flex: 3;
                     .description_title{
-                        @include sc(.6rem, #282828);
+                        @include sc(.6rem, #949aac);
+                        line-height: 1.4rem;
                         /*font-weight: bold;*/
                         width: 100%;
-                        margin-top:0.6rem;
                         /*margin-bottom: 0.3rem;*/
                     }
                     .description_text{
@@ -834,34 +863,30 @@
                 }
                 .shop_detail_vip{
                     display: inline-block;
-                    font-size: 12px;
-                    line-height: 12px;
-                    margin-top:14px;
+                    line-height: 1.1rem;
                     float:right;
-                    padding: .4rem .4rem .4rem .8rem;
-                    background-color:#3d3d3d;
+                    padding: 0rem .4rem 0rem .8rem;
                     /*@include bis('../../images/vip.jpg');*/
                     /*background-size: 34px auto;
                     background-position: 68px center;*/
 
-                    border-radius: 6px;
+                    /*border-radius: 6px;
                     border:1px solid rgba(0,0,0,0.5);
-                    border-width:0 0 0.025rem 0;
+                    border-width:0 0 0.025rem 0;*/
                     span{
-                        color:#fff;
+                        @include sc(.6rem, #0f83e7);
                         display: inline-block;
                         vertical-align:middle;
-                        font-size:0.5rem;
                     }
                     .icon_style{
                         width: .5rem;
                         height:.5rem;
                         font-size:0.5rem;
-                        color:#fff;
+                        color:#0f83e7;
                         display: inline-block;
                         vertical-align:middle;
                         use{
-                            fill:#fff;
+                            fill:#0f83e7;
                         }
                     }
                 }
@@ -994,7 +1019,7 @@
         }
     }
     .food_container{
-        padding-top:7rem;
+        padding-top:6.6rem;
         padding-bottom: 1.95rem;
         min-height: 100%;
     }
@@ -1041,25 +1066,38 @@
             flex: 4;
             overflow-y: auto;
             background-color: #fff;
-            
+            padding:0 .8rem;
             .menu_detail_header{
                 width: 100%;
-                padding: .4rem;
+                padding: .4rem .4rem .4rem 0;
                 position: relative;
                 @include fj;
                 align-items: center;
+                margin-right:1rem;
                 .menu_detail_header_left{
-                    width: 11rem;
+                    width: 100%;
                     white-space: nowrap;
                     overflow: hidden;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    span{
+                        vertical-align: middle;
+                        @include sc(.65rem, #666);
+                        line-height: 1.3rem;
+                    }
                     .menu_item_title{
-                        @include sc(.7rem, #666);
+                        @include sc(.65rem, #666);
                         font-weight: bold;
                     }
                     .menu_item_description{
-                        @include sc(.5rem, #999);
+                        @include sc(.65rem, #999);
                         width: 30%;
                         overflow: hidden;
+                    }
+                    .menu_item_open,.menu_item_close{
+                        @include sc(1.4rem, #C4CCDC);
+                        line-height: 1rem;
                     }
                 }
                 .menu_detail_header_right{
@@ -1099,7 +1137,7 @@
             }
             .store_detail_list{
                 background-color: #fff;
-                padding: .6rem .4rem .6rem .6rem;
+                padding: .6rem 0rem .6rem 0rem;
                 border-bottom: 1px solid #e5e5e5;
                 display:flex;
                 overflow: hidden;
@@ -1115,11 +1153,11 @@
                 .store_img{
                     display: block;
                     margin-right: .6rem;
-                    margin-left: .2rem;
                     img{
-                        @include wh(2.6rem, 2.6rem);
+                        @include wh(2.5rem, 2.5rem);
                         display: block;
                         border:1px solid #ccc;
+                        border-radius:.3rem;
                     }
                 }
                 .store_info{
@@ -1127,10 +1165,11 @@
                     flex:1;
                     .store_head{
                         @include fj;
-                        margin-bottom: .2rem;
+                        margin-bottom: .4rem;
                         .store_name{
-                            @include sc(.6rem, #333);
+                            @include sc(.8rem, #4d4e57);
                             span{
+                                font-weight: bold;
                                 vertical-align:middle;
                             }
                             .store_status{
@@ -1266,14 +1305,14 @@
         transform: translateY(100%);
     }
     .search_container{
-        background-color:#fff;
+        background-color:#f2f5f7;
         
         @include wh(100%, auto);
-        padding:.4rem 0;
-        @include sc(.6rem, #ccc);
-        text-align: center;
+        padding:.4rem 2rem;
+        @include sc(.65rem, #ccc);
+        text-align: left;
         font-weight: normal;
-        margin:14px 0 0 0;
+        margin:10px 0 0 0;
         border-radius: 4px;
 
     }

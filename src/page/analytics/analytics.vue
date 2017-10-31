@@ -1,6 +1,61 @@
  <template>
     <div>
-        <header id='head_top'>
+        <section class="head_tips" @click="gotoAddress({path:'/warning'})">您没有未读预警，点击查看历史预警</section>
+        <section class="head_brand"  @click="eventSearch()">
+            <div class="head_brand_name"  v-if="storeList.length >0 && defaultBrand == ''">
+                <img class="head_brand_pic" :src="storeList[0].defaultPic" />
+                <span>{{storeList[0].name}}&nbsp;</span>
+            </div>
+            <div class="head_brand_name"  v-if="storeList.length >0 && defaultBrand != ''">
+                <img  v-if="selectedIndex == null" class="head_brand_pic" :src="branchList[defaultBrand][0].defaultPic" />
+                <img  v-else class="head_brand_pic" :src="branchList[branchName[selectedIndex]][0].defaultPic" />
+
+                <span v-if="selectedIndex == null">{{branchList[defaultBrand][0].name}}&nbsp;</span>
+                <span v-else>{{branchList[branchName[selectedIndex]][0].name}}&nbsp;</span>
+            </div>
+            <div class="head_brand_button">
+                选择其他品牌
+                <svg width="8px" height="12px" viewBox="0 0 8 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g id="箭头-左" transform="translate(-349.000000, -152.000000)" fill="#007BE6">
+                            <path d="M354.929466,155.894975 L354.996555,155.082271 L354.996555,155.082271 C355.041992,154.531859 354.632629,154.048827 354.082217,154.00339 C354.054851,154.001131 354.027404,154 353.999945,154 L348,154 L348,154 C347.447715,154 347,154.447715 347,155 L347,155 L347,161 L347,161 C347,161.552285 347.447715,162 348,162 C348.027459,162 348.054906,161.998869 348.082272,161.99661 L348.894962,161.92952 L348.894962,156.894975 C348.894962,156.342691 349.342677,155.894975 349.894962,155.894975 L354.929466,155.894975 Z" id="disclosure-indicator" transform="translate(351.000000, 158.000000) rotate(-225.000000) translate(-351.000000, -158.000000) "></path>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+        </section>
+        <section class="head_calendar">
+            <span>请选择日期</span>
+            <section>
+                <div class="head_calendar_date">{{data | dateTime('MM月DD日')}} <span>今天</span></div>
+                <div class="head_calendar_button" @click="chooseDate()">
+                    <svg width="22px" height="21px" viewBox="0 0 22 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g id="首页-无预警" transform="translate(-337.000000, -215.000000)" fill="#007BE6">
+                                <path d="M338.991155,215 L357.008845,215 C358.110326,215 359,215.892996 359,216.994561 L359,234.005439 C359,235.097656 358.10853,236 357.008845,236 L338.991155,236 C337.889674,236 337,235.107004 337,234.005439 L337,216.994561 C337,215.902344 337.89147,215 338.991155,215 Z M339.993398,221 C339.444759,221 339,221.447489 339,221.998502 L339,233.001498 C339,233.552955 339.444946,234 339.993398,234 L356.006602,234 C356.555241,234 357,233.552511 357,233.001498 L357,221.998502 C357,221.447045 356.555054,221 356.006602,221 L339.993398,221 Z M340,217 L340,219 L345,219 L345,217 L340,217 Z M351,217 L351,219 L356,219 L356,217 L351,217 Z M352,229 L354,229 L354,231 L352,231 L352,229 Z M347,229 L349,229 L349,231 L347,231 L347,229 Z M342,229 L344,229 L344,231 L342,231 L342,229 Z M352,224 L354,224 L354,226 L352,226 L352,224 Z M347,224 L349,224 L349,226 L347,226 L347,224 Z M342,224 L344,224 L344,226 L342,226 L342,224 Z" id="calendar"></path>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+            </section>
+        </section>
+
+        <date-picker ref="myDate" field="myDate"
+                 placeholder="选择日期"
+                 v-model="data"
+                 format="yyyy/mm/dd"></date-picker>
+
+        <section class="head_tab">
+            <div class="tab_container" :class="{active:tabType=='dp'}" @click="clickTab('dp')">
+                <span>在店满意度</span><br/>
+                <span class="rate_total">{{rateCount.countHigh}}条</span>
+            </div>
+            <div class="tab_container" :class="{active:tabType=='ele'}" @click="clickTab('ele')">
+                <span>外卖满意度</span><br/>
+                <span class="rate_total">0条</span>
+            </div>
+        </section>
+        <!-- <header id='head_top'>
             <section class="title_head ellipsis">
                 <span class="title_text" >{{date | dateTime('YYYY年MM月DD日') }}</span>
             </section>
@@ -9,13 +64,13 @@
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#search"></use>
                 </svg>
             </section>
-        </header>
+        </header> -->
         <section v-if="!showLoading" class="shop_container main_container">
             
-            <section class="chart_container">
+            <!-- <section class="chart_container">
                 <IEcharts :option="bar" :height="100" theme="customer" @ready="onReady" @click="onClick"></IEcharts>
-            </section>
-            <section class="detail_container">
+            </section> -->
+            <!-- <section class="detail_container">
                 <div class="search_submit"  v-if="storeIds.length > 1"  @click="gotoAddress({path:'/rateByShop',query:{ids:storeIds,date:dateFormat}})">
                     <svg class="icon_style">
                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#more"></use>
@@ -29,24 +84,54 @@
                     </svg>
                     <span>查看详情</span>
                 </div>
-            </section>
+            </section> -->
 
             <section class="reply_container">
                <div class="reply_item">
                    <div class="reply_item_border">
-                        <span>负面评论</span>
-                        <div class="reply_item_count">{{rateCount.countLow}}条</div>
-                   </div>
-                </div>
+                        <section>
+                            <div class="reply_progress">
+                                <div class="reply_progress green" :style="{ width: rateCount.countHigh/rateCount.amount * 100+ '%'}">
+                                    {{ (rateCount.countHigh/rateCount.amount * 100 ).toFixed(1) }}%
+                                </div>
+                            </div> 
+                            <div class="reply_view_button">
+                                查看
+                            </div>
+                        </section>
+                        <div class="reply_item_count green">好评数量： {{rateCount.countHigh}}条</div>
+                    </div>
+               </div>
                <div class="reply_item">
                    <div class="reply_item_border">
-                        <span>正面评论</span>
-                        <div class="reply_item_count green">{{rateCount.countHigh}}条</div>
+                        <section>
+                            <div class="reply_progress">
+                                <div class="reply_progress yellow" :style="{ width: rateCount.countMid/rateCount.amount * 100 + '%'}">
+                                    {{ ( rateCount.countMid / rateCount.amount * 100 ).toFixed(1) }}%
+                                </div>
+                            </div>
+                            <div class="reply_view_button">
+                                查看
+                            </div>
+                        </section>
+                        <div class="reply_item_count yellow">中评数量： {{rateCount.countMid}}条</div>
                     </div>
+                    
+               </div>
+               <div class="reply_item">
                    <div class="reply_item_border">
-                        <span>中性评论</span>
-                        <div class="reply_item_count yellow">{{rateCount.countMid}}条</div>
-                    </div>
+                        <section>
+                            <div class="reply_progress">
+                                <div class="reply_progress red" :style="{ width: rateCount.countLow/rateCount.amount * 100+ '%'}">
+                                   {{ (rateCount.countLow / rateCount.amount * 100 ).toFixed(1) }}%
+                                </div>
+                            </div>
+                            <div class="reply_view_button">
+                                查看
+                            </div>
+                        </section>
+                        <div class="reply_item_count">差评数量： {{rateCount.countLow}}条</div>
+                   </div>
                </div>
             </section>
         </section>
@@ -55,43 +140,96 @@
 
        <loading v-show="showLoading"></loading>
 
-       <section class="shop_container main_container bg-gray" v-if="showSearch" >
-            
-            <div class="head_top">
-                <section class="title_search ellipsis">
-                    <input type="text" class="search_container" value="" placeholder="请输入搜索门店" 
-                    v-model='inputValue' @input='searchLocal(inputValue)'/>
-                </section>
-                <section class="title_right" @click="eventSearch()">
-                    取消
-                </section>
-            </div>
-
+       <section class="shop_container main_container bg-gray" v-if="showDefault">
+            <section class="description_header">
+                <div>设置默认品牌</div>
+                <div class="description_top">
+                    <section class="description_right">
+                        <h4 class="description_title ellipsis">首页默认品牌门店信息</h4>
+                    </section>
+                    <!-- <section class="description_more">
+                        <span class="shop_detail_vip" @click="eventDefault()">
+                            <span>设置默认品牌</span>        
+                            <svg class="icon_style">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#add"></use>
+                            </svg>                    
+                        </span>
+                    </section> -->
+                </div>
+            </section>
             <ul class="search_list">
-                <li>
+                <!-- <li>
                     <span class="store_name" @click="selectSearchResult(storeListOrigin)">
                         全部 ({{storeListOrigin.length}}家门店)
                     </span>
+                </li> -->
+                <li :class="{ active: name == defaultBrand}"  v-for="(name,index) in branchName" :key="index" @click="setDefaultBrand(branchList[name])">
+                    <div class="store_name">
+                        <img :src="branchList[name][0].defaultPic"/>
+                        <b>{{name}}</b> 
+                        <span>共{{branchList[name].length}}家门店</span>
+                        <span class="brand_default_button">设为默认</span>
+                    </div>
+                    <!-- <span class="store_address" v-if="branchList[name].length > 1">{{branchList[name][0].branchName}} 等</span>
+                    <span class="store_address" v-else>{{branchList[name][0].branchName?branchList[name][0].branchName:branchList[name][0].name}}</span> -->
                 </li>
-                <li  v-for="(name,index) in branchName" :key="index" @click="selectSearchResult(branchList[name])">
-                    <span class="store_name">{{name}} ({{branchList[name].length}}家门店)</span>
-                    <span class="store_address" v-if="branchList[name].length > 1">{{branchList[name][0].branchName}} 等</span>
-                    <span class="store_address" v-else>{{branchList[name][0].branchName?branchList[name][0].branchName:branchList[name][0].name}}</span>
-                </li>
-                <li  v-for="(store,index) in storeList" :key="index" @click="selectSearchResult([store])" v-if="storeList.length<storeListOrigin.length">
+                <li  v-for="(store,index) in storeList" :key="index" @click="selectSearchResult([store],index)" v-if="storeList.length < storeListOrigin.length">
                     <span class="store_name">{{store.name}} {{store.branchName}}</span>
                     <span class="store_address">{{store.address}}</span>
                 </li>
             </ul>
+            <div class="set_brand_default_button" @click="saveDefaultBrand()">确认</div>
+       </section>
+
+       <section class="shop_container main_container bg-gray" v-if="showSearch">
+            <section class="description_header">
+                <div>选择品牌</div>
+                <div class="description_top">
+                    <section class="description_right">
+                        <h4 class="description_title ellipsis">展示相应品牌门店信息</h4>
+                    </section>
+                    <section class="description_more">
+                        <span class="shop_detail_vip" @click="eventDefault()">
+                            <span>设置默认品牌</span>        
+                            <svg width="8px" height="12px" viewBox="0 0 8 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="箭头-左" transform="translate(-349.000000, -152.000000)" fill="#007BE6">
+                                        <path d="M354.929466,155.894975 L354.996555,155.082271 L354.996555,155.082271 C355.041992,154.531859 354.632629,154.048827 354.082217,154.00339 C354.054851,154.001131 354.027404,154 353.999945,154 L348,154 L348,154 C347.447715,154 347,154.447715 347,155 L347,155 L347,161 L347,161 C347,161.552285 347.447715,162 348,162 C348.027459,162 348.054906,161.998869 348.082272,161.99661 L348.894962,161.92952 L348.894962,156.894975 C348.894962,156.342691 349.342677,155.894975 349.894962,155.894975 L354.929466,155.894975 Z" id="disclosure-indicator" transform="translate(351.000000, 158.000000) rotate(-225.000000) translate(-351.000000, -158.000000) "></path>
+                                    </g>
+                                </g>
+                            </svg>                  
+                        </span>
+                    </section>
+                </div>
+            </section>
+
+            <ul class="search_list">
+                <li :class="{ active: name == defaultBrand }"  v-for="(name,index) in branchName" :key="index" @click="selectSearchResult(branchList[name],index)">
+                    <div class="store_name">
+                        <img :src="branchList[name][0].defaultPic"/>
+                        <b>{{name}}</b> 
+                        <span>共{{branchList[name].length}}家门店</span>
+                        <span class="brand_default">默认</span>
+                        <span v-if="selectedIndex == index" class="brand_select">
+                            <svg width="15px" height="11px" viewBox="0 0 15 11" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="选择品牌-" transform="translate(-342.000000, -196.000000)" fill="#007BE6">
+                                        <path d="M347.267767,203.267767 L354.096194,196.43934 C354.681981,195.853553 355.631728,195.853553 356.217514,196.43934 C356.803301,197.025126 356.803301,197.974874 356.217514,198.56066 L348.43934,206.338835 L348.43934,206.338835 C347.971408,206.806767 347.271233,206.90091 346.709851,206.621264 C346.440501,206.561628 346.184404,206.427045 345.974874,206.217514 L345.974874,206.217514 L342.43934,202.681981 C341.853553,202.096194 341.853553,201.146447 342.43934,200.56066 L342.43934,200.56066 C343.025126,199.974874 343.974874,199.974874 344.56066,200.56066 L344.56066,200.56066 L347.267767,203.267767 Z" id="Combined-Shape"></path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </span>
+                    </div>
+                </li>
+            </ul>
+            
         </section>
 
-       <!-- <section class="animation_opactiy shop_back_svg_container" v-if="showLoading">
+        <!-- <section class="animation_opactiy shop_back_svg_container" v-if="showLoading">
            <img src="../../images/shop_back_svg.svg">
-       </section> -->
-       <transition name="router-slid" mode="out-in">
+        </section> -->
+        <transition name="router-slid" mode="out-in">
             <router-view></router-view>
-
-
         </transition>
     </div>
 </template>
@@ -104,24 +242,30 @@
     // import {loadMore} from 'src/components/common/mixin'
     // import BScroll from 'better-scroll'
     import footGuide from '../../components/footer/footGuide'
-    import IEcharts from 'vue-echarts-v3/src/lite.vue'
+    import myDatepicker from 'vue-datepicker-simple/datepicker-2.vue';
 
-    import echarts from 'vue-echarts-v3/node_modules/echarts/lib/echarts'
-    import 'vue-echarts-v3/node_modules/echarts/lib/chart/line'
-    import 'vue-echarts-v3/node_modules/echarts/lib/component/graphic'
-    import 'vue-echarts-v3/node_modules/echarts/lib/component/dataZoom'
-    import 'vue-echarts-v3/node_modules/echarts/lib/component/tooltip'
-    import 'vue-echarts-v3/node_modules/echarts/lib/component/title'
+    // import IEcharts from 'vue-echarts-v3/src/lite.vue'
+    // import echarts from 'vue-echarts-v3/node_modules/echarts/lib/echarts'
+    // import 'vue-echarts-v3/node_modules/echarts/lib/chart/line'
+    // import 'vue-echarts-v3/node_modules/echarts/lib/component/graphic'
+    // import 'vue-echarts-v3/node_modules/echarts/lib/component/dataZoom'
+    // import 'vue-echarts-v3/node_modules/echarts/lib/component/tooltip'
+    // import 'vue-echarts-v3/node_modules/echarts/lib/component/title'
 
     import debounce from 'debounce'
-    import theme from './theme.json'
-    IEcharts.registerTheme('customer', theme)
+    // import theme from './theme.json'
+    // IEcharts.registerTheme('customer', theme)
 
     export default {
         data(){
             return{
+                data:'2017/10/31',
+                tabType:'dp',
                 showLoading: true, //显示加载动画
                 showSearch:false,
+                showDefault:false,
+                defaultBrand:'',
+                selectedIndex:null,
                 storeListOrigin:[],
                 storeList: [],
                 storeIds: [],
@@ -130,131 +274,133 @@
                 inputValue:'',
                 chart:null,
                 date:new Date(),
-                dateFormat:'',
+                dateFormat: new Date().getTime(),
                 rateCount:{
                     countLow:0,
                     countMid:0,
                     countHigh:0,
+                    amount:0
                 },
-                bar: {
-                    title: {
-                        left: '4%',
-                        top:'4%',
-                        text: '统计中..'
-                    },
-                    toolbox: {
+                originData:null,
+                // bar: {
+                //     title: {
+                //         left: '4%',
+                //         top:'4%',
+                //         text: '统计中..'
+                //     },
+                //     toolbox: {
                         
-                    },
-                    grid: {
-                        left: '0%',
-                        right: '0%',
-                        bottom: '30px',
-                        top: '0%',
-                    },
-                    tooltip : {
-                        show:true,
-                        trigger: 'axis',
-                        axisPointer: {
-                            value: '8/30',
-                            snap: false,
-                            lineStyle: {
-                                color: '#ffe983',
-                                opacity: 1,
-                                width: 2
-                            },
-                            label: {
-                                show: true,
-                                backgroundColor: '#ffe983'
-                            },
-                            handle: {
-                                show: true,
-                                color: '#004E52'
-                            }
-                        },
+                //     },
+                //     grid: {
+                //         left: '0%',
+                //         right: '0%',
+                //         bottom: '30px',
+                //         top: '0%',
+                //     },
+                //     tooltip : {
+                //         show:true,
+                //         trigger: 'axis',
+                //         axisPointer: {
+                //             value: '8/30',
+                //             snap: false,
+                //             lineStyle: {
+                //                 color: '#ffe983',
+                //                 opacity: 1,
+                //                 width: 2
+                //             },
+                //             label: {
+                //                 show: true,
+                //                 backgroundColor: '#ffe983'
+                //             },
+                //             handle: {
+                //                 show: true,
+                //                 color: '#004E52'
+                //             }
+                //         },
 
-                        triggerOn:'click'
-                    },
-                    xAxis : [
-                        {
-                            position: 'bottom',
-                            offset:4,
-                            type : 'category',
-                            boundaryGap : false,
-                            splitLine: {
-                                show: false
-                            }
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            show : false,
-                            axisLine :{
-                                show : false
-                            },
-                            axisLabel:{
-                                show : false
-                            },
-                            type : 'value'
-                        }
-                    ],
-                    dataZoom: [{
-                        type: 'inside',
-                        start: 50,
-                        end: 100
-                    }],
-                    series : [
-                        {
-                            type:'line',
-                            name:'好评',
-                            lineStyle:{normal:{color:'#6ea593'}},
-                            areaStyle: {
-                                normal: {
-                                    color: new echarts.graphic.LinearGradient(
-                                        0, 0, 0, 1,
-                                        [
-                                            {offset: 0, color: '#6ea593'},
-                                            {offset: 0.9, color: '#eafff1'},
-                                            {offset: 1, color: '#fff'}
-                                        ]
-                                    )
-                                }
-                            }
-                        },{
-                            type:'line',
-                            name:'中评',
-                            lineStyle:{normal:{color:'#f8d555'}},
-                            areaStyle: {
-                                normal: {
-                                    color: new echarts.graphic.LinearGradient(
-                                        0, 0, 0, 1,
-                                        [
-                                            {offset: 0, color: '#f8d555'},
-                                            {offset: 0.9, color: '#fcf8dd'},
-                                            {offset: 1, color: '#fff'}
-                                        ]
-                                    )
-                                }
-                            },
-                        },
-                        {
-                            type:'line',
-                            name:'差评',
-                            lineStyle:{normal:{color:'#eda994'}},
-                            areaStyle: {
-                                normal: {
-                                    color: new echarts.graphic.LinearGradient(
-                                        0, 0, 0, 1,
-                                        [
-                                            {offset: 0, color: '#eda994'},
-                                            {offset: 0.9, color: '#ffe3e2'},
-                                            {offset: 1, color: '#fff'}
-                                        ]
-                                    )
-                                }
-                            }
-                        }
-                    ]
-                }
+                //         triggerOn:'click'
+                //     },
+                //     xAxis : [
+                //         {
+                //             position: 'bottom',
+                //             offset:4,
+                //             type : 'category',
+                //             boundaryGap : false,
+                //             splitLine: {
+                //                 show: false
+                //             }
+                //         }
+                //     ],
+                //     yAxis : [
+                //         {
+                //             show : false,
+                //             axisLine :{
+                //                 show : false
+                //             },
+                //             axisLabel:{
+                //                 show : false
+                //             },
+                //             type : 'value'
+                //         }
+                //     ],
+                //     dataZoom: [{
+                //         type: 'inside',
+                //         start: 50,
+                //         end: 100
+                //     }],
+                //     series : [
+                //         {
+                //             type:'line',
+                //             name:'好评',
+                //             lineStyle:{normal:{color:'#6ea593'}},
+                //             areaStyle: {
+                //                 normal: {
+                //                     color: new echarts.graphic.LinearGradient(
+                //                         0, 0, 0, 1,
+                //                         [
+                //                             {offset: 0, color: '#6ea593'},
+                //                             {offset: 0.9, color: '#eafff1'},
+                //                             {offset: 1, color: '#fff'}
+                //                         ]
+                //                     )
+                //                 }
+                //             }
+                //         },{
+                //             type:'line',
+                //             name:'中评',
+                //             lineStyle:{normal:{color:'#f8d555'}},
+                //             areaStyle: {
+                //                 normal: {
+                //                     color: new echarts.graphic.LinearGradient(
+                //                         0, 0, 0, 1,
+                //                         [
+                //                             {offset: 0, color: '#f8d555'},
+                //                             {offset: 0.9, color: '#fcf8dd'},
+                //                             {offset: 1, color: '#fff'}
+                //                         ]
+                //                     )
+                //                 }
+                //             },
+                //         },
+                //         {
+                //             type:'line',
+                //             name:'差评',
+                //             lineStyle:{normal:{color:'#eda994'}},
+                //             areaStyle: {
+                //                 normal: {
+                //                     color: new echarts.graphic.LinearGradient(
+                //                         0, 0, 0, 1,
+                //                         [
+                //                             {offset: 0, color: '#eda994'},
+                //                             {offset: 0.9, color: '#ffe3e2'},
+                //                             {offset: 1, color: '#fff'}
+                //                         ]
+                //                     )
+                //                 }
+                //             }
+                //         }
+                //     ]
+                // }
             }
         },
         created(){
@@ -281,7 +427,8 @@
         components: {
             loading,
             footGuide,
-            IEcharts,
+            'date-picker': myDatepicker
+            // IEcharts,
         },
         computed: {
             ...mapState([
@@ -301,6 +448,10 @@
                 }
                 this.user = JSON.parse(getStore('user'));
 
+                if(getStore('defaultBrand') != undefined){
+                    this.defaultBrand = getStore('defaultBrand')
+                }
+
                 let response = await getMyStore(this.user.id);
                 if(response.status == 0){
                     let _this = this;
@@ -314,7 +465,7 @@
                         return item;
                     })
                     _this.branchName = Object.keys(_this.branchList);
-                    console.log(_this.branchList,_this.branchName);
+                    console.log(_this.branchList[_this.defaultBrand]);
                 }
                 
                 this.chartInit(response.stores);
@@ -323,16 +474,23 @@
                 this.hideLoading();
             },
 
+            chooseDate(){ 
+                this.$refs.myDate.$el.firstChild.focus();
+            },
+
+            clickTab(type){
+                this.tabType = type;
+            },
+
             chartInit(list){
-                console.log('chart init:');
                 // console.log(list);
 
                 this.storeIds = [];
                 this.storeList = list;
 
-
                 this.storeList.map(item=>{
                     this.storeIds.push(item.id);
+                    
                 })
 
                 // for(let i=0; i < this.storeIds.length ; i++){
@@ -342,45 +500,57 @@
                 let _this = this;
                 getRateAnalytics(_this.storeIds).then(function(resCount){
                     if(resCount.status == 0){
-                        
-                        _this.bar.yAxis[0].max = resCount.max*1.3;
-
+                        _this.originData = resCount;
+                        let index = resCount.date.length-2;
                         let year = new Date().getFullYear();
-                        _this.bar.xAxis[0].data = resCount.date;
-                        _this.date = year+'/'+resCount.date[resCount.date.length-2];
-                        _this.dateFormat = new Date(_this.date).getTime();
-                        _this.bar.tooltip.axisPointer.value = "8/30";
 
-                        _this.bar.series[0].data = resCount.countHigh;
-                        _this.bar.series[1].data = resCount.countMid;
-                        _this.bar.series[2].data = resCount.countLow;
+                        _this.date = year + '/'+ resCount.date[index];
+                        console.log(_this.date)
+                        // _this.dateFormat = new Date(_this.date).getTime();
+                        _this.rateCount.countHigh = resCount.countHigh[index]; 
+                        _this.rateCount.countMid = resCount.countMid[index]; 
+                        _this.rateCount.countLow = resCount.countLow[index]; 
+                        _this.rateCount.amount = _this.rateCount.countHigh + _this.rateCount.countMid + _this.rateCount.countLow + 0.00001;
+                        
+                        // _this.bar.yAxis[0].max = resCount.max*1.3;
 
-                        _this.rateCount.countHigh = _this.bar.series[0].data[resCount.date.length-2]; 
-                        _this.rateCount.countMid = _this.bar.series[1].data[resCount.date.length-2]; 
-                        _this.rateCount.countLow = _this.bar.series[2].data[resCount.date.length-2]; 
+                        // let year = new Date().getFullYear();
+                        // _this.bar.xAxis[0].data = resCount.date;
+                        // _this.date = year+'/'+resCount.date[resCount.date.length-2];
+                        // _this.dateFormat = new Date(_this.date).getTime();
+                        // _this.bar.tooltip.axisPointer.value = "8/30";
 
-                        _this.bar.tooltip.formatter = function(param){
+                        // _this.bar.series[0].data = resCount.countHigh;
+                        // _this.bar.series[1].data = resCount.countMid;
+                        // _this.bar.series[2].data = resCount.countLow;
+
+                        // _this.rateCount.countHigh = _this.bar.series[0].data[resCount.date.length-2]; 
+                        // _this.rateCount.countMid = _this.bar.series[1].data[resCount.date.length-2]; 
+                        // _this.rateCount.countLow = _this.bar.series[2].data[resCount.date.length-2]; 
+
+                        // _this.bar.tooltip.formatter = function(param){
                             
-                            _this.rateCount.countHigh = param[0].data; 
-                            _this.rateCount.countMid = param[1].data; 
-                            _this.rateCount.countLow = param[2].data; 
+                        //     _this.rateCount.countHigh = param[0].data; 
+                        //     _this.rateCount.countMid = param[1].data; 
+                        //     _this.rateCount.countLow = param[2].data; 
 
                             
-                            let year = new Date().getFullYear();
-                            if(param[0].axisValue.indexOf(year) == -1){
-                                param[0].axisValue = year+'/'+param[0].axisValue;
-                            }
-                            _this.date = new Date(param[0].axisValue); 
-                            _this.dateFormat = _this.date.getTime();
-                            console.log(_this.dateFormat);
-                        }
-                        if( _this.storeList.length == _this.storeListOrigin.length){
-                            _this.bar.title.text = '全部('+ _this.storeList.length +'家)门店';
-                        }else if(_this.storeList.length > 1 ){
-                            _this.bar.title.text = _this.storeList[0].name +'('+ _this.storeList.length +'家)门店';
-                        }else{
-                             _this.bar.title.text = _this.storeList[0].name + ' '+ _this.storeList[0].branchName ;
-                        }
+                        //     let year = new Date().getFullYear();
+                        //     if(param[0].axisValue.indexOf(year) == -1){
+                        //         param[0].axisValue = year+'/'+param[0].axisValue;
+                        //     }
+                        //     _this.date = new Date(param[0].axisValue); 
+                        //     _this.dateFormat = _this.date.getTime();
+                        //     console.log(_this.dateFormat);
+                        // }
+                        // if( _this.storeList.length == _this.storeListOrigin.length){
+                        //     _this.bar.title.text = '全部('+ _this.storeList.length +'家)门店';
+                        // }else if(_this.storeList.length > 1 ){
+                        //     _this.bar.title.text = _this.storeList[0].name +'('+ _this.storeList.length +'家)门店';
+                        // }else{
+                        //      _this.bar.title.text = _this.storeList[0].name + ' '+ _this.storeList[0].branchName ;
+                        // }
+
                         // _this.chart.option = _this.bar;
                         // _this.chart.dispatchAction({type: 'showTip', seriesIndex: '10', dataIndex: '10'})
                     }
@@ -401,13 +571,27 @@
 
             }, 200),
 
-            selectSearchResult(data){
-                
-                console.log('selectSearchResult:');
-                console.log(data);
+            selectSearchResult(data,index){
 
                 this.chartInit(data);
+                this.showDefault = false;
                 this.showSearch = false;
+                this.selectedIndex = index;
+                console.log('this.selectedIndex',this.selectedIndex);
+
+            },
+            setDefaultBrand(data){
+                
+                console.log('setDefault:' +　this.defaultBrand);
+
+                this.defaultBrand = data[0].name;
+                
+            },
+            saveDefaultBrand(){
+
+                setStore( 'defaultBrand', this.defaultBrand);
+                this.showDefault = false;
+                this.showSearch = true;
 
             },
             gotoAddress(path){
@@ -431,19 +615,37 @@
             },
             eventSearch(){
                 this.showSearch = !this.showSearch;
+                this.showDefault = false;
                 if(this.showSearch){
                     this.storeList = this.storeListOrigin;
                 }
+            },
+            eventDefault(){
+                this.showDefault = !this.showDefault;
+                this.showSearch = false;
+                console.log(this.showDefault);
             },
             //隐藏动画
             hideLoading(){
                 this.showLoading = false;
             },
 
+        },
+        watch: {
+            data: function (value,oldValue) {
+                console.log(value,oldValue);
+                let date = value.substr(5);
+                let index = this.originData.date.indexOf(date);
+
+                this.rateCount.countHigh = this.originData.countHigh[index]; 
+                this.rateCount.countMid = this.originData.countMid[index]; 
+                this.rateCount.countLow = this.originData.countLow[index]; 
+                this.rateCount.amount = this.rateCount.countHigh + this.rateCount.countMid + this.rateCount.countLow + 0.00001;
+                
+            }
         }
     }
 </script>
-
 <style lang="scss" scoped>
     @import 'src/style/mixin';
     @keyframes mymove{
@@ -474,6 +676,7 @@
        75%  { transform: scale(.9) }
        100% { transform: scale(1) }
     }
+    
     #head_top{
         background-color: #fff;
         position: fixed;
@@ -490,6 +693,202 @@
         line-height: 1.95rem;
         margin-left: .4rem;
     }
+    .head_tips{
+        @include sc(0.65rem, #fff);
+        line-height: 1.95rem;
+        background-color: #13be7b;
+        text-align: center;
+
+    }
+    .head_brand{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding:.75rem;
+        border-bottom:0.025rem solid #e5e5e5;
+        min-height: 3.5rem;
+        .head_brand_name{
+            .head_brand_pic{
+                @include wh(2rem, 2rem);
+                margin-right:.1rem;
+                border-radius: .4rem;
+                vertical-align:middle;
+            }
+            span{
+                @include sc(.9rem, #343640);
+                vertical-align:middle;
+            }
+        }
+        .head_brand_button{
+            @include sc(.65rem, #007BE6);
+        }
+    }
+    .head_calendar{
+        padding:.3rem .6rem .7rem .6rem;
+        border-bottom:0.025rem solid #e5e5e5;
+        span{
+            @include sc(.6rem, #969FB7);
+        }
+        section{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            .head_calendar_date{
+                @include sc(.9rem, #343640);
+            }
+            .head_calendar_button{
+                @include sc(.65rem, #007BE6);
+            }
+        }
+    }
+    .head_tab{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        padding:0 .75rem;
+        .tab_container{
+            @include sc(.9rem, #969FB7);
+            @include wh(6.6rem, auto);
+            border-bottom:0.2rem solid #fff;
+            text-align: center;
+            padding:.8rem .3rem .1rem;
+            line-height: .9rem;
+            span{
+                @include sc(.9rem, #969FB7);
+                display: inline-block;
+            }
+            .rate_total{
+                @include sc(.5rem, #969FB7);
+            }
+            &.active{
+                border-bottom:0.2rem solid #FFDA00;
+                @include sc(.9rem, #343640);
+                span{
+                    color:#343640;
+                    display: inline-block;
+                }
+            }
+        }
+    }
+    .description_header{
+            position: relative;
+            z-index: 10;
+            background-color: rgba(255,255,255,1);
+            padding: 0.8rem 0.8rem 0.6rem 0.8rem;
+            width: 100%;
+            overflow: hidden;
+            .description_top{
+                display: flex;
+                margin-top:0.2rem;
+                .description_left{
+                    margin-right: 0.5rem;
+                    img{
+                        @include wh(2.9rem, 2.9rem);
+                        display: block;
+                        border-radius: 3rem;
+                    }
+                }
+                .description_right{
+                    flex: 3;
+                    .description_title{
+                        @include sc(.6rem, #949aac);
+                        line-height: 1.4rem;
+                        /*font-weight: bold;*/
+                        width: 100%;
+                        /*margin-bottom: 0.3rem;*/
+                    }
+                    .description_text{
+                        @include sc(.5rem, #282828);
+                        /*margin-bottom: 0.3rem;*/
+                    }
+                    .description_promotion{
+                        @include sc(.5rem, #282828);
+                        width: 11.5rem;
+                    }
+                }
+                .description_more{
+                    flex:2;
+                }
+                .description_arrow{
+                    @include ct;
+                    right: 0.3rem;
+                    z-index: 11;
+                }
+                .shop_detail_vip{
+                    display: inline-block;
+                    line-height: 1.1rem;
+                    float:right;
+                    padding: 0rem .4rem 0rem .8rem;
+                    /*@include bis('../../images/vip.jpg');*/
+                    /*background-size: 34px auto;
+                    background-position: 68px center;*/
+
+                    /*border-radius: 6px;
+                    border:1px solid rgba(0,0,0,0.5);
+                    border-width:0 0 0.025rem 0;*/
+                    span{
+                        @include sc(.6rem, #0f83e7);
+                        display: inline-block;
+                        vertical-align:middle;
+                    }
+                    .icon_style{
+                        width: .5rem;
+                        height:.5rem;
+                        font-size:0.5rem;
+                        color:#0f83e7;
+                        display: inline-block;
+                        vertical-align:middle;
+                        use{
+                            fill:#0f83e7;
+                        }
+                    }
+                }
+            }
+            .description_footer{
+                @include fj;
+                margin-top: 0.5rem;
+                padding-right: 1rem;
+                p{
+                    @include sc(.5rem, #fff);
+                    span{
+                        color: #fff;
+                    }
+                    .tip_icon{
+                        padding: 0 .04rem;
+                        border: 0.025rem solid #fff;
+                        border-radius: 0.1rem;
+                        font-size: .4rem;
+                        display: inline-block;
+                    }
+                }
+                .ellipsis{
+                    width: 84%;
+                }
+                .footer_arrow{
+                    @include wh(.45rem, .45rem);
+                    position: absolute;
+                    right: .3rem;
+                }
+            }
+
+            &.empty{
+                padding: 1rem 0.8rem 1rem 0.8rem;
+                .description_top{
+                    img{
+                        @include wh(3.4rem, 3.4rem);
+                    }
+                    .shop_detail_vip{
+                        display: none;
+                    }
+                    .description_title {
+                        @include sc(.9rem, #282828);
+                    }
+                }
+            }
+        }
     .head_login{
         right: 0rem;
         @include wh(2rem,100%);
@@ -569,7 +968,7 @@
         }
     }
     .main_container{
-        padding-top:1.95rem;
+        
     }
     .shop_container{
         display: flex;
@@ -577,10 +976,9 @@
         position: absolute;
         right: 0;
         left: 0;
-        height: 100%;
         background:#eef3fa;
         &.bg-gray{
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(255,255,255,1);
             position: fixed;
             top:0;
             right: 0;
@@ -589,35 +987,86 @@
             height: 100%;
             z-index: 101;
         }
+        .set_brand_default_button{
+            position: fixed;
+            left:10%;
+            bottom:.6rem;
+            @include wh(80%, 2rem);
+            @include sc(.65rem, #fff);
+            padding: .6rem .6rem;
+            background-color:rgba(255,198,4,1);
+            margin:0 auto 1rem;
+            text-align: center;
+            border-radius: 1rem;
+        }
         .search_list{
             background-color: #fff;
             border-radius: .7rem;
             border-top-left-radius:0;
             border-top-right-radius:0;
             padding-bottom: .4rem;
-            max-height:20rem;
+            min-height:83%;
             overflow: scroll;
+
             li{
                 min-height: 49px;
                 text-align: left;
                 padding-left:.4rem;
-                padding: .2rem 0.4rem;
-                border-bottom: 0.02rem solid #ddd;
+                padding: .8rem 0.4rem;
+                border-bottom: 0.02rem solid #F2F5F7;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 @include sc(0.5rem, #666);
-
-                span{
+                background-color: #FFFFFF;
+                
+                .store_name{
                     display:block;
                     vertical-align:middle;
                     margin-left: .4rem;
                     line-height: 1rem;
-                    color:#aaa;
+                    img{
+                        @include wh(2rem, 2rem);
+                        vertical-align:middle;
+                        margin-right:.3rem;
+                    }
+                    b{
+                        font-size:.7rem;
+                        vertical-align:middle;
+                    }
+                    span{
+                        font-size:.6rem;
+                        color:#aaa;
+                        vertical-align:middle;
+                        margin:0 .2rem;
+                    }
+                    .brand_default{
+                        background-color: rgba(255,218,0,1);
+                        color:#fff;
+                        padding:.1rem .2rem;
+                        display: none;
+                    }
+                    .brand_default_button{
+                        float:right;
+                        padding-top:.5rem;
+                        color:#007BE6;
+                        display: none;
+                    }
+                    .brand_select{
+                        float:right;
+                        padding-top:.5rem;
+                    }
+                    
                 }
-                .store_name{
-                    @include sc(0.6rem, #666);
 
+                &.active{
+                    background-color: #FAFDFF;
+                    .brand_default{
+                        display: inline-block;
+                    }
+                    .brand_default_button{
+                        display: inline-block;
+                    }
                 }
                 /*&::before{
                     text-align: center;
@@ -719,238 +1168,7 @@
         height: 306px;
         padding-bottom:.4rem;
     }
-    /*.sort_container{
-        background-color: #fff;
-        border-bottom: 0.025rem solid #f1f1f1;
-        right: 0;
-        width: 100%;
-        display: flex;
-        z-index: 13;
-        box-sizing: border-box;
-
-        .sort_item{
-            flex:1;
-            margin:10px 10px 6px 15px;
-            @include wh(40%, 1.6rem);
-            
-            text-align: center;
-            line-height: 1rem;
-            .sort_item_container{
-                @include wh(100%, 100%);
-                position: relative;
-                z-index: 14;
-                background-color: #fff;
-                box-sizing: border-box;
-                .sort_item_border{
-
-                    @include sc(.5rem, #fff);
-                    border: 0.025rem solid #e1e1e1;
-                    padding: .2rem .4rem;
-                    border-radius: 0.2rem;
-                    line-height: 1rem;
-                }
-            }
-            .sort_icon{
-                vertical-align: middle;
-                transition: all .3s;
-                fill:#666;
-            }
-            
-        }
-        .choose_type{
-            .sort_item_container{
-
-                .category_title{
-                    color: $blue;
-                }
-                .sort_icon{
-                    transform: rotate(180deg);
-                    fill:$blue;
-                }
-            }
-        }
-        .showlist-enter-active, .showlist-leave-active {
-            transition: all .3s;
-            transform: translateY(0);
-        }
-        .showlist-enter, .showlist-leave-active {
-            opacity: 0;
-            transform: translateY(-100%);
-        }
-        .sort_detail_type{
-            width: 100%;
-            position: absolute;
-            display:flex;
-            top: 1.6rem;
-            left: 0;
-            border-top: 0.025rem solid $bc;
-            background-color: #fff;
-        }
-        .category_container{
-            .category_left{
-                flex: 1;
-                background-color: #f1f1f1;
-                height: 16rem;
-                overflow-y: auto;
-                span{
-                    @include sc(0.5rem, #666);
-                    line-height: 1.8rem;
-                }
-                .category_left_li{
-                    @include fj;
-                    padding:0 0.5rem;
-                    .category_icon{
-                        @include wh(.8rem, .8rem);
-                        vertical-align: middle;
-                        margin-right: .2rem;
-                    }
-                    .category_count{
-                        background-color: #ccc;
-                        @include sc(.4rem, #fff);
-                        padding: 0 .1rem;
-                        border: 0.025rem solid #ccc;
-                        border-radius: 0.8rem;
-                        vertical-align: middle;
-                        margin-right: 0.25rem;
-                    }
-                    .category_arrow{
-                        vertical-align: middle;
-                    }
-                }
-                .category_active{
-                    background-color: #fff;
-                }
-            }
-            .category_right{
-                flex: 1;
-                background-color: #fff;
-                padding-left: 0.5rem;
-                height: 16rem;
-                overflow-y: auto;
-                .category_right_li{
-                    @include fj;
-                    height: 1.8rem;
-                    line-height: 1.8rem;
-                    padding-right: 0.5rem;
-                    border-bottom: 0.025rem solid $bc;
-                    span{
-                        color: #666;
-                    }
-                }
-                .category_right_choosed{
-                    span{
-                        color: $blue;
-                    }
-                }
-            }
-        }
-        .sort_list_container{
-            width: 100%;
-            .sort_list_li{
-                height: 2.5rem;
-                display: flex;
-                align-items: center;
-                svg{
-                    @include wh(0.7rem, 0.7rem);
-                    margin:0 .3rem 0 .8rem;
-                }
-                p{
-                    line-height: 2.5rem;
-                    flex: auto;
-                    text-align: left;
-                    text-indent: 0.25rem;
-                    border-bottom: 0.025rem solid $bc;
-                    @include fj;
-                    align-items: center;
-                    span{
-                        color: #666;
-                    }
-                }
-                .sort_select{
-                    span{
-                        color: $blue;
-                    }
-                }
-            }
-        }
-        .filter_container{
-            flex-direction: column;
-            align-items: flex-start;
-            min-height: 10.6rem;
-            background-color: #f1f1f1;
-            .filter_header_style{
-                @include sc(0.4rem, #333);
-                line-height: 1.5rem;
-                height: 1.5rem;
-                text-align: left;
-                padding-left: .5rem;
-                background-color: #fff;
-            }
-            .filter_ul{
-                display: flex;
-                flex-wrap: wrap;
-                padding: 0 0.5rem;
-                background-color: #fff;
-                .filter_li{
-                    display: flex;
-                    align-items: center;
-                    border: 0.025rem solid #eee;
-                    @include wh(4.7rem, 1.4rem);
-                    margin-right: 0.25rem;
-                    border-radius: 0.125rem;
-                    padding: 0 0.25rem;
-                    margin-bottom: 0.25rem;
-                    svg{
-                        @include wh(.8rem, .8rem);
-                        margin-right: 0.125rem;
-                    }
-                    span{
-                        @include sc(0.4rem, #333);
-                    }
-                    .filter_icon{
-                        @include wh(.8rem, .8rem);
-                        font-size: 0.5rem;
-                        border: 0.025rem solid $bc;
-                        border-radius: 0.15rem;
-                        margin-right: 0.25rem;
-                        line-height: .8rem;
-                        text-align: center;
-                    }
-                    .activity_svg{
-                        margin-right: .25rem;
-                    }
-                    .selected_filter{
-                        color: $blue;
-                    }
-                }
-            }
-            .confirm_filter{
-                display: flex;
-                background-color: #f1f1f1;
-                width: 100%;
-                padding: .3rem .2rem;
-                .filter_button_style{
-                    @include wh(50%, 1.8rem);
-                    font-size: 0.8rem;
-                    line-height: 1.8rem;
-                    border-radius: 0.2rem;
-                }
-                .clear_all{
-                    background-color: #fff;
-                    margin-right: .5rem;
-                    border: 0.025rem solid #fff;
-                }
-                .confirm_select{
-                    background-color: #56d176;
-                    color: #fff;
-                    border: 0.025rem solid #56d176;
-                    span{
-                        color: #fff;
-                    }
-                }
-            }
-        }
-    }*/
+    
     .detail_container{
         display: flex;
         justify-content: center;
@@ -960,34 +1178,58 @@
         display: flex;
         flex-direction:column;
         padding-top: .6rem;
-        padding-bottom: 2.5rem;
         align-items: center;
         justify-content: center;
         align-content:center;
+        background-color:#fff;
         .reply_item{
-            width:94%;
+            width:100%;
             display: flex;
             .reply_item_border{
                 flex: 1;
-                height: 2.6rem;
+                min-height: 2.6rem;
                 @include sc(0.6rem, #333);
                 background-color: #fff;
-                border: 0.025rem solid #eef3fa;
-                border-width: 0 0.025rem 0.05rem 0;
-                padding: .1rem .5rem;
-                span{
-                    line-height: 1.2rem;
+                padding: .6rem .2rem .6rem .5rem;
+                section{
+                    display: flex;
+                    flex-direction: row;
                 }
-                .reply_item_count{
-                    @include sc(1rem, #fe736f);
-                    text-align: right;
-                    line-height: 1rem;
+                .reply_progress{
+                    flex:1;
+                    border-radius: .9rem;
+                    background-color: #f6f9fc;
+                    line-height: 1.6rem;
+
+                    @include wh(100%, 1.6rem);
+                    @include sc(0.65rem, #fff);
+
                     &.green{
-                        color:#4fd2a8;
+                        width:0%;
+                        padding-left:.8rem;
+                        background-color:#4fd2a8;
                     }
                     &.yellow{
-                        color:#fed137;
+                        width:0%;
+                        padding-left:.8rem;
+                        background-color:#fed137;
                     }
+                    &.red{
+                        width:0%;
+                        padding-left:.8rem;
+                        background-color:#fe736f;
+                    }
+                }
+                .reply_item_count{
+                    @include sc(.6rem, #969FB7);
+                    text-align: left;
+                    line-height: 1.2rem;
+                    padding-left:.8rem;
+                }
+                .reply_view_button{
+                    padding:0 .6rem;
+                    @include sc(.65rem, #007BE6);
+                    line-height: 1.6rem;
                 }
             }
         }
@@ -1108,5 +1350,51 @@
         }
     }
     
+
+</style>
+
+
+<style lang="scss">
+    #myDate{
+        position: fixed!important;
+        top:-10rem;
+    }
+    .vue-datepicker .vue-datepicker-panels{
+        position: fixed!important;
+        top: 4rem!important;
+        width: 90%!important;
+        left: 5%!important;
+        z-index:1111!important;
+    }
+    .vue-datepicker .vue-datepicker-panels::after{
+        
+    }
+    .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb thead, .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb2 thead{
+        background-color:#fff!important;
+        color:#FFC400!important;
+        
+        th{
+            font-weight: bold!important;
+        }
+    }
+
+    .vue-datepicker .vue-datepicker-panel .vue-datepicker-month span{
+        float: left!important;
+        display: block!important;
+        width: 78%!important;
+    }
+
+    .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb, .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb2{
+        width:100%!important;
+    }
+    .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb tbody tr td.z-existed.z-on span, .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb2 tbody tr td.z-existed.z-on span{
+        background-color: #F9BE2A!important;
+    }
+    .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb tbody tr td.z-existed span, .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb2 tbody tr td.z-existed span{
+        width:1.9rem!important;
+        height: 1.9rem!important;
+        line-height: 1.9rem!important;
+        border-radius: 1.9rem!important;
+    }
 
 </style>
