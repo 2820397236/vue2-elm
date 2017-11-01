@@ -113,7 +113,7 @@
             </transition>
         </section>
 
-        <foot-guide v-if="seletedCity"></foot-guide>
+        <foot-guide></foot-guide>
 
        <loading v-show="showLoading"></loading>
        <!-- <section class="animation_opactiy shop_back_svg_container" v-if="showLoading">
