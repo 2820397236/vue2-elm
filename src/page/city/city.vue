@@ -15,7 +15,7 @@
                         </g>
                     </svg>
 
-                    {{city?city.cityName:"上海"}}
+                    {{city?city.cityNameCh:"上海"}}
                 </router-link>
             </div>
             <div class="description_top">

@@ -15,7 +15,7 @@
                             <img :src="user.profileImg" @click="signout">
                         </section> -->
                         <section class="description_right">
-                            <h4 class="description_title ellipsis">您已订阅19家门店</h4>
+                            <h4 class="description_title ellipsis">您已订阅 全国 {{storeListOrigin.length}}家门店</h4>
                         </section>
                        <!--  <section class="description_more">
                             <router-link class="shop_detail_vip" :to="{path:'/city/1'}" tag="span" >  
@@ -43,20 +43,19 @@
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-left"></use>
                         </svg>
                     </footer> -->
-                    <input class="search_container" v-if="storeList.length != 0 || storeListOrigin.length != 0" placeholder="搜索已订阅的门店" v-model='inputVaule' @input='searchLocal(inputVaule)'>
+                    <input class="search_container" placeholder="搜索已订阅的门店" v-model='inputVaule' @input='searchLocal(inputVaule)' >
+                    <svg style="position: absolute;top:4.6rem;left:1.4rem;z-index:111" width="14px" height="15px" viewBox="0 0 14 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g id="订阅" transform="translate(-35.000000, -139.000000)" stroke="#969FB7" stroke-width="2">
+                            <g id="Group-4" transform="translate(20.000000, 129.000000)">
+                                <path d="M25.0746449,19.9029781 L24.4242215,19.3208759 L24.9130838,18.5977527 C25.4529797,17.7991409 25.7455405,16.8590641 25.7455405,15.8727703 C25.7455405,13.1816136 23.563927,11 20.8727703,11 C18.1816136,11 16,13.1816136 16,15.8727703 C16,18.563927 18.1816136,20.7455405 20.8727703,20.7455405 C21.6604567,20.7455405 22.4192375,20.5592204 23.1025288,20.206828 L23.8776622,19.8070701 L24.3790893,20.520659 C24.3946489,20.5428023 24.4123592,20.563881 24.4322948,20.5838166 L27.2007453,23.3522671 C27.3835859,23.5351077 27.680029,23.5351077 27.8628696,23.3522671 C28.0457101,23.1694265 28.0457101,22.8729834 27.8628696,22.6901428 L25.0944191,19.9216924 C25.0845904,19.9120445 25.0845904,19.9120445 25.0746449,19.9029781 Z" id="Combined-Shape"></path>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
 
                 </section>
             </header>
-
-            <section class="food_container emptyShop" v-if="storeList.length == 0">
-                <div class="start_button" @click = "gotoAddress('/city/1')">
-                    <svg class="icon_style">
-                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#buyNow"></use>
-                    </svg>
-                    <span>立即体验订阅评论监控</span>
-                    
-                </div>
-            </section>
 
             <transition name="fade-choose" v-if="storeList.length > 0">
                 <section v-show="changeShowType =='food'" class="food_container">
@@ -64,21 +63,21 @@
                         <section class="menu_right" ref="menuFoodList">
                             <ul v-for="(branch,i) in branchList">
                                 <li>
-                                    <header class="menu_detail_header" >
+                                    <header class="menu_detail_header" @click="setBranchListStatus(branch,i,!listStatusMap[branch].active)">
                                         <section class="menu_detail_header_left">
                                             <span class="menu_item_title">{{branch}}</span>
                                             <span class="menu_item_description">共{{branchMap[branch].length}}家门店</span>
-                                            <span class="menu_item_open">
+                                            <span class="menu_item_open" v-if="listStatusMap[branch].active == true" >
                                                 -
                                             </span>
-                                            <span class="menu_item_close">
+                                            <span class="menu_item_close" v-if="listStatusMap[branch].active == false" >
                                                 +
                                             </span>
                                         </section>
                                     </header>
                                 </li>
 
-                                <li v-for="(store,index) in branchMap[branch]" :key="index">
+                                <li v-for="(store,index) in branchMap[branch]" :key="index" v-if="listStatusMap[branch].active == true">
 
                                     <section class="store_detail_list">
                                             <section class="store_img" @click="gotoAddress('rate?storeId='+store.id)">
@@ -198,6 +197,7 @@
                 format:'',
                 seletedCity:false,
                 branchMap:{},
+                listStatusMap:{},
                 branchList:[],
             }
         },
@@ -322,10 +322,13 @@
 
                 let _self = this;
                 _self.branchMap = {};
+                _self.listStatusMap = {};
                 this.storeList.map(s=>{
                     if( false == _self.branchMap[s.name] instanceof Array){
                         _self.branchMap[s.name] = [];
                         _self.branchList.push(s.name);
+                        _self.listStatusMap[s.name]={};
+                        _self.listStatusMap[s.name].active = false;
                     }
                     _self.branchMap[s.name].push(s);
                 });
@@ -378,6 +381,12 @@
                 }
 
             }, 1000),
+
+            setBranchListStatus( branch , index , status ){
+               this.listStatusMap[branch].active = status;
+               this.listStatusMap = JSON.parse(JSON.stringify(this.listStatusMap));
+               console.log( branch , index , status )
+            },
             gotoAddress(path){
                 this.$router.push(path);
             },
@@ -1074,6 +1083,7 @@
                 @include fj;
                 align-items: center;
                 margin-right:1rem;
+                border-bottom: 1px solid #e5e5e5;
                 .menu_detail_header_left{
                     width: 100%;
                     white-space: nowrap;
@@ -1089,14 +1099,20 @@
                     .menu_item_title{
                         @include sc(.65rem, #666);
                         font-weight: bold;
+                        display: block;
+                        flex:1;
+
                     }
                     .menu_item_description{
                         @include sc(.65rem, #999);
                         width: 30%;
                         overflow: hidden;
+                        flex:2;
                     }
                     .menu_item_open,.menu_item_close{
                         @include sc(1.4rem, #C4CCDC);
+                        @include wh(1rem, 1rem);
+                        text-align: center;
                         line-height: 1rem;
                     }
                 }
@@ -1308,7 +1324,7 @@
         background-color:#f2f5f7;
         
         @include wh(100%, auto);
-        padding:.4rem 2rem;
+        padding:.4rem 1.8rem;
         @include sc(.65rem, #ccc);
         text-align: left;
         font-weight: normal;

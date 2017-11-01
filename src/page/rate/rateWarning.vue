@@ -14,7 +14,7 @@
             </section>
         </header> -->
         <section class="description_header">
-            <div>已处理预警</div>
+            <div>历史预警</div>
             <div class="description_top">
                <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
                     <img :src="user.profileImg" @click="signout">
@@ -22,6 +22,12 @@
                 <!-- <section class="description_right">
                     <h4 class="description_title ellipsis">您已订阅19家门店</h4>
                 </section> -->
+                <section class="head_option" :class="{red:warningType == 'high',yellow:warningType == 'mid', green:warningType == 'low'}"  @click="clickRateType()">
+                <span>预警 {{rateType}}</span>
+                <svg class="icon_style">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#warning"></use>
+                </svg>
+            </section>
 
             </div>
 
@@ -67,7 +73,7 @@
             
         </section>
         <loading v-show="showLoading"></loading>
-        <foot-guide></foot-guide>
+      <!--   <foot-guide></foot-guide> -->
 
 
         <section class="shop_container main_container bg-gray" v-if="showRateType" @click="goBack()">

@@ -23,8 +23,12 @@
                 <div class="form_title">{{area}}</div>
                 <section id="hot_city_container">
                     <ul class="citylistul clear">
-                        <li v-for="item in areaMap[area]" :key="item.id" @click="setCity(item)">
-                            {{item.cityName}}
+
+                        <li  v-for="(item,index) in areaMap[area]" :key="item.id" @click="setCity(item)">
+                            <!-- <div v-if="index==0">{{item.enName.substr(0,1)}}</div> -->
+                            <!-- <div v-if="index>0 && item.enName.substr(0,1) != areaMap[area][index-1].enName.substr(0,1)">{{item.enName.substr(0,1)}}</div> -->
+                            <div class="city"> {{item.cityNameCh}}</div>
+                            
                         </li>  
                     </ul>
                 </section>
@@ -117,11 +121,11 @@ export default {
         //     this.guessCityid = res.id;
         // })
 
+        let _this = this;
         //获取热门城市
         hotcity().then(res => {
-            let _this = this;
-            this.hotcity = res.cities;
-            this.guesscity = res.cities[0];
+            this.hotcity = res.cityInfoList;
+            this.guesscity = res.cityInfoList[0];
 
             this.hotcity.map(item=>{
                 if( _this.areaList.indexOf(item.areaName) == -1 ){
@@ -306,17 +310,22 @@ export default {
     }
     .citylistul{
         li{
-            float: left;
-            text-align: center;
-            color: $blue;
-            border-bottom: 0.025rem solid $bc;
-            border-right: 0.025rem solid $bc;
-            @include wh(33.3%, 2rem);
+
+        }
+        .city{
+            /*float: left;*/
+            text-align: left;
+            color: #8a8d96;
+            border-bottom: 0.025rem solid #f2f4f8;
+            /*border-right: 0.025rem solid $bc;*/
+            @include wh(auto, 2rem);
             @include font(0.6rem, 2rem);
+            margin-left:1rem;
+            margin-right:1rem;
         }
-        li:nth-of-type(3n){
+        /*li:nth-of-type(3n){
             border-right: none;
-        }
+        }*/
     }
     .city_title{
         color: #666;

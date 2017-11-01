@@ -14,8 +14,8 @@ export const cityGuess = () => fetch('/v1/cities', {
  * 获取首页热门城市
  */
 
-export const hotcity = () => fetch('/v1/cities', {
-	type: 'hot'
+export const hotcity = () => fetch('/v1/cities/queryCityList', {
+	// type: 'hot'
 });
 
 
@@ -221,6 +221,14 @@ export const getRateCount = (storeId) => fetch('/v1/store/getRateCount', {
 
 export const getRateAnalytics = (storeId) => fetch('/v1/store/getRateAnalytics', {
 	storeId //[id,id,id]
+}, 'POST');
+
+export const getAnalyzeRate = ({dpStoreIds,eleStoreIds,startDate,endDate,source}) => fetch('/v1/store/analyzeRate', {
+	dpStoreIds, //[id,id,id]
+	eleStoreIds,
+	startDate,
+	endDate,
+	source
 }, 'POST');
 
 export const getRateByDate = (storeId,date) => fetch('/v1/store/getRateByDate', {

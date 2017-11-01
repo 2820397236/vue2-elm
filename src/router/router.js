@@ -8,6 +8,7 @@ const city = r => require.ensure([], () => r(require('../page/city/city')), 'cit
 // const search = r => require.ensure([], () => r(require('../page/search/search')), 'search')
 const shop = r => require.ensure([], () => r(require('../page/shop/shop')), 'shop')
 const rate = r => require.ensure([], () => r(require('../page/rate/rate')), 'rate')
+const rateByType = r => require.ensure([], () => r(require('../page/rate/rateByType')), 'rateByType')
 const rateByShop = r => require.ensure([], () => r(require('../page/rate/rateByShop')), 'rateByShop')
 const warning = r => require.ensure([], () => r(require('../page/rate/rateWarning')), 'rateWarning')
 const login = r => require.ensure([], () => r(require('../page/login/login')), 'login')
@@ -104,6 +105,7 @@ export default [{
         {
             path: '/shop',
             component: shop,
+            meta: { keepAlive: true },
             // children: [{
             //     path: 'foodDetail', //食品详情页
             //     component: foodDetail,
@@ -120,6 +122,11 @@ export default [{
         {
             path: '/rate',
             component: rate
+        },
+        //评论
+        {
+            path: '/rateByType',
+            component: rateByType
         },
         //评论
         {
@@ -294,6 +301,7 @@ export default [{
         {
             path: '/analytics',
             component: analytics,
+            meta: { keepAlive: true },
         },
     ]
 }]

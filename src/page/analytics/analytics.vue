@@ -27,7 +27,7 @@
         <section class="head_calendar">
             <span>请选择日期</span>
             <section>
-                <div class="head_calendar_date">{{data | dateTime('MM月DD日')}} <span>今天</span></div>
+                <div class="head_calendar_date">{{startDate | dateTime('MM月DD日')}}-{{endDate | dateTime('MM月DD日')}} <span>今天</span></div>
                 <div class="head_calendar_button" @click="chooseDate()">
                     <svg width="22px" height="21px" viewBox="0 0 22 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -42,17 +42,17 @@
 
         <date-picker ref="myDate" field="myDate"
                  placeholder="选择日期"
-                 v-model="data"
+                 v-model="datePiker"
                  format="yyyy/mm/dd"></date-picker>
 
         <section class="head_tab">
             <div class="tab_container" :class="{active:tabType=='dp'}" @click="clickTab('dp')">
                 <span>在店满意度</span><br/>
-                <span class="rate_total">{{rateCount.countHigh}}条</span>
+                <span class="rate_total">{{rateCount[0].amount}}条</span>
             </div>
             <div class="tab_container" :class="{active:tabType=='ele'}" @click="clickTab('ele')">
                 <span>外卖满意度</span><br/>
-                <span class="rate_total">0条</span>
+                <span class="rate_total">{{rateCount[1].amount}}条</span>
             </div>
         </section>
         <!-- <header id='head_top'>
@@ -86,35 +86,35 @@
                 </div>
             </section> -->
 
-            <section class="reply_container">
+            <section class="reply_container" v-if="tabType=='dp'">
                <div class="reply_item">
                    <div class="reply_item_border">
                         <section>
                             <div class="reply_progress">
-                                <div class="reply_progress green" :style="{ width: rateCount.countHigh/rateCount.amount * 100+ '%'}">
-                                    {{ (rateCount.countHigh/rateCount.amount * 100 ).toFixed(1) }}%
+                                <div class="reply_progress green" :style="{ width: rateCount[0].high/rateCount[0].amount * 100+ '%'}">
+                                    {{ (rateCount[0].high/rateCount[0].amount * 100 ).toFixed(1) }}%
                                 </div>
                             </div> 
-                            <div class="reply_view_button">
+                            <div class="reply_view_button" @click="gotoAddress({path:'rateByType','query':{storeId:storeIds[0]}})">
                                 查看
                             </div>
                         </section>
-                        <div class="reply_item_count green">好评数量： {{rateCount.countHigh}}条</div>
+                        <div class="reply_item_count green">好评数量： {{rateCount[0].high}}条</div>
                     </div>
                </div>
                <div class="reply_item">
                    <div class="reply_item_border">
                         <section>
                             <div class="reply_progress">
-                                <div class="reply_progress yellow" :style="{ width: rateCount.countMid/rateCount.amount * 100 + '%'}">
-                                    {{ ( rateCount.countMid / rateCount.amount * 100 ).toFixed(1) }}%
+                                <div class="reply_progress yellow" :style="{ width: rateCount[0].mid/rateCount[0].amount * 100 + '%'}">
+                                    {{ ( rateCount[0].mid / rateCount[0].amount * 100 ).toFixed(1) }}%
                                 </div>
                             </div>
                             <div class="reply_view_button">
                                 查看
                             </div>
                         </section>
-                        <div class="reply_item_count yellow">中评数量： {{rateCount.countMid}}条</div>
+                        <div class="reply_item_count yellow">中评数量： {{rateCount[0].mid}}条</div>
                     </div>
                     
                </div>
@@ -122,15 +122,64 @@
                    <div class="reply_item_border">
                         <section>
                             <div class="reply_progress">
-                                <div class="reply_progress red" :style="{ width: rateCount.countLow/rateCount.amount * 100+ '%'}">
-                                   {{ (rateCount.countLow / rateCount.amount * 100 ).toFixed(1) }}%
+                                <div class="reply_progress red" :style="{ width: rateCount[0].low/rateCount[0].amount * 100+ '%'}">
+                                   {{ (rateCount[0].low / rateCount[0].amount * 100 ).toFixed(1) }}%
                                 </div>
                             </div>
                             <div class="reply_view_button">
                                 查看
                             </div>
                         </section>
-                        <div class="reply_item_count">差评数量： {{rateCount.countLow}}条</div>
+                        <div class="reply_item_count">差评数量： {{rateCount[0].low}}条</div>
+                   </div>
+               </div>
+            </section>
+
+            <section class="reply_container" v-if="tabType=='ele'">
+               <div class="reply_item">
+                   <div class="reply_item_border">
+                        <section>
+                            <div class="reply_progress">
+                                <div class="reply_progress green" :style="{ width: rateCount[1].high/rateCount[1].amount * 100+ '%'}">
+                                    {{ (rateCount[1].high/rateCount[1].amount * 100 ).toFixed(1) }}%
+                                </div>
+                            </div> 
+                            <div class="reply_view_button" @click="gotoAddress({path:'rateByType','query':{storeId:storeIds[0]}})">
+                                查看
+                            </div>
+                        </section>
+                        <div class="reply_item_count green">好评数量： {{rateCount[1].high}}条</div>
+                    </div>
+               </div>
+               <div class="reply_item">
+                   <div class="reply_item_border">
+                        <section>
+                            <div class="reply_progress">
+                                <div class="reply_progress yellow" :style="{ width: rateCount[1].mid/rateCount[1].amount * 100 + '%'}">
+                                    {{ ( rateCount[1].mid / rateCount[1].amount * 100 ).toFixed(1) }}%
+                                </div>
+                            </div>
+                            <div class="reply_view_button">
+                                查看
+                            </div>
+                        </section>
+                        <div class="reply_item_count yellow">中评数量： {{rateCount[1].mid}}条</div>
+                    </div>
+                    
+               </div>
+               <div class="reply_item">
+                   <div class="reply_item_border">
+                        <section>
+                            <div class="reply_progress">
+                                <div class="reply_progress red" :style="{ width: rateCount[1].low/rateCount[1].amount * 100+ '%'}">
+                                   {{ (rateCount[1].low / rateCount[1].amount * 100 ).toFixed(1) }}%
+                                </div>
+                            </div>
+                            <div class="reply_view_button">
+                                查看
+                            </div>
+                        </section>
+                        <div class="reply_item_count">差评数量： {{rateCount[1].low}}条</div>
                    </div>
                </div>
             </section>
@@ -236,7 +285,7 @@
 
 <script>
     import {mapState, mapMutations} from 'vuex'
-    import {getMyStore,getRateAnalytics,getStoreRate} from 'src/service/getData'
+    import {getAnalyzeRate,getMyStore,getRateAnalytics,getStoreRate} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import loading from 'src/components/common/loading'
     // import {loadMore} from 'src/components/common/mixin'
@@ -259,7 +308,7 @@
     export default {
         data(){
             return{
-                data:'2017/10/31',
+                datePiker:'2017/10/31',
                 tabType:'dp',
                 showLoading: true, //显示加载动画
                 showSearch:false,
@@ -273,14 +322,19 @@
                 branchName:[],
                 inputValue:'',
                 chart:null,
-                date:new Date(),
-                dateFormat: new Date().getTime(),
-                rateCount:{
-                    countLow:0,
-                    countMid:0,
-                    countHigh:0,
+                rateCount:[{
+                    low:0,
+                    mid:0,
+                    high:0,
                     amount:0
-                },
+                },{
+                    low:0,
+                    mid:0,
+                    high:0,
+                    amount:0
+                }],
+                startDate   : null,
+                endDate     : null,
                 originData:null,
                 // bar: {
                 //     title: {
@@ -418,7 +472,6 @@
             this.initData();
             this.windowHeight = window.innerHeight;
             this.windowWidth = window.innerWidth;
-            console.log("w:"+this.windowWidth+",h:"+this.windowHeight);
         },
         beforeDestroy(){
             // this.foodScroll.removeEventListener('scroll', )
@@ -467,8 +520,11 @@
                     _this.branchName = Object.keys(_this.branchList);
                     console.log(_this.branchList[_this.defaultBrand]);
                 }
-                
-                this.chartInit(response.stores);
+                if(this.defaultBrand ==''){
+                    this.chartInit(response.stores);
+                }else{
+                    this.chartInit(this.branchList[this.defaultBrand]);
+                }
 
                 //隐藏加载动画
                 this.hideLoading();
@@ -489,7 +545,7 @@
                 this.storeList = list;
 
                 this.storeList.map(item=>{
-                    this.storeIds.push(item.id);
+                    this.storeIds.push(item.id+"");
                     
                 })
 
@@ -498,63 +554,106 @@
                 // }
 
                 let _this = this;
-                getRateAnalytics(_this.storeIds).then(function(resCount){
-                    if(resCount.status == 0){
-                        _this.originData = resCount;
-                        let index = resCount.date.length-2;
-                        let year = new Date().getFullYear();
+                let start,end;
 
-                        _this.date = year + '/'+ resCount.date[index];
-                        console.log(_this.date)
-                        // _this.dateFormat = new Date(_this.date).getTime();
-                        _this.rateCount.countHigh = resCount.countHigh[index]; 
-                        _this.rateCount.countMid = resCount.countMid[index]; 
-                        _this.rateCount.countLow = resCount.countLow[index]; 
-                        _this.rateCount.amount = _this.rateCount.countHigh + _this.rateCount.countMid + _this.rateCount.countLow + 0.00001;
-                        
-                        // _this.bar.yAxis[0].max = resCount.max*1.3;
+                if( _this.startDate != null && _this.endDate != null){
+                    start =  _this.startDate;
+                    end =  _this.endDate;
+                }else{
+                    start = new Date();
+                    end = new Date();
+                    start.setMonth(start.getMonth() - 1);
+                    _this.startDate = start.getTime();
+                    _this.endDate = end.getTime();
+                }
 
-                        // let year = new Date().getFullYear();
-                        // _this.bar.xAxis[0].data = resCount.date;
-                        // _this.date = year+'/'+resCount.date[resCount.date.length-2];
-                        // _this.dateFormat = new Date(_this.date).getTime();
-                        // _this.bar.tooltip.axisPointer.value = "8/30";
+                getAnalyzeRate({
+                    dpStoreIds  :   _this.storeIds,
+                    eleStoreIds :   null,
+                    startDate   :   _this.startDate,
+                    endDate     :   _this.endDate,
+                    source      :   0
+                }).then(function(data){
 
-                        // _this.bar.series[0].data = resCount.countHigh;
-                        // _this.bar.series[1].data = resCount.countMid;
-                        // _this.bar.series[2].data = resCount.countLow;
+                        _this.originData = data.result;
+                        _this.rateCount = [{
+                            low:0,
+                            mid:0,
+                            high:0,
+                            amount:0
+                        },{
+                            low:0,
+                            mid:0,
+                            high:0,
+                            amount:0
+                        }];
+                        _this.originData.map(rate=>{
+                            _this.rateCount[rate.source].high += rate.rate5  += rate.rate4;
+                            _this.rateCount[rate.source].mid += rate.rate3;
+                            _this.rateCount[rate.source].low += rate.rate2  += rate.rate1 += rate.rate0;
+                            _this.rateCount[rate.source].amount += rate.rate5 += rate.rate4 += rate.rate3 += rate.rate2 += rate.rate1 += rate.rate0;
+                        })
 
-                        // _this.rateCount.countHigh = _this.bar.series[0].data[resCount.date.length-2]; 
-                        // _this.rateCount.countMid = _this.bar.series[1].data[resCount.date.length-2]; 
-                        // _this.rateCount.countLow = _this.bar.series[2].data[resCount.date.length-2]; 
+                        console.log(_this.originData);
 
-                        // _this.bar.tooltip.formatter = function(param){
-                            
-                        //     _this.rateCount.countHigh = param[0].data; 
-                        //     _this.rateCount.countMid = param[1].data; 
-                        //     _this.rateCount.countLow = param[2].data; 
-
-                            
-                        //     let year = new Date().getFullYear();
-                        //     if(param[0].axisValue.indexOf(year) == -1){
-                        //         param[0].axisValue = year+'/'+param[0].axisValue;
-                        //     }
-                        //     _this.date = new Date(param[0].axisValue); 
-                        //     _this.dateFormat = _this.date.getTime();
-                        //     console.log(_this.dateFormat);
-                        // }
-                        // if( _this.storeList.length == _this.storeListOrigin.length){
-                        //     _this.bar.title.text = '全部('+ _this.storeList.length +'家)门店';
-                        // }else if(_this.storeList.length > 1 ){
-                        //     _this.bar.title.text = _this.storeList[0].name +'('+ _this.storeList.length +'家)门店';
-                        // }else{
-                        //      _this.bar.title.text = _this.storeList[0].name + ' '+ _this.storeList[0].branchName ;
-                        // }
-
-                        // _this.chart.option = _this.bar;
-                        // _this.chart.dispatchAction({type: 'showTip', seriesIndex: '10', dataIndex: '10'})
-                    }
                 })
+                // getRateAnalytics(_this.storeIds).then(function(resCount){
+                //     if(resCount.status == 0){
+                //         _this.originData = resCount;
+                //         let index = resCount.date.length-2;
+                //         let year = new Date().getFullYear();
+
+                //         _this.date = year + '/'+ resCount.date[index];
+                //         console.log(_this.date)
+                //         // _this.dateFormat = new Date(_this.date).getTime();
+                //         _this.rateCount.countHigh = resCount.countHigh[index]; 
+                //         _this.rateCount.countMid = resCount.countMid[index]; 
+                //         _this.rateCount.countLow = resCount.countLow[index]; 
+                //         _this.rateCount.amount = _this.rateCount.countHigh + _this.rateCount.countMid + _this.rateCount.countLow + 0.00001;
+                        
+                //         // _this.bar.yAxis[0].max = resCount.max*1.3;
+
+                //         // let year = new Date().getFullYear();
+                //         // _this.bar.xAxis[0].data = resCount.date;
+                //         // _this.date = year+'/'+resCount.date[resCount.date.length-2];
+                //         // _this.dateFormat = new Date(_this.date).getTime();
+                //         // _this.bar.tooltip.axisPointer.value = "8/30";
+
+                //         // _this.bar.series[0].data = resCount.countHigh;
+                //         // _this.bar.series[1].data = resCount.countMid;
+                //         // _this.bar.series[2].data = resCount.countLow;
+
+                //         // _this.rateCount.countHigh = _this.bar.series[0].data[resCount.date.length-2]; 
+                //         // _this.rateCount.countMid = _this.bar.series[1].data[resCount.date.length-2]; 
+                //         // _this.rateCount.countLow = _this.bar.series[2].data[resCount.date.length-2]; 
+
+                //         // _this.bar.tooltip.formatter = function(param){
+                            
+                //         //     _this.rateCount.countHigh = param[0].data; 
+                //         //     _this.rateCount.countMid = param[1].data; 
+                //         //     _this.rateCount.countLow = param[2].data; 
+
+                            
+                //         //     let year = new Date().getFullYear();
+                //         //     if(param[0].axisValue.indexOf(year) == -1){
+                //         //         param[0].axisValue = year+'/'+param[0].axisValue;
+                //         //     }
+                //         //     _this.date = new Date(param[0].axisValue); 
+                //         //     _this.dateFormat = _this.date.getTime();
+                //         //     console.log(_this.dateFormat);
+                //         // }
+                //         // if( _this.storeList.length == _this.storeListOrigin.length){
+                //         //     _this.bar.title.text = '全部('+ _this.storeList.length +'家)门店';
+                //         // }else if(_this.storeList.length > 1 ){
+                //         //     _this.bar.title.text = _this.storeList[0].name +'('+ _this.storeList.length +'家)门店';
+                //         // }else{
+                //         //      _this.bar.title.text = _this.storeList[0].name + ' '+ _this.storeList[0].branchName ;
+                //         // }
+
+                //         // _this.chart.option = _this.bar;
+                //         // _this.chart.dispatchAction({type: 'showTip', seriesIndex: '10', dataIndex: '10'})
+                //     }
+                // })
 
             },
             searchLocal :debounce(function (keyword) {
@@ -632,15 +731,18 @@
 
         },
         watch: {
-            data: function (value,oldValue) {
-                console.log(value,oldValue);
-                let date = value.substr(5);
-                let index = this.originData.date.indexOf(date);
+            datePiker: function (value,oldValue) {
+                // console.log(value,oldValue);
+                this.startDate = new Date(value).getTime();
 
-                this.rateCount.countHigh = this.originData.countHigh[index]; 
-                this.rateCount.countMid = this.originData.countMid[index]; 
-                this.rateCount.countLow = this.originData.countLow[index]; 
-                this.rateCount.amount = this.rateCount.countHigh + this.rateCount.countMid + this.rateCount.countLow + 0.00001;
+
+                // let date = value.substr(5);
+                // let index = this.originData.date.indexOf(date);
+
+                // this.rateCount.countHigh = this.originData.countHigh[index]; 
+                // this.rateCount.countMid = this.originData.countMid[index]; 
+                // this.rateCount.countLow = this.originData.countLow[index]; 
+                // this.rateCount.amount = this.rateCount.countHigh + this.rateCount.countMid + this.rateCount.countLow + 0.00001;
                 
             }
         }
