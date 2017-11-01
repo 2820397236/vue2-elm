@@ -47,7 +47,7 @@
 
                 if(!this.$route.query.code){
 
-                    window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://test.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://demo.icoos.cn/";
+                    window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://demo.icoos.cn/";
                     return;
 
                 }else{
@@ -58,7 +58,7 @@
                     //weixin api return openid, but our system returns openId
                     if(!res.openid){
 
-                        window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://test.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://demo.icoos.cn/";
+                        window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://demo.icoos.cn/";
                         return;
 
                     }else{
