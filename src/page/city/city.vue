@@ -19,7 +19,7 @@
                 </router-link>
             </div>
             <div class="description_top">
-                <input type="text" name="city" ref="searchInput" placeholder="请输入要搜索订阅的门店名称" @keyup.enter="inputSearch(inputVaule,$event)"
+                <input type="text" name="city" ref="searchInput" placeholder="请输入要搜索订阅的门店名称" @keyup.enter="inputSearch(inputVaule)"
             class="city_input input_style" v-model='inputVaule'  v-focus>
                 <span class="button_style"  @click="clickSearch(inputVaule)">搜索</span>
             </div>
@@ -190,21 +190,21 @@
             clickSearch(keyword){
 
                 if (keyword && keyword != " ") {
-                    let city = this.city.cityName;
-                    this.searchStore(city,keyword);
+                    let cityName  = this.city.cityNameCh;
+                    this.searchStore(cityName,keyword);
                 }
             },
 
-            searchStore(city,keyword,i=0){
+            searchStore(cityName,keyword,i=0){
                 
                 this.startLoading();
                 let _this = this;
-                console.log(city,keyword,this.$route.params.cityid);
-                searchplace(city,keyword,this.city.dpCityId).then(res => {
+                console.log(cityName,keyword,this.$route.params.cityid);
+                searchplace(cityName,keyword,this.city.dpCityId).then(res => {
                         _this.inputVaule = '';  
                         if(res.status == -1){
                             setTimeout(()=>{
-                                this.searchStore(city,keyword,++i);
+                                this.searchStore(cityName,keyword,++i);
                             },3000 );
                         }
 
@@ -221,7 +221,7 @@
                         if(res.stores.length == 0 || res.stores.length <5){
                             
                             setTimeout(()=>{
-                                this.searchStore(city,keyword,++i);
+                                this.searchStore(cityName,keyword,++i);
                             },3000 );
                             
                         }else{

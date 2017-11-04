@@ -7,7 +7,7 @@
 
         <form class="city_form" v-on:submit.prevent>
             <router-link to="/home" slot="changecity" class="change_city_right button_style">
-                <span>{{city?city.cityName:"上海"}}</span>
+                <span>{{city?city.cityNameCh:"上海"}}</span>
                 <svg class="arrow_down" data-name="arrow_down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">
                     <path class="cls-1" d="M8,2.33l-4,4-4-4Z"/>
                 </svg>

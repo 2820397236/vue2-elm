@@ -43,7 +43,7 @@
         <date-picker ref="myDate" field="myDate"
                  placeholder="选择日期"
                  v-model="datePiker"
-                 format="yyyy/mm/dd"></date-picker>
+                 format="yyyy/mm/dd" readOnly="readOnly"></date-picker>
 
         <section class="head_tab">
             <div class="tab_container" :class="{active:tabType=='dp'}" @click="clickTab('dp')">
