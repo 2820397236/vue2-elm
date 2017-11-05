@@ -158,7 +158,7 @@
                             </svg>
                         </li> -->
                         <!-- <li  v-for="(item,index) in payments" :key="item.id" :class="{choose: payWayIndex == index}" -->
-                        <li  v-for="(item,index) in payments" :key="item.id"
+                        <li  v-for="(item,index) in payments" :key="item.id" :class="{choose: payWayIndex == index}"
                         @click="choosePayWay(item.paymentType,index)">
                             <span class="pay_way_title">
                                 {{item.title}}<br/>
@@ -799,7 +799,7 @@
                 position:relative;
                 border:0.025rem solid #e5e5e5;
                 display: flex;
-                background-color: #fbfbfb;
+                background-color: #fff;
                 span{
                     @include sc(.6rem, #343640);
                     margin-right:.2rem;
@@ -842,26 +842,7 @@
                 }
             }
             .choose{
-                /*border:0 solid #3d3d3d;
-                background-color:#3d3d3d;*/
-                border: 0.025rem solid #ccc;
-                background-color: rgba(61,61,61,1);
-                box-shadow: 1px 1px 1px #999 inset;
-                overflow: hidden;
-                .price_now{
-                    text-align: center;
-                    @include sc(.7rem, rgba(255,209,1,1));
-                }
-                svg{
-                    fill: #ffd101;
-                    position:absolute;
-                    right:.06rem;
-                    top:.06rem;
-                    display: block;
-                }
-                .tri{
-                    display: block;
-                }
+                background-color: #fbfbfb;
             }
         }
     }
