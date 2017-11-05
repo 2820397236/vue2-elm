@@ -4,8 +4,29 @@
             <span slot='logo' class="head_logo"  @click="reload">ele.me</span>
         </head-top> -->
         
+        <header class="shop_detail_header" ref="shopheader">
+                <!-- <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"> -->
+            <section class="description_header">
+                <span>城市列表</span>
+                <router-link class="header_city" :to="{path:'/city/1'}" tag="span">
+                    取消
+                </router-link>
+                <div class="description_top">
+                   <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
+                        <img :src="user.profileImg" @click="signout">
+                    </section> -->
+                    <section class="description_right">
+                        <h4 class="description_title ellipsis">选择门店所在地区</h4>
+                    </section>
+                    <section class="description_more">
+                        
+                    </section>
 
-        <form class="city_form" v-on:submit.prevent>
+                </div>
+
+            </section>
+        </header>  
+        <!-- <form class="city_form" v-on:submit.prevent>
             <router-link to="/home" slot="changecity" class="change_city_right button_style">
                 <span>{{city?city.cityNameCh:"上海"}}</span>
                 <svg class="arrow_down" data-name="arrow_down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">
@@ -16,7 +37,7 @@
             </div>
             
             <div class="head_back_left button_style" @click="goBack()">返回</div>
-        </form>
+        </form> -->
 
         <section class="main_container">
             <section v-for="area in areaList" v-if=" area != '国外热门'">
@@ -202,6 +223,136 @@ export default {
         @include wh(2.3rem, 0.7rem);
         @include ct;
     }
+
+    .description_header{
+        position: fixed;
+        top:0;
+        z-index: 10;
+        background-color: rgba(255,255,255,1);
+        padding: 0.8rem 0.1rem 0.6rem 0.8rem;
+        width: 100%;
+        overflow: hidden;
+        .header_city{
+            float:right;
+            padding:.3rem .8rem .3rem .4rem;
+            @include sc(0.65rem, #1184e8);
+        }
+        .description_top{
+            display: flex;
+            margin-top:.7rem;
+            margin-right:.7rem;
+            &.active{
+                margin-right:0rem;
+                .button_style{
+                    display: block;
+                }
+            }
+            .button_style{
+                display: none;
+                padding:.3rem .8rem .3rem .6rem;
+                @include sc(0.65rem, #1184e8);
+                line-height: 1.3rem;
+            }
+            .city_input{
+                flex:1;
+                /*border: 1px solid $bc;*/
+                padding: 0.3rem 0.3rem 0.3rem 1.4rem;
+                background:#f2f5f7;
+                line-height: 1.4rem;
+                -webkit-appearance: none!important;
+                @include sc(0.65rem, #333);
+            }
+            .description_left{
+                margin-right: 0.5rem;
+                img{
+                    @include wh(2.9rem, 2.9rem);
+                    display: block;
+                    border-radius: 3rem;
+                }
+            }
+            .description_right{
+                flex: 3;
+                .description_title{
+                    @include sc(.6rem, #949aac);
+                    line-height: 1.4rem;
+                    /*font-weight: bold;*/
+                    width: 100%;
+                    /*margin-bottom: 0.3rem;*/
+                }
+                .description_text{
+                    @include sc(.5rem, #282828);
+                    /*margin-bottom: 0.3rem;*/
+                }
+                .description_promotion{
+                    @include sc(.5rem, #282828);
+                    width: 11.5rem;
+                }
+            }
+            .description_more{
+                flex:2;
+            }
+            .description_arrow{
+                @include ct;
+                right: 0.3rem;
+                z-index: 11;
+            }
+            .shop_detail_vip{
+                display: inline-block;
+                line-height: 1.1rem;
+                float:right;
+                padding: 0rem .4rem 0rem .8rem;
+                /*@include bis('../../images/vip.jpg');*/
+                /*background-size: 34px auto;
+                background-position: 68px center;*/
+
+                /*border-radius: 6px;
+                border:1px solid rgba(0,0,0,0.5);
+                border-width:0 0 0.025rem 0;*/
+                span{
+                    @include sc(.6rem, #0f83e7);
+                    display: inline-block;
+                    vertical-align:middle;
+                }
+                .icon_style{
+                    width: .5rem;
+                    height:.5rem;
+                    font-size:0.5rem;
+                    color:#0f83e7;
+                    display: inline-block;
+                    vertical-align:middle;
+                    use{
+                        fill:#0f83e7;
+                    }
+                }
+            }
+        }
+        .description_footer{
+            @include fj;
+            margin-top: 0.5rem;
+            padding-right: 1rem;
+            p{
+                @include sc(.5rem, #fff);
+                span{
+                    color: #fff;
+                }
+                .tip_icon{
+                    padding: 0 .04rem;
+                    border: 0.025rem solid #fff;
+                    border-radius: 0.1rem;
+                    font-size: .4rem;
+                    display: inline-block;
+                }
+            }
+            .ellipsis{
+                width: 84%;
+            }
+            .footer_arrow{
+                @include wh(.45rem, .45rem);
+                position: absolute;
+                right: .3rem;
+            }
+        }
+    }
     .title_head{
         @include center;
         width: 50%;
@@ -221,7 +372,7 @@ export default {
         }
     }
     .main_container{
-        padding-top:2rem;
+        padding-top:4.8rem;
     }
     .city_nav{
         /*padding-top: 2.35rem;*/
