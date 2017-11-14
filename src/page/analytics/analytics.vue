@@ -495,6 +495,7 @@
             ]),
             //初始化时获取基本数据
             async initData(){
+                document.getElementById("myDate").focus();
 
                 if(getStore('user') == undefined){
                     this.$router.push('/');
@@ -502,7 +503,7 @@
                 this.user = JSON.parse(getStore('user'));
 
                 if(getStore('defaultBrand') != undefined){
-                    this.defaultBrand = getStore('defaultBrand')
+                    this.defaultBrand = getStore('defaultBrand');
                 }
 
                 let response = await getMyStore(this.user.id);
@@ -518,9 +519,10 @@
                         return item;
                     })
                     _this.branchName = Object.keys(_this.branchList);
-                    console.log(_this.branchList[_this.defaultBrand]);
+                    console.log(_this.branchName,_this.defaultBrand);
                 }
-                if(this.defaultBrand ==''){
+
+                if(this.defaultBrand == ''){
                     this.chartInit(response.stores);
                 }else{
                     this.chartInit(this.branchList[this.defaultBrand]);
@@ -543,7 +545,7 @@
 
                 this.storeIds = [];
                 this.storeList = list;
-
+                console.log(this.storeIds);
                 this.storeList.map(item=>{
                     this.storeIds.push(item.id+"");
                     

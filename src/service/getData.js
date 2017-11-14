@@ -248,8 +248,6 @@ export const getUserByOpenId = (openId) => fetch('/v1/user/getByOpenId', {
 	openId
 });
 
-
-
 export const getMyStore = userId => fetch('/v1/user/home', {
 	userId
 });
@@ -538,3 +536,21 @@ export const signout = () => fetch('/v2/signout');
  * 改密码
  */
 export const changePassword = (username, oldpassWord, newpassword, confirmpassword, captcha_code) => fetch('/v2/changepassword', {username, oldpassWord, newpassword, confirmpassword, captcha_code}, 'POST');
+
+
+/**
+ * 获取套餐
+ */
+export const getPlan = (openId,storeIds) =>fetch('/v2/order/getAvailablePlan',{
+	openId,
+	storeIds
+});
+
+/**
+ * 获取套餐
+ */
+export const checkout = (openId,storeIds,planCode) =>fetch('/v2/order/checkout',{
+	openId,
+	storeIds,
+	planCode
+});

@@ -158,14 +158,28 @@
                             </svg>
                         </li> -->
                         <!-- <li  v-for="(item,index) in payments" :key="item.id" :class="{choose: payWayIndex == index}" -->
-                        <li  v-for="(item,index) in payments" :key="item.id" :class="{choose: payWayIndex == index}"
+                        
+                        <!-- <li  v-for="(item,index) in payments" :key="item.id" :class="{choose: payWayIndex == index}"
                         @click="choosePayWay(item.paymentType,index)">
                             <span class="pay_way_title">
                                 {{item.title}}<br/>
                                 <span class="pay_way_subtitle" v-if="item.subTitle">{{item.subTitle}}</span>
                             </span>
-                           <!--  <span class="price_rrp">{{item.rrpPrice}}</span> -->
                             <span class="price_now">{{item.priceDesc}}</span>
+                            <div class="tri"></div>
+                            <svg class="address_empty_right" >
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select"></use>
+                            </svg>
+                        </li> -->
+
+                        <li  v-for="(item,index) in plans" :key="item.id" :class="{choose: payWayIndex == index}"
+                        @click="choosePayWay(item.planCode,index)">
+                            <span class="pay_way_title">
+                                {{item.description}}<br/>
+                                <span class="pay_way_subtitle" v-if="item.info">{{item.info}}</span>
+                            </span>
+                           <!--  <span class="price_rrp">{{item.rrpPrice}}</span> -->
+                            <span class="price_now">{{item.planName}}</span>
                             <div class="tri"></div>
                             <svg class="address_empty_right" >
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select"></use>
@@ -176,11 +190,10 @@
                 <!-- <section class="hongbo">
                     <span>* 备注：请核对订阅信息，信息订阅后暂不可退订。</span>
                 </section> -->
-                <section class="confrim_order" @click="confrimOrder" v-if="payments.length >0">
-                    <p v-if="payWayId == 'A'">
-                    <!-- 总计 {{storeList.length}} 家门店， -->共计: ¥{{storeList.length * payments[payWayIndex].price /100}}, 确认订阅</p>
-                    <p v-if="payWayId == 'B'">
-                    <!-- 总计 {{storeList.length}} 家门店， -->共计: ¥{{payments[payWayIndex].price/100}}, 确认订阅</p>
+                <section class="confrim_order" @click="confrimOrder" v-if="plans.length >0">
+                    <p >
+                    <!-- 总计 {{storeList.length}} 家门店， -->共计: ¥{{storeList.length * plans[payWayIndex].price /100}}, 确认订阅</p>
+                    <!-- <p v-if="payWayId == 'B'">共计: ¥{{payments[payWayIndex].price/100}}, 确认订阅</p> -->
                     
                 </section>
             </section>
@@ -202,7 +215,7 @@
     import headTop from 'src/components/header/head'
     import alertTip from 'src/components/common/alertTip'
     import loading from 'src/components/common/loading'
-    import {getStoreInfo, addToCart,getPayConfig,getJsConfig,getPayment} from 'src/service/getData'
+    import {getStoreInfo, addToCart, getPayConfig, getJsConfig, getPayment, getPlan, checkout} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import {imgBaseUrl} from 'src/config/env'
     import weixin from 'weixin-js-sdk'
@@ -210,6 +223,8 @@
     export default {
         data(){
             return {
+                plans:[],
+                storeDto:[],
                 storeIds:[],
                 storeList:[],
                 storeLimit:0,
@@ -225,37 +240,14 @@
                 payWayIndex: 0,
                 showAlert: false, //弹出框
                 alertText: null, //弹出框内容
-                payments:[
-                    // {
-                    //     id:0,
-                    //     title:"包年(12个月)",
-                    //     subTitle:"",
-                    //     rrpPrice:120,
-                    //     price:60
-                    // },
-                    // // {
-                    // //     id:1,
-                    // //     title:"1个月",
-                    // //     subTitle:"",
-                    // //     rrpPrice:4,
-                    // //     price:3
-                    // // },
-                    // // {
-                    // //     id:2,
-                    // //     title:"3个月",
-                    // //     subTitle:"",
-                    // //     rrpPrice:16,
-                    // //     price:8
-                    // // }
-                ]
+                payments:[]
             }
         },
         created(){
-            console.log(this.$route.query.ids);
             if(this.$route.query.ids instanceof Array){
                 this.storeIds = this.$route.query.ids.map(item => parseInt(item));
             }else{
-                this.storeIds = [this.$route.query.ids];
+                this.storeIds = [parseInt(this.$route.query.ids)];
             }
 
             this.user = JSON.parse(getStore('user'));
@@ -264,13 +256,22 @@
             }
 
             let _this = this;
-            getPayment(this.user.id).then(function(response){
-                console.log(response);
-                _this.payments = response.cart;
-                _this.payWayId = response.cart[0].paymentType;
-                _this.payWayIndex = 0;
-                _this.storeLimit = response.limit;
-                console.log('limit:'+response.limit);
+            
+            // getPayment(_this.user.id).then(function(res){
+            //     console.log(res);
+            //     _this.payments = res.cart;
+            //     _this.payWayId = res.cart[0].paymentType;
+            //     _this.payWayIndex = 0;
+            //     _this.storeLimit = res.limit;
+            //     console.log('limit:'+res.limit);
+            // })
+
+            _this.storeIds.map( o => {
+               _this.storeDto.push({storeId:o , sourceType: 'DP'});
+            });
+
+            getPlan(_this.user.openId,_this.storeDto).then(function(res){
+                _this.plans = res.plans;
             })
             // //获取上个页面传递过来的geohash值
             // this.geohash = this.$route.query.geohash;
@@ -428,37 +429,36 @@
                 // let json = {"appId":"wx797ef910234a14be","nonceStr":"92dac676060347ce86b1e2d688112644","package":"prepay_id=wx20170914135516792c54141f0486582465","signType":"MD5","timeStamp":"1505368516","paySign":"C772A305F19D559BCA82BD19A9CC43A3"};
                 
 
-                if( this.payWayId == 'B' && this.storeIds.length > 10){
-                    this.showAlert = true;
-                    this.alertText = '15天产品试用体验最高10家门店';
-                    return
-                }
-
-                let _this = this;
-                _this.showLoading = true;
-
-                // let json = await getPayConfig(_this.user.id,_this.storeIds,_this.payWayId);
-                // json.timestamp = json.timeStamp;
-
-                // json.success = function (res) {
-                    
+                // if( this.payWayId == 'B' && this.storeIds.length > 10){
+                //     this.showAlert = true;
+                //     this.alertText = '15天产品试用体验最高10家门店';
+                //     return
                 // }
 
-                addToCart(_this.user.id,_this.storeIds,_this.payWayId).then(function(response){
+                // let _this = this;
+                // _this.showLoading = true;
 
-                    if(response.status == 0){
-
-                        _this.showLoading = false;
-                        _this.$router.push('/analytics');
-                    }else{
-                        alert(response);
-                    }
-                })
-
-                console.log(json);
-
-                weixin.chooseWXPay(json);
+                // let json = await getPayConfig(_this.user.id,_this.storeIds,_this.payWayId);
                 
+                // json.timestamp = json.timeStamp;
+                // json.success = function (res) {
+                    
+                //     addToCart(_this.user.id,_this.storeIds,_this.payWayId).then(function(response){
+
+                //         if(response.status == 0){
+
+                //             _this.showLoading = false;
+                //             _this.$router.push('/analytics');
+                //         }else{
+                //             alert(response);
+                //         }
+                //     })
+                // }
+
+                // weixin.chooseWXPay(json);
+                console.log(this.user.openId,this.storeDto,this.payWayId);
+                let res = await checkout(this.user.openId,this.storeDto,this.payWayId);
+                console.log(res);
                 
             },
         },

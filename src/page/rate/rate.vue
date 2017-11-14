@@ -239,9 +239,14 @@
                         },5000)
                     }
 
-                    this.rateList = resRate.rates;
-                    this.rateListOrigin = resRate.rates;
-                    this.ratesEleOrigin = resRate.ratesEle;
+                    if(resRate.rates){
+                        this.rateList = resRate.rates;
+                        this.rateListOrigin = resRate.rates;
+                    }
+                    
+                    if(resRate.ratesEle){
+                        this.ratesEleOrigin = resRate.ratesEle;
+                    }
                 }
 
                 let resCount = await getRateCount([this.store.id]);

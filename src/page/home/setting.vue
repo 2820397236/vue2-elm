@@ -1,9 +1,9 @@
 <template>
   	<div>
-        <header class="shop_detail_header" ref="shopheader">
+        <header class="myhome_header" ref="shopheader">
                 <!-- <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"> -->
                 <section class="description_header">
-                    <div>欢乐的大厨</div>
+                    <div>{{user.realName}}</div>
                     <div class="description_top">
                        <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
                             <img :src="user.profileImg" @click="signout">
@@ -11,12 +11,10 @@
                         <section class="description_right">
                             <h4 class="description_title ellipsis">个人中心</h4>
                         </section>
-                        <section class="description_more">
-                            
-                        </section>
-
                     </div>
-
+                </section>
+                <section class="img_header">
+                    <img :src="user.profileImg"/>
                 </section>
             </header>   
 
@@ -77,6 +75,7 @@ import loading from 'src/components/common/loading'
 export default {
     data(){
         return{
+            user: null,
             city: '',
             hotcity: [],     //热门城市列表
             areaList:[],
@@ -162,6 +161,18 @@ export default {
             text-align: center;
             vertical-align:middle;
             /*font-weight: bold;*/
+        }
+    }
+    .myhome_header{
+        display: flex;
+    }
+    .img_header{
+        width:6rem;
+        padding: 0.8rem 0.8rem 0.6rem 0.8rem;
+        img{
+            width:100%;
+            height:auto;
+            border-radius: 4rem;
         }
     }
     .main_container{

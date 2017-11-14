@@ -34,11 +34,12 @@
        
         <form class="loginForm newStyle">
             <section class="input_container">
-                <input type="number" placeholder="请输入您的手机号码" v-model.lazy="phone">
+                <input type="text" placeholder="请输入您的手机号码" v-model.lazy="phone">
                 <input type="text" placeholder="请填写推荐码(非必填)" v-model.lazy="inviteCode">
                 <div>
                     <input type="text" placeholder="输入验证码" v-model.lazy="verify">
-                    <a class="code_button" @click="getVerifyCode()">获取验证码</a>
+                    <a class="code_button" v-if="!lock" @click="getVerifyCode()">获取验证码</a>
+                    <a class="code_button" v-if="lock" @click="getVerifyCode()">已发送</a>
                 </div>
             </section>
             <section>
@@ -65,10 +66,9 @@
                 </div>
             </section> -->
         </form>
-        <div class="login_container"  v-if="!lock" @click="login()">
+        <div class="login_container"  @click="login()">
             登录
         </div>
-        <div class="login_container"  v-if="lock">发送中，请稍后</div>
 
         <!--  <p class="login_tips">
             <svg v-if="errorMsg != ''" class="icon_style">
@@ -187,9 +187,8 @@
                 this.lock = true;
                 this.timer = true;
 
-                this.codeRes = await mobileCode(_this.phone,_this.inviteCode);
+                this.codeRes = await mobileCode(this.phone,this.inviteCode);
 
-                this.codeRes = data;
                 this.lock = false;
 
                 if(this.codeRes.status == -1){
@@ -299,7 +298,7 @@
             border-top: 0.25rem solid #FEC842;
             border-radius: 4px;
             margin: 1rem 1.2rem 0;
-            padding:1rem 1rem;
+            padding: 0.4rem 1rem 1rem;
         }
         .title_container{
             display: flex;
@@ -344,8 +343,8 @@
                 display: block;
                 background-color: #fff;
                 flex:1;
-                text-align: right;
-                line-height: 3rem;
+                text-align: center;
+                line-height: 2.2rem;
             }
             .right_phone_number{
                 background-color: #4cd964;
