@@ -54,6 +54,8 @@ const confirmOrder = r => require.ensure([], () => r(require('../page/confirmOrd
 // const find = r => require.ensure([], () => r(require('../page/find/find')), 'find')
 // const download = r => require.ensure([], () => r(require('../page/download/download')), 'download')
 const analytics = r => require.ensure([], () => r(require('../page/analytics/analytics')), 'analytics')
+const myOrder = r => require.ensure([], () => r(require('../page/confirmOrder/myOrder')), 'myOrder')
+const myOrderDetail = r => require.ensure([], () => r(require('../page/confirmOrder/myOrderDetail')), 'myOrderDetail')
 
 
 
@@ -105,7 +107,7 @@ export default [{
         {
             path: '/shop',
             component: shop,
-            meta: { keepAlive: true },
+            // meta: { keepAlive: true },
             // children: [{
             //     path: 'foodDetail', //食品详情页
             //     component: foodDetail,
@@ -303,5 +305,13 @@ export default [{
             component: analytics,
             meta: { keepAlive: true },
         },
+        {
+            path: '/myOrder',
+            component: myOrder
+        },
+        {
+            path: '/myOrderDetail/:orderId',
+            component: myOrderDetail
+        }
     ]
 }]

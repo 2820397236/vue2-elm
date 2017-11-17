@@ -4,7 +4,7 @@ import routes from './router/router'
 import store from './store/'
 import {routerMode} from './config/env'
 import FastClick from 'fastclick'
-// import Vue2Filters from 'vue2-filters'
+import Vue2Filters from 'vue2-filters'
 import {getJsConfig} from './service/getData'
 // import {getStore, setStore, removeStore} from 'src/config/mUtils'
 import moment from 'moment/min/moment.min'
@@ -18,7 +18,7 @@ if ('addEventListener' in document) {
     }, false);
 }
 
-// Vue.use(Vue2Filters)
+Vue.use(Vue2Filters)
 Vue.use(VueRouter)
 Vue.use(weixin)
 Vue.filter('dateTime', function (value,format) {
@@ -40,7 +40,6 @@ const router = new VueRouter({
 		}
 	}
 })
-
 
 getJsConfig(location.href).then(function(data){
     

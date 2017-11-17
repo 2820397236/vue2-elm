@@ -455,11 +455,13 @@
                 //     })
                 // }
 
-                // weixin.chooseWXPay(json);
+                // 
                 console.log(this.user.openId,this.storeDto,this.payWayId);
                 let res = await checkout(this.user.openId,this.storeDto,this.payWayId);
-                console.log(res);
-                
+                let json = JSON.parse(res.paymentJson);
+                json.timestamp = json.timeStamp;
+                // console.log(json);
+                weixin.chooseWXPay(json);
             },
         },
         watch: {

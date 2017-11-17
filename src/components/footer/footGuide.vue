@@ -204,7 +204,8 @@
 
         <section @click = "gotoAddress('/setting')" class="guide_item" :class="$route.path.indexOf('setting') !== -1? 'active' : ''">
             <svg class="icon_style">
-                <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('setting') !== -1? '#myHomeActive' : '#myHome'"></use>
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                :xlink:href="$route.path.indexOf('setting') >=0 ? '#myHomeActive' : '#myHome'"></use>
             </svg>
             <span>个人中心</span>
         </section>

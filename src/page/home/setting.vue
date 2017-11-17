@@ -3,7 +3,7 @@
         <header class="myhome_header" ref="shopheader">
                 <!-- <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"> -->
                 <section class="description_header">
-                    <div>{{user.realName}}</div>
+                    <div v-if="user">{{user.realName}}</div>
                     <div class="description_top">
                        <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
                             <img :src="user.profileImg" @click="signout">
@@ -13,7 +13,7 @@
                         </section>
                     </div>
                 </section>
-                <section class="img_header">
+                <section  v-if="user" class="img_header">
                     <img :src="user.profileImg"/>
                 </section>
             </header>   
@@ -23,7 +23,7 @@
                 <!-- <div class="form_title">xxxx</div> -->
                 <section id="hot_city_container">
                     <ul class="citylistul clear">
-                        <li >
+                        <li @click="gotoAddress('/myOrder')">
                             <span>我的订单</span>
                             <svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -130,6 +130,9 @@ export default {
         },
         goBack(){
             this.$router.go(-1);
+        },
+        gotoAddress(path){
+            this.$router.push(path);
         },
     },
 }

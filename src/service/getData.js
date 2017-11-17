@@ -483,10 +483,10 @@ var sendLogin = (code, mobile, validate_token) => fetch('/v1/login/app_mobile', 
  * 获取订单列表
  */
 
-export const getOrderList = (user_id, offset) => fetch('/bos/v2/users/' + user_id + '/orders', {
-	limit: 10,
-	offset,
-});
+// export const getOrderList = (user_id, offset) => fetch('/bos/v2/users/' + user_id + '/orders', {
+// 	limit: 10,
+// 	offset,
+// });
 
 
 /**
@@ -547,10 +547,20 @@ export const getPlan = (openId,storeIds) =>fetch('/v2/order/getAvailablePlan',{
 });
 
 /**
- * 获取套餐
+ * 确认订单
  */
 export const checkout = (openId,storeIds,planCode) =>fetch('/v2/order/checkout',{
 	openId,
 	storeIds,
 	planCode
+});
+
+/**
+ * 获取套餐
+ */
+export const getOrderList = (openId,pageSize,pageNum) =>fetch('/v2/order/getOrderList',{
+	openId,
+	pageSize:5,
+	pageNum:0,
+	appExpire:false
 });

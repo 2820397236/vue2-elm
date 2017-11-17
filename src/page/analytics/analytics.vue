@@ -533,7 +533,7 @@
             },
 
             chooseDate(){ 
-                this.$refs.myDate.$el.firstChild.focus();
+                document.getElementById("myDate").focus();
             },
 
             clickTab(type){
