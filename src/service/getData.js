@@ -575,8 +575,8 @@ export const getOrderList = (openId,pageSize,pageNum) =>fetch('/v2/order/getOrde
 /**
  * 获取订阅列表
  */
-export const getSubscribeList = (openId) =>fetch('/v2/order/getSubscribeList',{
+export const getSubscribeList = (openId,pageSize=100,pageNum=0) =>fetch('/v2/order/getSubscribeList',{
 	openId,
-	pageSize:20,
-	pageNum:0,
+	pageSize,
+	pageNum,
 });

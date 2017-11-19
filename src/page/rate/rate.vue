@@ -16,7 +16,7 @@
             <section class="head_calendar">
                 <span>请选择日期</span>
                 <section>
-                    <div class="head_calendar_date">{{calendar2.value[0][1]}}月{{calendar2.value[0][2]}}日 - {{calendar2.value[1][1]}}月{{calendar2.value[1][2]}}日 <span>今天</span></div>
+                    <div class="head_calendar_date">{{calendar2.value[0][1]+1}}月{{calendar2.value[0][2]}}日 - {{calendar2.value[1][1]+1}}月{{calendar2.value[1][2]}}日 <span>今天</span></div>
                     <div class="head_calendar_button" @click="openCalendar()">
                         <svg width="22px" height="21px" viewBox="0 0 22 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -164,14 +164,14 @@
                calendar2:{
                     show:false,
                     range:true,
-                    value:[[2017,11,1],[2017,11,19]], //默认日期
+                    value:[[2017,10,1],[2017,10,19]], //默认日期
                     // lunar:true, //显示农历
                     begin:[2017,10,1], //可选开始日期
                     end:[2017,11,19], //可选结束日期
                     select:(begin,end)=>{
                         console.log(begin,end);
-                        this.calendar2.value[0] = [begin[0],begin[1]+1,begin[2]];
-                        this.calendar2.value[1] = [end[0],end[1]+1,end[2]];
+                        this.calendar2.value[0] = [begin[0],begin[1],begin[2]];
+                        this.calendar2.value[1] = [end[0],end[1],end[2]];
                     }
                 },
                 showLoading: true, //显示加载动画 

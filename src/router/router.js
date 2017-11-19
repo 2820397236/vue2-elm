@@ -304,7 +304,6 @@ export default [{
         {
             path: '/analytics',
             component: analytics,
-            meta: { keepAlive: true },
         },
         {
             path: '/chart',

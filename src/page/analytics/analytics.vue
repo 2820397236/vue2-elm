@@ -105,7 +105,7 @@
                                     {{ ( rateCount[0].mid / rateCount[0].amount * 100 ).toFixed(1) }}%
                                 </div>
                             </div>
-                            <div class="reply_view_button">
+                            <div class="reply_view_button" @click="gotoAddress({path:'rateByType','query':{storeId:storeIds[0]}})">
                                 查看
                             </div>
                         </section>
@@ -121,7 +121,7 @@
                                    {{ (rateCount[0].low / rateCount[0].amount * 100 ).toFixed(1) }}%
                                 </div>
                             </div>
-                            <div class="reply_view_button">
+                            <div class="reply_view_button" @click="gotoAddress({path:'rateByType','query':{storeId:storeIds[0]}})">
                                 查看
                             </div>
                         </section>
@@ -567,6 +567,10 @@
                 // console.log(this.storeList);
 
                 console.log(this.storeList);
+                if(this.storeList.length == 0){
+                    this.gotoAddress('shop');
+                    return;
+                }
 
                 if(this.defaultBrand == ''){
                     this.chartInit(this.storeList);

@@ -284,7 +284,7 @@
                     this.storeListOrigin = this.shopList;
                 }
 
-                let res = await getSubscribeList(this.user.openId);
+                let res = await getSubscribeList(this.user.openId,100,0);
                 if(res.status == 0){
                     this.storeList = res.subscribeList.content;
                     this.storeListOrigin = res.subscribeList.content;

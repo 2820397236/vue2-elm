@@ -201,11 +201,10 @@
                 let _this = this;
                 console.log(cityName,keyword,this.$route.params.cityid);
                 searchplace(cityName,keyword,this.city.dpCityId).then(res => {
-                        _this.inputVaule = '';  
+                        // _this.inputVaule = '';  
                         if(res.status == -1){
-                            setTimeout(()=>{
-                                this.searchStore(cityName,keyword,++i);
-                            },3000 );
+                            this.stopLoading();
+                            return;
                         }
 
                         this.stores = res.stores;
@@ -220,8 +219,9 @@
 
                         if(res.stores.length == 0 || res.stores.length <5){
                             
-                            setTimeout(()=>{
+                            let t = setTimeout(()=>{
                                 this.searchStore(cityName,keyword,++i);
+                                clearTimeout(t);
                             },3000 );
                             
                         }else{
@@ -288,149 +288,134 @@
 <style lang="scss" scoped>
     @import 'src/style/mixin';
     .description_header{
-            position: fixed;
-            top:0;
-            z-index: 10;
-            background-color: rgba(255,255,255,1);
-            padding: 0.8rem 0.1rem 0.6rem 0.8rem;
-            width: 100%;
-            overflow: hidden;
-            .header_city{
-                float:right;
-                padding:.3rem .8rem .3rem .4rem;
-                @include sc(0.65rem, #1184e8);
-            }
-            .description_top{
-                display: flex;
-                margin-top:.7rem;
-                margin-right:.7rem;
-                &.active{
-                    margin-right:0rem;
-                    .button_style{
-                        display: block;
-                    }
-                }
+        position: fixed;
+        top:0;
+        z-index: 10;
+        background-color: rgba(255,255,255,1);
+        padding: 0.8rem 0.1rem 0.6rem 0.8rem;
+        width: 100%;
+        overflow: hidden;
+        .header_city{
+            float:right;
+            padding:.3rem .8rem .3rem .4rem;
+            @include sc(0.65rem, #1184e8);
+        }
+        .description_top{
+            display: flex;
+            margin-top:.7rem;
+            margin-right:.7rem;
+            &.active{
+                margin-right:0rem;
                 .button_style{
-                    display: none;
-                    padding:.3rem .8rem .3rem .6rem;
-                    @include sc(0.65rem, #1184e8);
-                    line-height: 1.3rem;
+                    display: block;
                 }
-                .city_input{
-                    flex:1;
-                    /*border: 1px solid $bc;*/
-                    padding: 0.3rem 0.3rem 0.3rem 1.4rem;
-                    background:#f2f5f7;
+            }
+            .button_style{
+                display: none;
+                padding:.3rem .8rem .3rem .6rem;
+                @include sc(0.65rem, #1184e8);
+                line-height: 1.3rem;
+            }
+            .city_input{
+                flex:1;
+                /*border: 1px solid $bc;*/
+                padding: 0.3rem 0.3rem 0.3rem 1.4rem;
+                background:#f2f5f7;
+                line-height: 1.4rem;
+                -webkit-appearance: none!important;
+                @include sc(0.65rem, #333);
+            }
+            .description_left{
+                margin-right: 0.5rem;
+                img{
+                    @include wh(2.9rem, 2.9rem);
+                    display: block;
+                    border-radius: 3rem;
+                }
+            }
+            .description_right{
+                flex: 3;
+                .description_title{
+                    @include sc(.6rem, #949aac);
                     line-height: 1.4rem;
-                    -webkit-appearance: none!important;
-                    @include sc(0.65rem, #333);
+                    /*font-weight: bold;*/
+                    width: 100%;
+                    /*margin-bottom: 0.3rem;*/
                 }
-                .description_left{
-                    margin-right: 0.5rem;
-                    img{
-                        @include wh(2.9rem, 2.9rem);
-                        display: block;
-                        border-radius: 3rem;
-                    }
+                .description_text{
+                    @include sc(.5rem, #282828);
+                    /*margin-bottom: 0.3rem;*/
                 }
-                .description_right{
-                    flex: 3;
-                    .description_title{
-                        @include sc(.6rem, #949aac);
-                        line-height: 1.4rem;
-                        /*font-weight: bold;*/
-                        width: 100%;
-                        /*margin-bottom: 0.3rem;*/
-                    }
-                    .description_text{
-                        @include sc(.5rem, #282828);
-                        /*margin-bottom: 0.3rem;*/
-                    }
-                    .description_promotion{
-                        @include sc(.5rem, #282828);
-                        width: 11.5rem;
-                    }
+                .description_promotion{
+                    @include sc(.5rem, #282828);
+                    width: 11.5rem;
                 }
-                .description_more{
-                    flex:2;
-                }
-                .description_arrow{
-                    @include ct;
-                    right: 0.3rem;
-                    z-index: 11;
-                }
-                .shop_detail_vip{
+            }
+            .description_more{
+                flex:2;
+            }
+            .description_arrow{
+                @include ct;
+                right: 0.3rem;
+                z-index: 11;
+            }
+            .shop_detail_vip{
+                display: inline-block;
+                line-height: 1.1rem;
+                float:right;
+                padding: 0rem .4rem 0rem .8rem;
+                /*@include bis('../../images/vip.jpg');*/
+                /*background-size: 34px auto;
+                background-position: 68px center;*/
+
+                /*border-radius: 6px;
+                border:1px solid rgba(0,0,0,0.5);
+                border-width:0 0 0.025rem 0;*/
+                span{
+                    @include sc(.6rem, #0f83e7);
                     display: inline-block;
-                    line-height: 1.1rem;
-                    float:right;
-                    padding: 0rem .4rem 0rem .8rem;
-                    /*@include bis('../../images/vip.jpg');*/
-                    /*background-size: 34px auto;
-                    background-position: 68px center;*/
-
-                    /*border-radius: 6px;
-                    border:1px solid rgba(0,0,0,0.5);
-                    border-width:0 0 0.025rem 0;*/
-                    span{
-                        @include sc(.6rem, #0f83e7);
-                        display: inline-block;
-                        vertical-align:middle;
-                    }
-                    .icon_style{
-                        width: .5rem;
-                        height:.5rem;
-                        font-size:0.5rem;
-                        color:#0f83e7;
-                        display: inline-block;
-                        vertical-align:middle;
-                        use{
-                            fill:#0f83e7;
-                        }
-                    }
+                    vertical-align:middle;
                 }
-            }
-            .description_footer{
-                @include fj;
-                margin-top: 0.5rem;
-                padding-right: 1rem;
-                p{
-                    @include sc(.5rem, #fff);
-                    span{
-                        color: #fff;
-                    }
-                    .tip_icon{
-                        padding: 0 .04rem;
-                        border: 0.025rem solid #fff;
-                        border-radius: 0.1rem;
-                        font-size: .4rem;
-                        display: inline-block;
-                    }
-                }
-                .ellipsis{
-                    width: 84%;
-                }
-                .footer_arrow{
-                    @include wh(.45rem, .45rem);
-                    position: absolute;
-                    right: .3rem;
-                }
-            }
-
-            &.empty{
-                padding: 1rem 0.8rem 1rem 0.8rem;
-                .description_top{
-                    img{
-                        @include wh(3.4rem, 3.4rem);
-                    }
-                    .shop_detail_vip{
-                        display: none;
-                    }
-                    .description_title {
-                        @include sc(.9rem, #282828);
+                .icon_style{
+                    width: .5rem;
+                    height:.5rem;
+                    font-size:0.5rem;
+                    color:#0f83e7;
+                    display: inline-block;
+                    vertical-align:middle;
+                    use{
+                        fill:#0f83e7;
                     }
                 }
             }
         }
+        .description_footer{
+            @include fj;
+            margin-top: 0.5rem;
+            padding-right: 1rem;
+            p{
+                @include sc(.5rem, #fff);
+                span{
+                    color: #fff;
+                }
+                .tip_icon{
+                    padding: 0 .04rem;
+                    border: 0.025rem solid #fff;
+                    border-radius: 0.1rem;
+                    font-size: .4rem;
+                    display: inline-block;
+                }
+            }
+            .ellipsis{
+                width: 84%;
+            }
+            .footer_arrow{
+                @include wh(.45rem, .45rem);
+                position: absolute;
+                right: .3rem;
+            }
+        }
+    }
     .button_container{
         position: fixed;
         bottom:0;
