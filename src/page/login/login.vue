@@ -34,12 +34,12 @@
        
         <form class="loginForm newStyle">
             <section class="input_container">
-                <input type="text" placeholder="请输入您的手机号码" v-model.lazy="phone">
-                <input type="text" placeholder="请填写推荐码(非必填)" v-model.lazy="inviteCode">
+                <input type="text" placeholder="请输入您的手机号码" v-model="phone">
+                <input type="text" placeholder="请填写推荐码(非必填)" v-model="inviteCode">
                 <div>
-                    <input type="text" placeholder="输入验证码" v-model.lazy="verify">
+                    <input type="text" placeholder="输入验证码" v-model="verify">
                     <a class="code_button" v-if="!lock" @click="getVerifyCode()">获取验证码</a>
-                    <a class="code_button" v-if="lock" @click="getVerifyCode()">已发送</a>
+                    <a class="code_button" v-if="lock" >剩余{{second}}秒...</a>
                 </div>
             </section>
             <section>
@@ -95,7 +95,8 @@
         data(){
             return {
                 lock:false,
-                timer:false,
+                second:60,
+                timer:null,
                 loginWay: false, //登录方式，默认短信登录
                 showPassword: false, // 是否显示密码
                 inviteCode:'',
@@ -153,18 +154,6 @@
 
             },
 
-            getVerifyCode(){
-
-                if (!this.rightPhoneNumber) {
-                    this.showAlert=true;
-                    this.errorMsg = '手机格式错误';
-                    return;
-                }
-
-                this.mobileCode();
-
-            },
-
             login(){
                 console.log(this.phone,this.verify);
 
@@ -182,36 +171,27 @@
                 this.mobileLogin();
             },
 
+            getVerifyCode(){
+
+                if (!this.rightPhoneNumber) {
+                    this.showAlert=true;
+                    this.errorMsg = '手机格式错误';
+                    return;
+                }
+
+                this.mobileCode();
+
+            },
+
             async mobileCode(){
 
                 this.lock = true;
-                this.timer = true;
-
                 this.codeRes = await mobileCode(this.phone,this.inviteCode);
-
                 this.lock = false;
 
-                if(this.codeRes.status == -1){
+                if(this.codeRes.status < 0){
                     this.showAlert=true;
-                    this.errorMsg = '手机号不能为空';
-                    return;
-                }
-
-                if(_this.codeRes.status == -2){
-                    this.showAlert=true;
-                    this.errorMsg = '该手机号码已被注册';
-                    return;
-                }
-
-                if(this.codeRes.status == -3){
-                    this.showAlert=true;
-                    this.errorMsg = '邀请码已发送，请等3分钟再尝试';
-                    return;
-                }
-
-                if(this.codeRes.status == -4){
-                    this.showAlert=true;
-                    this.errorMsg = '服务器未响应，邀请码发送失败';
+                    this.errorMsg = this.codeRes.msg;
                     return;
                 }
 
@@ -219,6 +199,16 @@
                     this.showAlert=true;
                     this.errorMsg = '验证码已发送';
                 }
+
+                let _this = this;
+                _this.second = 60;
+                _this.timer = setInterval(()=>{
+                    _this.second = _this.second - 1 ;
+                    if(  _this.second == 0){
+                        clearInterval(_this.timer);
+                        this.lock = false;
+                    }
+                },1000);
             },
 
             //发送登录信息

@@ -1,19 +1,19 @@
 <template>
     <div>
         <header class="myhome_header" ref="shopheader">
-                <!-- <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"> -->
-                <section class="description_header">
-                    <div>我的订单</div>
-                    <div class="description_top">
-                       <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
-                            <img :src="user.profileImg" @click="signout">
-                        </section> -->
-                        <section class="description_right">
-                            <h4 class="description_title ellipsis" v-if="orderList">您有{{orderList.length}}个订单</h4>
-                        </section>
-                    </div>
-                </section>
-            </header>   
+            <!-- <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"> -->
+            <section class="description_header">
+                <div>我的订单</div>
+                <div class="description_top">
+                   <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
+                        <img :src="user.profileImg" @click="signout">
+                    </section> -->
+                    <section class="description_right">
+                        <h4 class="description_title ellipsis" v-if="orderList">您有{{orderList.length}}个订单</h4>
+                    </section>
+                </div>
+            </section>
+        </header>   
 
         <section class="main_container">
             <section >
@@ -31,26 +31,26 @@
                                 </g>
                             </svg>
                         </li>
-                        <li v-for="(store, i) in item.itemList">
+                        <li >
                             <section class="store_detail_list">
                                 <section class="store_img">
-                                    <img :src="store.picUrl">
+                                    <img :src="item.itemList[0].picUrl">
                                 </section>
 
                                 <section class="store_info">
                                     <h3 class="store_head">
                                         <span class="store_name ellipsis">
-                                            <span>{{store.name}}</span>
-                                            <span>(上海)</span> 
+                                            <span>{{item.itemList[0].name}}</span>
+                                            <!-- <span>(上海)</span>  -->
                                             <!-- <span class="store_status green" v-if="store.status==0">营业</span>
                                             <span class="store_status red" v-if="store.status!=0">停业</span> -->
                                         </span>
                                     </h3>
                                     <p class="store_content ellipsis">
-                                       门店数: 3家
+                                       门店数: {{item.itemList.length}}家
                                     </p>
                                     <p class="store_content ellipsis">
-                                       订阅周期: 6个月
+                                       套餐: {{item.info}}
                                     </p>
                                 </section>
                             </section>
@@ -157,9 +157,6 @@ export default {
             /*font-weight: bold;*/
         }
     }
-    .myhome_header{
-        display: flex;
-    }
     .img_header{
         width:6rem;
         padding: 0.8rem 0.8rem 0.6rem 0.8rem;
@@ -170,10 +167,13 @@ export default {
         }
     }
     .main_container{
+
+        padding-top: 4.2rem;
+        padding-bottom: 1.8rem;
     }
 
     .description_header{
-            position: relative;
+            position: fixed;
             z-index: 10;
             background-color: rgba(255,255,255,1);
             padding: 0.8rem 0.8rem 0.6rem 0.8rem;

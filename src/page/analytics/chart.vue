@@ -3,15 +3,15 @@
         <section class="head_tips" @click="gotoAddress({path:'/warning'})">您没有未读预警，点击查看历史预警</section>
         <section class="head_brand"  @click="eventSearch()">
             <div class="head_brand_name"  v-if="storeList.length >0 && defaultBrand == ''">
-                <img class="head_brand_pic" :src="storeList[0].pciUrl" />
-                <span>{{storeList[0].storeName}}&nbsp;</span>
+                <img class="head_brand_pic" :src="storeList[0].defaultPic" />
+                <span>{{storeList[0].name}}&nbsp;</span>
             </div>
             <div class="head_brand_name"  v-if="storeList.length >0 && defaultBrand != ''">
                 <img  v-if="selectedIndex == null" class="head_brand_pic" :src="branchList[defaultBrand][0].defaultPic" />
                 <img  v-else class="head_brand_pic" :src="branchList[branchName[selectedIndex]][0].defaultPic" />
 
-                <span v-if="selectedIndex == null">{{branchList[defaultBrand][0].storeName}}&nbsp;</span>
-                <span v-else>{{branchList[branchName[selectedIndex]][0].storeName}}&nbsp;</span>
+                <span v-if="selectedIndex == null">{{branchList[defaultBrand][0].name}}&nbsp;</span>
+                <span v-else>{{branchList[branchName[selectedIndex]][0].name}}&nbsp;</span>
             </div>
             <div class="head_brand_button">
                 选择其他品牌
@@ -27,8 +27,8 @@
         <section class="head_calendar">
             <span>请选择日期</span>
             <section>
-                <div class="head_calendar_date">{{calendar2.value[0][1]+1}}月{{calendar2.value[0][2]}}日 - {{calendar2.value[1][1]+1}}月{{calendar2.value[1][2]}}日 <span>今天</span></div>
-                <div class="head_calendar_button" @click="openCalendar()">
+                <div class="head_calendar_date">{{startDate | dateTime('MM月DD日')}}-{{endDate | dateTime('MM月DD日')}} <span>今天</span></div>
+                <div class="head_calendar_button" @click="chooseDate()">
                     <svg width="22px" height="21px" viewBox="0 0 22 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                             <g id="首页-无预警" transform="translate(-337.000000, -215.000000)" fill="#007BE6">
@@ -40,14 +40,17 @@
             </section>
         </section>
 
+        <date-picker ref="myDate" field="myDate"
+                 placeholder="选择日期"
+                 v-model="datePiker"
+                 format="yyyy/mm/dd" readOnly="readOnly"></date-picker>
+
         <section class="head_tab">
             <div class="tab_container" :class="{active:tabType=='dp'}" @click="clickTab('dp')">
                 <span>在店满意度</span><br/>
-                <span class="rate_total">{{rateCount[0].amount.toFixed(0)}}条</span>
             </div>
             <div class="tab_container" :class="{active:tabType=='ele'}" @click="clickTab('ele')">
                 <span>外卖满意度</span><br/>
-                <span class="rate_total">{{rateCount[1].amount.toFixed(0)}}条</span>
             </div>
         </section>
         <!-- <header id='head_top'>
@@ -62,9 +65,9 @@
         </header> -->
         <section v-if="!showLoading" class="shop_container main_container">
             
-            <!-- <section class="chart_container">
+            <section class="chart_container">
                 <IEcharts :option="bar" :height="100" theme="customer" @ready="onReady" @click="onClick"></IEcharts>
-            </section> -->
+            </section>
             <!-- <section class="detail_container">
                 <div class="search_submit"  v-if="storeIds.length > 1"  @click="gotoAddress({path:'/rateByShop',query:{ids:storeIds,date:dateFormat}})">
                     <svg class="icon_style">
@@ -130,12 +133,12 @@
                </div>
             </section>
 
-            <section class="reply_container" v-if="tabType=='ele'">
+            <!-- <section class="reply_container" v-if="tabType=='ele'">
                <div class="reply_item">
                    <div class="reply_item_border">
                         <section>
                             <div class="reply_progress">
-                                <div class="reply_progress green" :style="{ width: rateCount[1].high/rateCount[1].amount * 100 + '%'}">
+                                <div class="reply_progress green" :style="{ width: rateCount[1].high/rateCount[1].amount * 100+ '%'}">
                                     {{ (rateCount[1].high/rateCount[1].amount * 100 ).toFixed(1) }}%
                                 </div>
                             </div> 
@@ -177,7 +180,7 @@
                         <div class="reply_item_count">差评数量： {{rateCount[1].low}}条</div>
                    </div>
                </div>
-            </section>
+            </section> -->
         </section>
             
        <foot-guide></foot-guide>
@@ -218,7 +221,7 @@
                     <span class="store_address" v-else>{{branchList[name][0].branchName?branchList[name][0].branchName:branchList[name][0].name}}</span> -->
                 </li>
                 <li  v-for="(store,index) in storeList" :key="index" @click="selectSearchResult([store],index)" v-if="storeList.length < storeListOrigin.length">
-                    <span class="store_name">{{store.storeName}} {{store.branchName}}</span>
+                    <span class="store_name">{{store.name}} {{store.branchName}}</span>
                     <span class="store_address">{{store.address}}</span>
                 </li>
             </ul>
@@ -250,7 +253,7 @@
             <ul class="search_list">
                 <li :class="{ active: name == defaultBrand }"  v-for="(name,index) in branchName" :key="index" @click="selectSearchResult(branchList[name],index)">
                     <div class="store_name">
-                        <img :src="branchList[name][0].pciUrl"/>
+                        <img :src="branchList[name][0].defaultPic"/>
                         <b>{{name}}</b> 
                         <span>共{{branchList[name].length}}家门店</span>
                         <span class="brand_default">默认</span>
@@ -275,65 +278,35 @@
         <transition name="router-slid" mode="out-in">
             <router-view></router-view>
         </transition>
-
-        <transition name="fade">
-        <div class="bg-gray" v-if="calendar2.show">
-            <div class="calendar-dialog">
-                <calendar :range="calendar2.range" :lunar="calendar2.lunar" :value="calendar2.value" :begin="calendar2.begin" :end="calendar2.end" @select="calendar2.select"></calendar>
-                <div class="calendar-button">
-                    <span @click="cancelCalendar">取消</span>
-                    <span @click="saveCalendar">确定</span>
-                </div>
-            </div>
-        </div>
-        </transition>
-
     </div>
 </template>
 
 <script>
     import {mapState, mapMutations} from 'vuex'
-    import {getAnalyzeRate,getMyStore,getRateAnalytics,getStoreRate,getSubscribeList} from 'src/service/getData'
+    import {getAnalyzeRate,getMyStore,getRateAnalytics,getStoreRate} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import loading from 'src/components/common/loading'
     // import {loadMore} from 'src/components/common/mixin'
     // import BScroll from 'better-scroll'
     import footGuide from '../../components/footer/footGuide'
-    import calendar from 'src/components/common/calendar.vue'
+    import myDatepicker from 'vue-datepicker-simple/datepicker-2.vue';
 
-    // import IEcharts from 'vue-echarts-v3/src/lite.vue'
-    // import echarts from 'vue-echarts-v3/node_modules/echarts/lib/echarts'
-    // import 'vue-echarts-v3/node_modules/echarts/lib/chart/line'
-    // import 'vue-echarts-v3/node_modules/echarts/lib/component/graphic'
-    // import 'vue-echarts-v3/node_modules/echarts/lib/component/dataZoom'
-    // import 'vue-echarts-v3/node_modules/echarts/lib/component/tooltip'
-    // import 'vue-echarts-v3/node_modules/echarts/lib/component/title'
+    import IEcharts from 'vue-echarts-v3/src/lite.vue'
+    import echarts from 'vue-echarts-v3/node_modules/echarts/lib/echarts'
+    import 'vue-echarts-v3/node_modules/echarts/lib/chart/line'
+    import 'vue-echarts-v3/node_modules/echarts/lib/component/graphic'
+    import 'vue-echarts-v3/node_modules/echarts/lib/component/dataZoom'
+    import 'vue-echarts-v3/node_modules/echarts/lib/component/tooltip'
+    import 'vue-echarts-v3/node_modules/echarts/lib/component/title'
 
     import debounce from 'debounce'
-    // import theme from './theme.json'
-    // IEcharts.registerTheme('customer', theme)
+    import theme from './theme.json'
+    IEcharts.registerTheme('customer', theme)
 
     export default {
         data(){
             return{
-                calendar2:{
-                    show:false,
-                    range:true,
-                    value:[[2017,10,1],[2017,10,19]], //默认日期
-                    // lunar:true, //显示农历
-                    begin:[2017,10,1], //可选开始日期
-                    end:[2017,11,19], //可选结束日期
-                    select:(begin,end)=>{
-
-                        this.calendar2.value[0] = [begin[0],begin[1],begin[2]];
-                        this.calendar2.value[1] = [end[0],end[1],end[2]];
-                        if(this.defaultBrand == ''){
-                            this.chartInit(this.storeList);
-                        }else{
-                            this.chartInit(this.branchList[this.defaultBrand]);
-                        }
-                    }
-                },
+                datePiker:'2017/10/31',
                 tabType:'dp',
                 showLoading: true, //显示加载动画
                 showSearch:false,
@@ -361,125 +334,126 @@
                 startDate   : null,
                 endDate     : null,
                 originData:null,
-                // bar: {
-                //     title: {
-                //         left: '4%',
-                //         top:'4%',
-                //         text: '统计中..'
-                //     },
-                //     toolbox: {
+                bar: {
+                    title: {
+                        left: '4%',
+                        top:'4%',
+                        text: '统计中..'
+                    },
+                    toolbox: {
                         
-                //     },
-                //     grid: {
-                //         left: '0%',
-                //         right: '0%',
-                //         bottom: '30px',
-                //         top: '0%',
-                //     },
-                //     tooltip : {
-                //         show:true,
-                //         trigger: 'axis',
-                //         axisPointer: {
-                //             value: '8/30',
-                //             snap: false,
-                //             lineStyle: {
-                //                 color: '#ffe983',
-                //                 opacity: 1,
-                //                 width: 2
-                //             },
-                //             label: {
-                //                 show: true,
-                //                 backgroundColor: '#ffe983'
-                //             },
-                //             handle: {
-                //                 show: true,
-                //                 color: '#004E52'
-                //             }
-                //         },
+                    },
+                    grid: {
+                        left: '0%',
+                        right: '0%',
+                        bottom: '30px',
+                        top: '0%',
+                    },
+                    tooltip : {
+                        show:true,
+                        trigger: 'axis',
+                        axisPointer: {
+                            value: '8/30',
+                            snap: false,
+                            lineStyle: {
+                                color: '#ffe983',
+                                opacity: 1,
+                                width: 2
+                            },
+                            label: {
+                                show: true,
+                                backgroundColor: '#ffe983'
+                            },
+                            handle: {
+                                show: true,
+                                color: '#004E52'
+                            }
+                        },
 
-                //         triggerOn:'click'
-                //     },
-                //     xAxis : [
-                //         {
-                //             position: 'bottom',
-                //             offset:4,
-                //             type : 'category',
-                //             boundaryGap : false,
-                //             splitLine: {
-                //                 show: false
-                //             }
-                //         }
-                //     ],
-                //     yAxis : [
-                //         {
-                //             show : false,
-                //             axisLine :{
-                //                 show : false
-                //             },
-                //             axisLabel:{
-                //                 show : false
-                //             },
-                //             type : 'value'
-                //         }
-                //     ],
-                //     dataZoom: [{
-                //         type: 'inside',
-                //         start: 50,
-                //         end: 100
-                //     }],
-                //     series : [
-                //         {
-                //             type:'line',
-                //             name:'好评',
-                //             lineStyle:{normal:{color:'#6ea593'}},
-                //             areaStyle: {
-                //                 normal: {
-                //                     color: new echarts.graphic.LinearGradient(
-                //                         0, 0, 0, 1,
-                //                         [
-                //                             {offset: 0, color: '#6ea593'},
-                //                             {offset: 0.9, color: '#eafff1'},
-                //                             {offset: 1, color: '#fff'}
-                //                         ]
-                //                     )
-                //                 }
-                //             }
-                //         },{
-                //             type:'line',
-                //             name:'中评',
-                //             lineStyle:{normal:{color:'#f8d555'}},
-                //             areaStyle: {
-                //                 normal: {
-                //                     color: new echarts.graphic.LinearGradient(
-                //                         0, 0, 0, 1,
-                //                         [
-                //                             {offset: 0, color: '#f8d555'},
-                //                             {offset: 0.9, color: '#fcf8dd'},
-                //                             {offset: 1, color: '#fff'}
-                //                         ]
-                //                     )
-                //                 }
-                //             },
-                //         },
-                //         {
-                //             type:'line',
-                //             name:'差评',
-                //             lineStyle:{normal:{color:'#eda994'}},
-                //             areaStyle: {
-                //                 normal: {
-                //                     color: new echarts.graphic.LinearGradient(
-                //                         0, 0, 0, 1,
-                //                         [
-                //                             {offset: 0, color: '#eda994'},
-                //                             {offset: 0.9, color: '#ffe3e2'},
-                //                             {offset: 1, color: '#fff'}
-                //                         ]
-                //                     )
-                //                 }
-                //             }
-                //         }
-                //     ]
-                // }
+                        triggerOn:'click'
+                    },
+                    xAxis : [
+                        {
+                            data:[],
+                            position: 'bottom',
+                            offset:4,
+                            type : 'category',
+                            boundaryGap : false,
+                            splitLine: {
+                                show: false
+                            }
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            show : false,
+                            axisLine :{
+                                show : false
+                            },
+                            axisLabel:{
+                                show : false
+                            },
+                            type : 'value'
+                        }
+                    ],
+                    dataZoom: [{
+                        type: 'inside',
+                        start: 50,
+                        end: 100
+                    }],
+                    series : [
+                        {
+                            type:'line',
+                            name:'好评',
+                            lineStyle:{normal:{color:'#6ea593'}},
+                            areaStyle: {
+                                normal: {
+                                    color: new echarts.graphic.LinearGradient(
+                                        0, 0, 0, 1,
+                                        [
+                                            {offset: 0, color: '#6ea593'},
+                                            {offset: 0.9, color: '#eafff1'},
+                                            {offset: 1, color: '#fff'}
+                                        ]
+                                    )
+                                }
+                            }
+                        },{
+                            type:'line',
+                            name:'中评',
+                            lineStyle:{normal:{color:'#f8d555'}},
+                            areaStyle: {
+                                normal: {
+                                    color: new echarts.graphic.LinearGradient(
+                                        0, 0, 0, 1,
+                                        [
+                                            {offset: 0, color: '#f8d555'},
+                                            {offset: 0.9, color: '#fcf8dd'},
+                                            {offset: 1, color: '#fff'}
+                                        ]
+                                    )
+                                }
+                            },
+                        },
+                        {
+                            type:'line',
+                            name:'差评',
+                            lineStyle:{normal:{color:'#eda994'}},
+                            areaStyle: {
+                                normal: {
+                                    color: new echarts.graphic.LinearGradient(
+                                        0, 0, 0, 1,
+                                        [
+                                            {offset: 0, color: '#eda994'},
+                                            {offset: 0.9, color: '#ffe3e2'},
+                                            {offset: 1, color: '#fff'}
+                                        ]
+                                    )
+                                }
+                            }
+                        }
+                    ]
+                }
             }
         },
         created(){
@@ -505,8 +479,8 @@
         components: {
             loading,
             footGuide,
-            calendar
-            // IEcharts,
+            'date-picker': myDatepicker,
+            IEcharts,
         },
         computed: {
             ...mapState([
@@ -520,7 +494,7 @@
             ]),
             //初始化时获取基本数据
             async initData(){
-
+                
                 if(getStore('user') == undefined){
                     this.$router.push('/');
                 }
@@ -530,46 +504,24 @@
                     this.defaultBrand = getStore('defaultBrand');
                 }
 
-                // let response = await getMyStore(this.user.id);
-                // if(response.status == 0){
-                //     let _this = this;
-                //     _this.storeList = response.stores;
-                //     _this.storeListOrigin = response.stores;
-                //     _this.storeListOrigin.map(item=>{
-                //         if(!_this.branchList[item.name]){
-                //             _this.branchList[item.name]=[];
-                //         }
-                //         _this.branchList[item.name].push(item);
-                //         return item;
-                //     })
-                //     _this.branchName = Object.keys(_this.branchList);
-                //     console.log(_this.branchName,_this.defaultBrand);
-                // }
-                let _this = this;
-                let response = await getSubscribeList(this.user.openId);
+                let response = await getMyStore(this.user.id);
                 if(response.status == 0){
-
-                    
-                    _this.storeList = response.subscribeList.content;
-                    _this.storeListOrigin = response.subscribeList.content;
+                    let _this = this;
+                    _this.storeList = response.stores;
+                    _this.storeListOrigin = response.stores;
                     _this.storeListOrigin.map(item=>{
-                        if(!_this.branchList[item.storeName]){
-                            _this.branchList[item.storeName]=[];
+                        if(!_this.branchList[item.name]){
+                            _this.branchList[item.name]=[];
                         }
-                        _this.branchList[item.storeName].push(item);
+                        _this.branchList[item.name].push(item);
                         return item;
                     })
                     _this.branchName = Object.keys(_this.branchList);
                     console.log(_this.branchName,_this.defaultBrand);
-                    // this.extra = response.extra;
                 }
-                // console.log('xxx')
-                // console.log(this.storeList);
-
-                console.log(this.storeList);
 
                 if(this.defaultBrand == ''){
-                    this.chartInit(this.storeList);
+                    this.chartInit(response.stores);
                 }else{
                     this.chartInit(this.branchList[this.defaultBrand]);
                 }
@@ -577,17 +529,9 @@
                 //隐藏加载动画
                 this.hideLoading();
             },
-            openCalendar(){
-                this.calendar2.show = true;
-            },
-            cancelCalendar(){
-                this.calendar2.show = false;
-            },
-            saveCalendar(){
-                this.calendar2.show = false;
-            },
 
             chooseDate(){ 
+                document.getElementById("myDate").focus();
             },
 
             clickTab(type){
@@ -599,10 +543,9 @@
 
                 this.storeIds = [];
                 this.storeList = list;
-                console.log(list);
-                // console.log(this.storeIds);
+                console.log(this.storeIds);
                 this.storeList.map(item=>{
-                    this.storeIds.push(item.storeId+"");
+                    this.storeIds.push(item.id+"");
                     
                 })
 
@@ -611,40 +554,50 @@
                 // }
 
                 let _this = this;
-                let start = new Date();
-                let end = new Date();
+                let start,end;
 
-                start.setFullYear(_this.calendar2.value[0][0],    _this.calendar2.value[0][1],  _this.calendar2.value[0][2]);
-                end.setFullYear(_this.calendar2.value[1][0],      _this.calendar2.value[1][1],  _this.calendar2.value[1][2]);
+                if( _this.startDate != null && _this.endDate != null){
+                    start =  _this.startDate;
+                    end =  _this.endDate;
+                }else{
+                    start = new Date();
+                    end = new Date();
+                    start.setMonth(start.getMonth() - 1);
+                    _this.startDate = start.getTime();
+                    _this.endDate = end.getTime();
+                }
 
                 getAnalyzeRate({
                     dpStoreIds  :   _this.storeIds,
                     eleStoreIds :   null,
-                    startDate   :   start.getTime(),
-                    endDate     :   end.getTime(),
+                    startDate   :   _this.startDate,
+                    endDate     :   _this.endDate,
                     source      :   0
                 }).then(function(data){
 
-                        _this.originData = data.result;
-                        _this.rateCount = [{
-                            low:0,
-                            mid:0,
-                            high:0,
-                            amount:0.00001
-                        },{
-                            low:0,
-                            mid:0,
-                            high:0,
-                            amount:0.00001
-                        }];
-                        _this.originData.map(rate=>{
-                            _this.rateCount[rate.source].high += rate.rate5  + rate.rate4;
-                            _this.rateCount[rate.source].mid += rate.rate3;
-                            _this.rateCount[rate.source].low += rate.rate2  + rate.rate1 + rate.rate0;
-                            _this.rateCount[rate.source].amount += rate.rateCount;
-                        })
+                    _this.originData = data.result;
+                    _this.rateCount = [{
+                        low:0,
+                        mid:0,
+                        high:0,
+                        amount:0
+                    },{
+                        low:0,
+                        mid:0,
+                        high:0,
+                        amount:0
+                    }];
+                    _this.originData.map(rate=>{
+                        console.log(rate.rateDate)
+                        // _this.xAxis[0].data.push()
+                        // _this.rateCount[rate.source].high += rate.rate5  += rate.rate4;
+                        // _this.rateCount[rate.source].mid += rate.rate3;
+                        // _this.rateCount[rate.source].low += rate.rate2  += rate.rate1 += rate.rate0;
+                        // _this.rateCount[rate.source].amount += rate.rate5 += rate.rate4 += rate.rate3 += rate.rate2 += rate.rate1 += rate.rate0;
 
-                        // console.log(_this.originData);
+                    })
+
+                    console.log(_this.originData);
 
                 })
                 // getRateAnalytics(_this.storeIds).then(function(resCount){
@@ -711,7 +664,7 @@
                 if (keyword && keyword != " ") {
 
                     this.storeList = this.storeListOrigin.filter(store=>{
-                        return store.storeName.indexOf(keyword) > -1;
+                        return store.name.indexOf(keyword) > -1;
                     });
 
                 }else if(keyword == "") {
@@ -733,7 +686,7 @@
                 
                 console.log('setDefault:' +　this.defaultBrand);
 
-                this.defaultBrand = data[0].storeName;
+                this.defaultBrand = data[0].name;
                 
             },
             saveDefaultBrand(){
@@ -906,10 +859,10 @@
             @include wh(6.6rem, auto);
             border-bottom:0.2rem solid #fff;
             text-align: center;
-            padding:.8rem .3rem .1rem;
+            padding:.6rem .3rem .3rem;
             line-height: .9rem;
             span{
-                @include sc(.9rem, #969FB7);
+                @include sc(.65rem, #969FB7);
                 display: inline-block;
             }
             .rate_total{
@@ -1122,37 +1075,6 @@
     .main_container{
         
     }
-    .calendar-dialog{
-        width:90%;
-    }
-    .calendar-button{
-        border-bottom-left-radius: .4rem;
-        border-bottom-right-radius: .4rem;
-        background-color: #fff;
-        display: flex;
-        justify-content: space-between;
-        span{
-            @include sc(.65rem, #24253D);
-            display: inline-block;
-            padding: .2rem 1rem .8rem;
-            &:last-child{
-                color:#007BE6;
-            }
-        }
-    }
-    .bg-gray{
-        background-color: rgba(0,0,0,0.5);
-        position: fixed;
-        top:0;
-        right: 0;
-        left: 0;
-        bottom:0;
-        height: 100%;
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
     .shop_container{
         display: flex;
         flex-direction: column;
@@ -1160,7 +1082,16 @@
         right: 0;
         left: 0;
         background:#eef3fa;
-        
+        &.bg-gray{
+            background-color: rgba(255,255,255,1);
+            position: fixed;
+            top:0;
+            right: 0;
+            left: 0;
+            bottom:0;
+            height: 100%;
+            z-index: 101;
+        }
         .set_brand_default_button{
             position: fixed;
             left:10%;
@@ -1179,7 +1110,6 @@
             border-top-left-radius:0;
             border-top-right-radius:0;
             padding-bottom: .4rem;
-            width:100%;
             min-height:83%;
             overflow: scroll;
 

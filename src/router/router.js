@@ -54,6 +54,7 @@ const confirmOrder = r => require.ensure([], () => r(require('../page/confirmOrd
 // const find = r => require.ensure([], () => r(require('../page/find/find')), 'find')
 // const download = r => require.ensure([], () => r(require('../page/download/download')), 'download')
 const analytics = r => require.ensure([], () => r(require('../page/analytics/analytics')), 'analytics')
+const chart = r => require.ensure([], () => r(require('../page/analytics/chart')), 'chart')
 const myOrder = r => require.ensure([], () => r(require('../page/confirmOrder/myOrder')), 'myOrder')
 const myOrderDetail = r => require.ensure([], () => r(require('../page/confirmOrder/myOrderDetail')), 'myOrderDetail')
 
@@ -303,6 +304,11 @@ export default [{
         {
             path: '/analytics',
             component: analytics,
+            meta: { keepAlive: true },
+        },
+        {
+            path: '/chart',
+            component: chart,
             meta: { keepAlive: true },
         },
         {

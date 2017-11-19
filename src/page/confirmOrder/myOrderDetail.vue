@@ -31,13 +31,13 @@
                                     <h3 class="store_head">
                                         <span class="store_name ellipsis">
                                             <span>{{store.name}}</span>
-                                            <span>({{store.branchName}})</span> 
+                                            <!-- <span>({{store.branchName}})</span>  -->
                                             <!-- <span class="store_status green" v-if="store.status==0">营业</span>
                                             <span class="store_status red" v-if="store.status!=0">停业</span> -->
                                         </span>
                                     </h3>
                                     <p class="store_content ellipsis">
-                                       {{store.addr}}
+                                       {{store.branchName}}
                                     </p>
                                 </section>
                             </section>
@@ -95,7 +95,7 @@ export default {
     methods:{
         //初始化时获取基本数据
         async initData(){
-            
+
             let res = await getOrderList(this.user.openId);
             this.orderList = res.orderList.content;
             this.orderList.map(o=>{

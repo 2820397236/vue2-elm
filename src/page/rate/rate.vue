@@ -16,8 +16,8 @@
             <section class="head_calendar">
                 <span>请选择日期</span>
                 <section>
-                    <div class="head_calendar_date">{{dateFormat | dateTime('MM月DD日')}} <span>今天</span></div>
-                    <div class="head_calendar_button">
+                    <div class="head_calendar_date">{{calendar2.value[0][1]}}月{{calendar2.value[0][2]}}日 - {{calendar2.value[1][1]}}月{{calendar2.value[1][2]}}日 <span>今天</span></div>
+                    <div class="head_calendar_button" @click="openCalendar()">
                         <svg width="22px" height="21px" viewBox="0 0 22 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                 <g id="首页-无预警" transform="translate(-337.000000, -215.000000)" fill="#007BE6">
@@ -135,35 +135,60 @@
             </ul>
         </section>
         <loading v-show="showLoading"></loading>
+        <transition name="fade">
+        <div class="bg-gray" v-if="calendar2.show">
+            <div class="calendar-dialog">
+                <calendar :range="calendar2.range" :lunar="calendar2.lunar" :value="calendar2.value" :begin="calendar2.begin" :end="calendar2.end" @select="calendar2.select"></calendar>
+                <div class="calendar-button">
+                    <span @click="cancelCalendar">取消</span>
+                    <span @click="saveCalendar">确定</span>
+                </div>
+            </div>
+        </div>
+        </transition>
     </div>
 </template>
 
 <script>
     import headTop from 'src/components/header/head'
     import {mapState} from 'vuex'
-    import {getMyStore,getStoreInfo,getStoreRate,getRateCount} from 'src/service/getData'
+    import {getMyStore,getStoreInfo,getStoreRate,getRateCount,getAnalyzeRate} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import {getImgPath} from 'src/components/common/mixin'
     import loading from 'src/components/common/loading'
+    import calendar from 'src/components/common/calendar.vue'
 
     export default {
         data(){
             return{
-               showLoading: true, //显示加载动画 
-               licenseImg: null,
-               showRateType: false,
-               dateFormat: new Date().getTime(),
-               rateListOrigin:[],
-               rateList:[],
-               ratesEleOrigin:[],
-               ratesEle:[],
-               rateCount:{},
-               storeName:'',
-               storeImg:'',
-               store:null,
-               tabType:'dp',
-               rateType:'负面评论',
-               type:'',
+               calendar2:{
+                    show:false,
+                    range:true,
+                    value:[[2017,11,1],[2017,11,19]], //默认日期
+                    // lunar:true, //显示农历
+                    begin:[2017,10,1], //可选开始日期
+                    end:[2017,11,19], //可选结束日期
+                    select:(begin,end)=>{
+                        console.log(begin,end);
+                        this.calendar2.value[0] = [begin[0],begin[1]+1,begin[2]];
+                        this.calendar2.value[1] = [end[0],end[1]+1,end[2]];
+                    }
+                },
+                showLoading: true, //显示加载动画 
+                licenseImg: null,
+                showRateType: false,
+                dateFormat: new Date().getTime(),
+                rateListOrigin:[],
+                rateList:[],
+                ratesEleOrigin:[],
+                ratesEle:[],
+                rateCount:{},
+                storeName:'',
+                storeImg:'',
+                store:null,
+                tabType:'dp',
+                rateType:'负面评论',
+                type:'',
             }
         },
         mounted(){
@@ -176,10 +201,20 @@
         },
         components: {
             headTop,
-            loading
+            loading,
+            calendar
         },
         mixins:[getImgPath],
         methods: {
+            openCalendar(){
+                this.calendar2.show = true;
+            },
+            cancelCalendar(){
+                this.calendar2.show = false;
+            },
+            saveCalendar(){
+                this.calendar2.show = false;
+            },
             clickTab(type){
                 this.tabType = type;
                 switch(type){
@@ -254,8 +289,67 @@
                     this.rateCount = resCount.rates[0];
                 }
 
+                this.analyzaRate([this.$route.query.storeId]);
+
                 this.setRatingType('low');
                 this.hideLoading();
+            },
+
+             analyzaRate(list){
+                // console.log(list);
+
+                this.storeIds = list;
+
+                // for(let i=0; i < this.storeIds.length ; i++){
+                //     getStoreRate(this.user.id, this.storeIds[i]);
+                // }
+
+                let _this = this;
+                let start,end;
+
+                if( _this.startDate != null && _this.endDate != null){
+                    start =  _this.startDate;
+                    end =  _this.endDate;
+                }else{
+                    start = new Date();
+                    end = new Date();
+                    start.setMonth(start.getMonth() - 1);
+                    _this.startDate = start.getTime();
+                    _this.endDate = end.getTime();
+                }
+
+                getAnalyzeRate({
+                    dpStoreIds  :   _this.storeIds,
+                    eleStoreIds :   null,
+                    startDate   :   _this.startDate,
+                    endDate     :   _this.endDate,
+                    source      :   0
+                }).then(function(data){
+
+                        _this.originData = data.result;
+                        _this.rateCount = [{
+                            low:0,
+                            mid:0,
+                            high:0,
+                            amount:0
+                        },{
+                            low:0,
+                            mid:0,
+                            high:0,
+                            amount:0
+                        }];
+                        _this.originData.map(rate=>{
+                            _this.rateCount[rate.source].high += rate.rate5  += rate.rate4;
+                            _this.rateCount[rate.source].mid += rate.rate3;
+                            _this.rateCount[rate.source].low += rate.rate2  += rate.rate1 += rate.rate0;
+                            _this.rateCount[rate.source].amount += rate.rate5 += rate.rate4 += rate.rate3 += rate.rate2 += rate.rate1 += rate.rate0;
+                        })
+
+                        console.log(_this.originData);
+
+                })
+               
+
             },
 
             setRatingType(type){
@@ -480,21 +574,44 @@
                 }*/
             }
         }
+    .calendar-dialog{
+        width:90%;
+    }
+    .calendar-button{
+        border-bottom-left-radius: .4rem;
+        border-bottom-right-radius: .4rem;
+        background-color: #fff;
+        display: flex;
+        justify-content: space-between;
+        span{
+            @include sc(.65rem, #24253D);
+            display: inline-block;
+            padding: .2rem 1rem .8rem;
+            &:last-child{
+                color:#007BE6;
+            }
+        }
+    }
     .main_container{
         padding-top:8.5rem;
     }
 
+    .bg-gray{
+        background-color: rgba(0,0,0,0.5);
+        position: fixed;
+        top:0;
+        right: 0;
+        left: 0;
+        bottom:0;
+        height: 100%;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     .shop_container{
-        &.bg-gray{
-            background-color: rgba(0,0,0,0.5);
-            position: fixed;
-            top:0;
-            right: 0;
-            left: 0;
-            bottom:0;
-            height: 100%;
-        }
-        
+
     }
     .shoplist_container{
         overflow-y: auto;

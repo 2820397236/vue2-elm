@@ -80,14 +80,14 @@
                                 <li v-for="(store,index) in branchMap[branch]" :key="index" v-if="listStatusMap[branch].active == true">
 
                                     <section class="store_detail_list">
-                                            <section class="store_img" @click="gotoAddress('rate?storeId='+store.id)">
-                                                <img :src="store.defaultPic">
+                                            <section class="store_img" @click="gotoAddress('rate?storeId='+store.storeId)">
+                                                <img :src="store.pciUrl">
                                             </section>
 
-                                            <section  @click="gotoAddress('rate?storeId='+store.id)" class="store_info">
+                                            <section  @click="gotoAddress('rate?storeId='+store.storeId)" class="store_info">
                                                 <h3 class="store_head">
                                                     <span class="store_name ellipsis">
-                                                    <span>{{store.name}}</span>
+                                                    <span>{{store.storeName}}</span>
                                                     <span v-if="store.branchName">({{store.branchName}})</span> 
                                                     <!-- <span class="store_status green" v-if="store.status==0">营业</span>
                                                     <span class="store_status red" v-if="store.status!=0">停业</span> -->
@@ -96,7 +96,7 @@
                                                 <p class="store_content ellipsis" v-if="store.address == ''">
                                                     {{store.regionName}}&nbsp;&nbsp;{{store.priceText}}
                                                 </p>
-                                                <p class="store_content ellipsis" v-else>{{store.address}}</p>
+                                                <p class="store_content ellipsis" v-else>{{store.addr}}</p>
                                                 <!-- <p class="store_time">
                                                     <span v-if="store.isCancel == false">
                                                         {{store.createTime | dateTime('自YYYY年MM月DD日订阅')}}</span>
@@ -137,7 +137,7 @@
 
 <script>
     import {mapState, mapMutations} from 'vuex'
-    import {getMyStore,getUser,cancelMyStore,renewMyStore} from 'src/service/getData'
+    import {getMyStore,getUser,cancelMyStore,renewMyStore,getSubscribeList} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import alertTip from 'src/components/common/alertStore'
     import loading from 'src/components/common/loading'
@@ -284,59 +284,68 @@
                     this.storeListOrigin = this.shopList;
                 }
 
-                //获取我的门店
-                let response = await getMyStore(this.user.id);
-                if(response.status == -1){
-
-                    removeStore('user');
-                    this.gotoAddress('/');
-
-                }else if(response.status == 0){
-                    this.storeList = response.stores;
-                    this.storeListOrigin = response.stores;
-                    this.extra = response.extra;
+                let res = await getSubscribeList(this.user.openId);
+                if(res.status == 0){
+                    this.storeList = res.subscribeList.content;
+                    this.storeListOrigin = res.subscribeList.content;
+                    // this.extra = response.extra;
                 }
+                // console.log('xxx')
+                console.log(this.storeList);
+
+                // //获取我的门店
+                // let response = await getMyStore(this.user.id);
+                // if(response.status == -1){
+
+                //     removeStore('user');
+                //     this.gotoAddress('/');
+
+                // }else if(response.status == 0){
+                //     this.storeList = response.stores;
+                //     this.storeListOrigin = response.stores;
+                //     this.extra = response.extra;
+                // }
 
 
-                // this.storeList = [];
-                // this.storeListOrigin = [];
-                // this.extra = [];
+                // // this.storeList = [];
+                // // this.storeListOrigin = [];
+                // // this.extra = [];
 
-                if(this.storeList.length ==0){
-                    this.seletedCity = false;
-                }
+                // if(this.storeList.length ==0){
+                //     this.seletedCity = false;
+                // }
 
-                //整合数据
-                for(var i=0;i<this.extra.length;i++){
-                    for(var j=0;j<this.storeList.length;j++){
-                        if( this.storeList[j].id == this.extra[i].storeId){
+                // //整合数据
+                // for(var i=0;i<this.extra.length;i++){
+                //     for(var j=0;j<this.storeList.length;j++){
+                //         if( this.storeList[j].id == this.extra[i].storeId){
 
-                            this.storeList[j].createTime = this.extra[i].createTime;
-                            this.storeList[j].expireTime = new Date(new Date().setMonth(new Date(this.extra[i].createTime).getMonth() + 1));
-                            this.storeList[j].isCancel = this.extra[i].isCancel;
-                        }
-                    }
-                }
+                //             this.storeList[j].createTime = this.extra[i].createTime;
+                //             this.storeList[j].expireTime = new Date(new Date().setMonth(new Date(this.extra[i].createTime).getMonth() + 1));
+                //             this.storeList[j].isCancel = this.extra[i].isCancel;
+                //         }
+                //     }
+                // }
 
-                this.storeListOrigin = JSON.parse(JSON.stringify(this.storeList));
+                // this.storeListOrigin = JSON.parse(JSON.stringify(this.storeList));
 
                 let _self = this;
                 _self.branchMap = {};
                 _self.listStatusMap = {};
                 this.storeList.map(s=>{
-                    if( false == _self.branchMap[s.name] instanceof Array){
-                        _self.branchMap[s.name] = [];
-                        _self.branchList.push(s.name);
-                        _self.listStatusMap[s.name]={};
-                        _self.listStatusMap[s.name].active = false;
+                    if( false == _self.branchMap[s.storeName] instanceof Array){
+                        _self.branchMap[s.storeName] = [];
+                        _self.branchList.push(s.storeName);
+                        _self.listStatusMap[s.storeName]={};
+                        _self.listStatusMap[s.storeName].active = false;
                     }
-                    _self.branchMap[s.name].push(s);
+                    _self.branchMap[s.storeName].push(s);
                 });
 
 
                 console.log(_self.branchMap);
 
-                this.RECORD_MYSHOPS(this.storeListOrigin.map(item=>item.id));
+                // this.RECORD_MYSHOPS(this.storeListOrigin.map(item=>item.id));
                 
                 //隐藏加载动画
                 this.hideLoading();

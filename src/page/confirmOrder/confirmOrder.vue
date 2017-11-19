@@ -1,44 +1,11 @@
 <template>
     <div class="confirmOrderContainer">
         <section v-if="!showLoading">
-            <!-- <head-top head-title="确认订阅门店" goBack="true"></head-top> -->
-            <!-- <router-link :to='{path: "/confirmOrder/chooseAddress", query: {id: checkoutData.cart.id, sig: checkoutData.sig}}' class="address_container">
-                <div class="address_empty_left">
-                    <svg class="location_icon">
-                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#location"></use>
-                    </svg>
-                    <div class="add_address" v-if="!choosedAddress">请添加一个收获地址</div>
-                    <div v-else class="address_detail_container">
-                        <header>
-                            <span>{{choosedAddress.name}}</span>
-                            <span>{{choosedAddress.sex == 1? '先生':'女士'}}</span>
-                            <span>{{choosedAddress.phone}}</span>
-                        </header>
-                        <div class="address_detail">
-                            <span v-if="choosedAddress.tag" :style="{backgroundColor: iconColor(choosedAddress.tag)}">{{choosedAddress.tag}}</span>
-                            <p>{{choosedAddress.address_detail}}</p>
-                        </div>
-                    </div>
-                </div>
-                <svg class="address_empty_right">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                </svg>
-            </router-link> -->
-            <!-- <section class="delivery_model container_style">
-                <p class="deliver_text">送达时间</p>
-                <section class="deliver_time">
-                    <p>尽快送达 | 预计 {{checkoutData.delivery_reach_time}}</p>
-                    <p v-if="checkoutData.cart.is_deliver_by_fengniao">蜂鸟专送</p>
-                </section>
-            </section> -->
+
             <header class="shop_detail_header" ref="shopheader">
-                <!-- <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"> -->
                 <section class="description_header">
                     <div>门店列表</div>
                     <div class="description_top">
-                       <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
-                            <img :src="user.profileImg" @click="signout">
-                        </section> -->
                         <section class="description_right">
                             <h4 class="description_title ellipsis">您已选择2家门店</h4>
                         </section>
@@ -76,61 +43,7 @@
                     </section>
                 </section>
             </section>
-            <!-- <section class="food_list">
-                <header v-if="checkoutData.cart.restaurant_info">
-                    <img :src="imgBaseUrl + checkoutData.cart.restaurant_info.image_path">
-                    <span>{{checkoutData.cart.restaurant_info.name}}</span>
-                </header>
-                <ul class="food_list_ul" v-if="checkoutData.cart.groups">
-                    <li v-for="item in checkoutData.cart.groups[0]" :key="item.id" class="food_item_style">
-                        <p class="food_name ellipsis">{{item.name}}</p>
-                        <div class="num_price">
-                            <span>x {{item.quantity}}</span>
-                            <span>¥{{item.price}}</span>
-                        </div>
-                    </li>
-                </ul>
-                <div class="food_item_style" v-if="checkoutData.cart.extra">
-                    <p class="food_name ellipsis">{{checkoutData.cart.extra[0].name}}</p>
-                    <div class="num_price">
-                        <span></span>
-                        <span>¥ {{checkoutData.cart.extra[0].price}}</span>
-                    </div>
-                </div>
-                <div class="food_item_style">
-                    <p class="food_name ellipsis">配送费</p>
-                    <div class="num_price">
-                        <span></span>
-                        <span>¥ {{checkoutData.cart.deliver_amount || 0}}</span>
-                    </div>
-                </div>
-                <div class="food_item_style total_price">
-                    <p class="food_name ellipsis">订单 ¥{{checkoutData.cart.total}}</p>
-                    <div class="num_price">
-                        <span>待支付 ¥{{checkoutData.cart.total}}</span>
-                    </div>
-                </div>
-            </section>
-            <section class="pay_way container_style">
-                <router-link :to='{path: "/confirmOrder/remark", query: {id: checkoutData.cart.id, sig: checkoutData.sig}}' class="header_style">
-                    <span>订单备注</span>
-                    <div class="more_type">
-                        <span class="ellipsis">{{remarkText||inputText? remarklist: '口味、偏好等'}}</span>
-                        <svg class="address_empty_right">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                        </svg>
-                    </div>
-                </router-link>
-                <router-link :to="checkoutData.invoice.is_available? '/confirmOrder/invoice': ''" class="hongbo" :class="{support_is_available: checkoutData.invoice.is_available}">
-                    <span>发票抬头</span>
-                    <span>
-                        {{checkoutData.invoice.status_text}}
-                        <svg class="address_empty_right">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                        </svg>
-                    </span>
-                </router-link>
-            </section> -->
+            
             <section class="pay_way container_style">
                 <header class="header_style">
                     <span>选择订阅周期</span>
@@ -215,7 +128,7 @@
     import headTop from 'src/components/header/head'
     import alertTip from 'src/components/common/alertTip'
     import loading from 'src/components/common/loading'
-    import {getStoreInfo, addToCart, getPayConfig, getJsConfig, getPayment, getPlan, checkout} from 'src/service/getData'
+    import {getStoreInfo, addToCart, getPayConfig, getJsConfig, getPayment, getPlan, checkout,testSubscribe} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import {imgBaseUrl} from 'src/config/env'
     import weixin from 'weixin-js-sdk'
@@ -223,6 +136,7 @@
     export default {
         data(){
             return {
+                planCode:null,
                 plans:[],
                 storeDto:[],
                 storeIds:[],
@@ -272,7 +186,10 @@
 
             getPlan(_this.user.openId,_this.storeDto).then(function(res){
                 _this.plans = res.plans;
-            })
+                _this.payWayId = _this.plans[0].planCode;
+            });
+
+            
             // //获取上个页面传递过来的geohash值
             // this.geohash = this.$route.query.geohash;
             // //获取上个页面传递过来的shopid值
@@ -458,10 +375,16 @@
                 // 
                 console.log(this.user.openId,this.storeDto,this.payWayId);
                 let res = await checkout(this.user.openId,this.storeDto,this.payWayId);
+                if(res.freePay){
+                    this.$router.push('/shop');
+                    return;
+                }
+
                 let json = JSON.parse(res.paymentJson);
                 json.timestamp = json.timeStamp;
+                this.$router.push('/shop');
                 // console.log(json);
-                weixin.chooseWXPay(json);
+                // weixin.chooseWXPay(json);
             },
         },
         watch: {
@@ -480,8 +403,6 @@
     
     .confirmOrderContainer{
         background-color: #fff;
-        height: 100%;
-        overflow: scroll;
         p, span{
             font-family: Helvetica Neue,Tahoma,Arial;
         }
@@ -870,8 +791,8 @@
 
     .food_container{
         display: flex;
-        flex: 1;
         padding-top:4rem;
+        padding-bottom:11rem;
     }
     .menu_container{
         display: flex;

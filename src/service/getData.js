@@ -556,11 +556,27 @@ export const checkout = (openId,storeIds,planCode) =>fetch('/v2/order/checkout',
 });
 
 /**
- * 获取套餐
+ * 测试套餐生效
+ */
+export const testSubscribe = (orderId) =>fetch('/v2/order/testSubscribe',{
+	orderId,
+});
+
+
+/**
+ * 获取订单列表
  */
 export const getOrderList = (openId,pageSize,pageNum) =>fetch('/v2/order/getOrderList',{
 	openId,
-	pageSize:5,
+	pageSize:20,
 	pageNum:0,
 	appExpire:false
+});
+/**
+ * 获取订阅列表
+ */
+export const getSubscribeList = (openId) =>fetch('/v2/order/getSubscribeList',{
+	openId,
+	pageSize:20,
+	pageNum:0,
 });
