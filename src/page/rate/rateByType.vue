@@ -8,8 +8,8 @@
                 <img class="title_img" :src="storeImg"/>
                 <div class="title_content">
                     <div class="title_text">{{storeName}}</div>
-                    <!-- <div class="title_time" v-if="store">{{store.address}}</div> -->
-                    <span class="title_time" v-if="Object.keys(rateListOrigin).length>0">{{rateList[rateList.length-1].ratingTime}} 到 {{rateList[0].ratingTime}}</span>
+                    <div class="title_time" v-if="store">{{store.address}}</div>
+                    <!-- <span class="title_time" v-if="Object.keys(rateListOrigin).length>0">{{rateList[rateList.length-1].ratingTime}} 到 {{rateList[0].ratingTime}}</span> -->
                 </div>
                 <!-- <div class="head_link_button">数据分析</div> -->
             </section>
