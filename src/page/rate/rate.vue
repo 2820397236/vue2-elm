@@ -30,24 +30,24 @@
             </section>
             <section>
                 <ul class="rate_navi">
-                    <li class="tab_container" :class="{active:tabType=='dp'}" @click="clickTab('dp')">
-                        <span>在店满意度 {{rateCount.countHigh}}条</span>
+                    <li class="tab_container" :class="{active:source==0}" @click="setRatingType(rateType,0)">
+                        <span v-if="rateCount[0]">在店满意度 {{rateCount[0].amount}}条</span>
                     </li>
-                    <li class="tab_container" :class="{active:tabType=='ele'}" @click="clickTab('ele')">
-                        <span>外卖满意度 {{ratesEleOrigin.length}}条</span>
+                    <li class="tab_container" :class="{active:source==1}" @click="setRatingType(rateType,1)">
+                        <span v-if="rateCount[1]">外卖满意度 {{rateCount[1].amount}}条</span>
                     </li>
                 </ul>
             </section>
-            <section v-if="false">
-                <ul class="rate_navi">
-                    <li :class="{ active : type == 'high' }" @click="setRatingType('high')">
-                        <span>好评 {{rateCount.countHigh}}</span>
+            <section v-if="true">
+                <ul class="rate_right">
+                    <li :class="{ active : type == 'high' }" @click="setRatingType('high',source)">
+                        <span>好评 <!-- {{rateCount[source].high}} --></span>
                     </li>
-                    <li :class="{ active : type == 'mid' }" @click="setRatingType('mid')">
-                        <span>中评 {{rateCount.countMid}}</span>
+                    <li :class="{ active : type == 'mid' }" @click="setRatingType('mid',source)">
+                        <span>中评 <!-- {{rateCount[source].mid}} --></span>
                     </li>
-                    <li :class="{ active : type == 'low' }" @click="setRatingType('low')">
-                        <span>差评 {{rateCount.countLow}}</span>
+                    <li :class="{ active : type == 'low' }" @click="setRatingType('low',source)">
+                        <span>差评 <!-- {{rateCount[source].low}} --></span>
                     </li>
                 </ul>
             </section>
@@ -56,7 +56,7 @@
         <section v-if="!showLoading" class="shop_container main_container">
 
             <section class="shoplist_container">
-                <ul v-if="rateList.length > 0 && tabType == 'dp'" >
+                <ul v-if="rateList.length > 0 && source == 0" >
                     <li v-for="(item,index) in rateList" :key="index">
                         <section class="menu_detail_list">
                             <div class="menu_detail_link">
@@ -82,7 +82,7 @@
                     </li>
                 </ul>
 
-                <ul v-if="rateList.length > 0 && tabType == 'ele'" >
+                <ul v-if="rateList.length > 0 && source == 1" >
                     <li v-for="(item,index) in rateList" :key="index">
                         <section class="menu_detail_list">
                             <div class="menu_detail_link">
@@ -120,20 +120,6 @@
             
         </section>
 
-
-        <section class="shop_container main_container bg-gray" v-if="showRateType" @click="goBack()">
-            <ul class="rate_navi">
-                <li class="green" @click="setRatingType('high')">
-                    <span>好评 {{rateCount.countHigh}}</span>
-                </li>
-                <li class="yellow" @click="setRatingType('mid')">
-                    <span>中评 ({{rateCount.countMid}}</span>
-                </li>
-                <li class="red" @click="setRatingType('low')">
-                    <span>差评 {{rateCount.countLow}}</span>
-                </li>
-            </ul>
-        </section>
         <loading v-show="showLoading"></loading>
         <transition name="fade">
         <div class="bg-gray" v-if="calendar2.show">
@@ -164,16 +150,33 @@
                calendar2:{
                     show:false,
                     range:true,
-                    value:[[2017,10,1],[2017,10,19]], //默认日期
+                    value:[[2015,0,1],[new Date().getFullYear(),new Date().getMonth(),new Date().getDate()]], //默认日期
                     // lunar:true, //显示农历
-                    begin:[2017,10,1], //可选开始日期
-                    end:[2017,11,19], //可选结束日期
+                    begin:[2015,0,1], //可选开始日期
+                    end:[new Date().getFullYear(),new Date().getMonth(),new Date().getDate()], //可选结束日期
                     select:(begin,end)=>{
                         console.log(begin,end);
                         this.calendar2.value[0] = [begin[0],begin[1],begin[2]];
                         this.calendar2.value[1] = [end[0],end[1],end[2]];
+
+                        console.log(begin,end);
+                        console.log(new Date(this.calendar2.value[0][0],this.calendar2.value[0][1],this.calendar2.value[0][2]).getTime());
+                        console.log(new Date(this.calendar2.value[1][0],this.calendar2.value[1][1],this.calendar2.value[1][2]).getTime());
+
+                        this.setRatingType(this.rateType,this.source);
                     }
                 },
+                rateCount:[{
+                    low:0,
+                    mid:0,
+                    high:0,
+                    amount:0
+                },{
+                    low:0,
+                    mid:0,
+                    high:0,
+                    amount:0
+                }],
                 showLoading: true, //显示加载动画 
                 licenseImg: null,
                 showRateType: false,
@@ -182,12 +185,11 @@
                 rateList:[],
                 ratesEleOrigin:[],
                 ratesEle:[],
-                rateCount:{},
                 storeName:'',
                 storeImg:'',
                 store:null,
-                tabType:'dp',
-                rateType:'负面评论',
+                source:0,
+                rateType:'low',
                 type:'',
             }
         },
@@ -213,16 +215,19 @@
                 this.calendar2.show = false;
             },
             saveCalendar(){
+
+                this.setRatingType(this.rateType,this.source);
+
                 this.calendar2.show = false;
             },
-            clickTab(type){
-                this.tabType = type;
-                switch(type){
-                    case "dp":
+            clickTab(source){
+                this.source = source;
+                switch(source){
+                    case 0:
                     this.rateList = this.rateListOrigin;
                     break;
 
-                    case "ele":
+                    case 1:
                     this.rateList = this.ratesEleOrigin;
                     break;
 
@@ -281,7 +286,16 @@
                     
                     if(resRate.ratesEle){
                         this.ratesEleOrigin = resRate.ratesEle;
+                        this.ratesEleOrigin.map( ele => {
+                            let avatar = ele.avatar;
+                            if(ele.avatar != ""){
+                                ele.avatar = "http://fuss10.elemecdn.com/"+ ele.avatar.substr(0,1)+"/"+ ele.avatar.substr(1,2) +"/"+ 
+                                ele.avatar.substr(3,ele.avatar.length - 1)+".jpeg?imageMogr2/thumbnail/60x60/format/webp/quality/85" ; 
+                            }
+                        });
                     }
+
+                    console.log(this.ratesEleOrigin);
                 }
 
                 let resCount = await getRateCount([this.store.id]);
@@ -291,7 +305,7 @@
 
                 this.analyzaRate([this.$route.query.storeId]);
 
-                this.setRatingType('low');
+                this.setRatingType('low',0);
                 this.hideLoading();
             },
 
@@ -339,50 +353,66 @@
                             amount:0
                         }];
                         _this.originData.map(rate=>{
-                            _this.rateCount[rate.source].high += rate.rate5  += rate.rate4;
+                            _this.rateCount[rate.source].high += rate.rate5  + rate.rate4;
                             _this.rateCount[rate.source].mid += rate.rate3;
-                            _this.rateCount[rate.source].low += rate.rate2  += rate.rate1 += rate.rate0;
-                            _this.rateCount[rate.source].amount += rate.rate5 += rate.rate4 += rate.rate3 += rate.rate2 += rate.rate1 += rate.rate0;
+                            _this.rateCount[rate.source].low += rate.rate2  + rate.rate1 + rate.rate0;
+                            _this.rateCount[rate.source].amount += rate.rateCount;
                         })
 
-                        console.log(_this.originData);
+                        console.log(_this.originData,_this.rateCount);
 
                 })
                
 
             },
 
-            setRatingType(type){
+            setRatingType(rateType='low',source=0){
                 
-                this.type = type;
+                this.rateType = rateType;
+                this.source = source;
 
-                switch(type){
-                    case 'low':
-                    this.rateList = this.rateListOrigin.filter(item=>{
-                        return item.ratingStar < 30
-                    });
-                    this.rateType = '负面评论';
+
+                switch(source){
+                    case 0:
+                    this.rateList = JSON.parse(JSON.stringify(this.rateListOrigin));
                     break;
 
-                    case 'mid':
-                    this.rateList = this.rateListOrigin.filter(item=>{
-                        return item.ratingStar == 30
-                    });
-                    this.rateType = '中性评论';
-                    break;
-
-                    case 'high':
-                    this.rateList = this.rateListOrigin.filter(item=>{
-                        return item.ratingStar > 30
-                    });
-                    this.rateType = '正面评论';
+                    case 1:
+                    this.rateList = JSON.parse(JSON.stringify(this.ratesEleOrigin));
                     break;
 
                     default:
-                    this.rateList = this.rateListOrigin;
-                    this.rateType = '全部评论';
+                    break
+                }
+
+                switch(rateType){
+                    case 'low':
+                    this.rateList = this.rateList.filter(item=>{
+                        return item.ratingStar < 30
+                    });
+                    break;
+
+                    case 'mid':
+                    this.rateList = this.rateList.filter(item=>{
+                        return item.ratingStar == 30
+                    });
+                    break;
+
+                    case 'high':
+                    this.rateList = this.rateList.filter(item=>{
+                        return item.ratingStar > 30
+                    });
+                    break;
+
+                    default:
+                    this.rateList = this.rateList;
                     break;
                 }
+
+                this.rateList = this.rateList.filter(o=>{
+                    return o.rateDate >= new Date(this.calendar2.value[0][0],this.calendar2.value[0][1],this.calendar2.value[0][2]).getTime()
+                    && o.rateDate <= new Date(this.calendar2.value[1][0],this.calendar2.value[1][1],this.calendar2.value[1][2]).getTime()
+                });
             },
 
         }
@@ -518,6 +548,26 @@
             }
         }
     }
+    .rate_right{
+        width: 20%;
+        position: absolute;
+        right: -1rem;
+        top: 8.4rem;
+        background: #fff;
+        flex-direction: column;
+        span{
+            display:inline-block;
+            vertical-align:middle;
+            padding: 0 .4rem;
+            @include sc(0.6rem, #b1b8ca);
+            font-weight: bold;
+        }
+        .active{
+            span{
+                color:#4399EF;
+            }
+        }
+    }
     .rate_navi{
             display: flex;
             flex-direction: row;
@@ -525,6 +575,7 @@
             border-radius: .7rem;
             border-top-left-radius:0;
             border-top-right-radius:0;
+            
             li{
                 flex:1;
                 text-align: center;

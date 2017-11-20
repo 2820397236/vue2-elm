@@ -242,11 +242,11 @@ export default {
                         }
                     }
                     if (this.begin.length>0) {
-                        let beginTime = Number(new Date(parseInt(this.begin[0]),parseInt(this.begin[1]) - 1,parseInt(this.begin[2])))
+                        let beginTime = Number(new Date(parseInt(this.begin[0]),parseInt(this.begin[1]) ,parseInt(this.begin[2])))
                         if (beginTime > Number(new Date(this.year, this.month, i))) options.disabled = true
                     }
                     if (this.end.length>0){
-                        let endTime = Number(new Date(parseInt(this.end[0]),parseInt(this.end[1]) - 1,parseInt(this.end[2])))
+                        let endTime = Number(new Date(parseInt(this.end[0]),parseInt(this.end[1]) ,parseInt(this.end[2])))
                         if (endTime <  Number(new Date(this.year, this.month, i))) options.disabled = true
                     }
                     temp[line].push(options)
@@ -254,15 +254,15 @@ export default {
                     let options
                     // 判断是否选中
                     if( this.value.filter(v => v.join("") == [this.year,this.month,i].join("")).length>0 ){
-                        options = Object.assign({day: i,selected:true},this.getLunarInfo(this.year,this.month+1,i),this.getEvents(this.year,this.month+1,i))
+                        options = Object.assign({day: i,selected:true},this.getLunarInfo(this.year,this.month,i),this.getEvents(this.year,this.month,i))
                     }else{
-                        options = Object.assign({day: i,selected:false},this.getLunarInfo(this.year,this.month+1,i),this.getEvents(this.year,this.month+1,i))
+                        options = Object.assign({day: i,selected:false},this.getLunarInfo(this.year,this.month,i),this.getEvents(this.year,this.month,i))
                         if (this.begin.length>0) {
-                            let beginTime = Number(new Date(parseInt(this.begin[0]),parseInt(this.begin[1]) - 1,parseInt(this.begin[2])))
+                            let beginTime = Number(new Date(parseInt(this.begin[0]),parseInt(this.begin[1]) ,parseInt(this.begin[2])))
                             if (beginTime > Number(new Date(this.year, this.month, i))) options.disabled = true
                         }
                         if (this.end.length>0){
-                            let endTime = Number(new Date(parseInt(this.end[0]),parseInt(this.end[1]) - 1,parseInt(this.end[2])))
+                            let endTime = Number(new Date(parseInt(this.end[0]),parseInt(this.end[1]) ,parseInt(this.end[2])))
                             if (endTime <  Number(new Date(this.year, this.month, i))) options.disabled = true
                         }
                     }
@@ -275,12 +275,12 @@ export default {
                     let chkY = chk.getFullYear()
                     let chkM = chk.getMonth()
                     // 匹配上次选中的日期
-                    if (parseInt(seletSplit[0]) == this.year && parseInt(seletSplit[1]) - 1 == this.month && parseInt(seletSplit[2]) == i) {
+                    if (parseInt(seletSplit[0]) == this.year && parseInt(seletSplit[1])  == this.month && parseInt(seletSplit[2]) == i) {
                         // console.log("匹配上次选中的日期",lunarYear,lunarMonth,lunarValue,lunarInfo)
                         temp[line].push(Object.assign(
                             {day: i,selected: true},
-                            this.getLunarInfo(this.year,this.month+1,i),
-                            this.getEvents(this.year,this.month+1,i),
+                            this.getLunarInfo(this.year,this.month,i),
+                            this.getEvents(this.year,this.month,i),
                         ))
                         this.today = [line, temp[line].length - 1]
                     }
@@ -290,8 +290,8 @@ export default {
                         // console.log("今天",lunarYear,lunarMonth,lunarValue,lunarInfo)
                         temp[line].push(Object.assign(
                             {day: i,selected: true},
-                            this.getLunarInfo(this.year,this.month+1,i),
-                            this.getEvents(this.year,this.month+1,i),
+                            this.getLunarInfo(this.year,this.month,i),
+                            this.getEvents(this.year,this.month,i),
                         ))
                         this.today = [line, temp[line].length - 1]
                     }else{
@@ -303,11 +303,11 @@ export default {
                             this.getEvents(this.year,this.month+1,i),
                         )
                         if (this.begin.length>0) {
-                            let beginTime = Number(new Date(parseInt(this.begin[0]),parseInt(this.begin[1]) - 1,parseInt(this.begin[2])))
+                            let beginTime = Number(new Date(parseInt(this.begin[0]),parseInt(this.begin[1]) ,parseInt(this.begin[2])))
                             if (beginTime > Number(new Date(this.year, this.month, i))) options.disabled = true
                         }
                         if (this.end.length>0){
-                            let endTime = Number(new Date(parseInt(this.end[0]),parseInt(this.end[1]) - 1,parseInt(this.end[2])))
+                            let endTime = Number(new Date(parseInt(this.end[0]),parseInt(this.end[1]) ,parseInt(this.end[2])))
                             if (endTime <  Number(new Date(this.year, this.month, i))) options.disabled = true
                         }
                         temp[line].push(options)
@@ -439,7 +439,7 @@ export default {
                 this.month = 0
                 this.year = parseInt(this.year) + 1
             } else {
-                this.month = parseInt(this.month) + 1
+                this.month = parseInt(this.month) +1
             }
             this.render(this.year, this.month)
         },

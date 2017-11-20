@@ -319,10 +319,10 @@
                 calendar2:{
                     show:false,
                     range:true,
-                    value:[[2017,10,1],[2017,10,19]], //默认日期
+                    value:[[new Date().getFullYear(),new Date().getMonth(),1],[new Date().getFullYear(),new Date().getMonth(),new Date().getDate()]], //默认日期
                     // lunar:true, //显示农历
-                    begin:[2017,10,1], //可选开始日期
-                    end:[2017,11,19], //可选结束日期
+                    begin:[2017,5,1], //可选开始日期
+                    end:[new Date().getFullYear(),new Date().getMonth(),new Date().getDate()], //可选结束日期
                     select:(begin,end)=>{
 
                         this.calendar2.value[0] = [begin[0],begin[1],begin[2]];
@@ -520,6 +520,7 @@
             ]),
             //初始化时获取基本数据
             async initData(){
+                console.log([new Date().getFullYear(),new Date().getMonth(),new Date().getDate()]);
 
                 if(getStore('user') == undefined){
                     this.$router.push('/');
