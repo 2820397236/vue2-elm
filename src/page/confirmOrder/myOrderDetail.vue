@@ -1,19 +1,19 @@
 <template>
     <div>
         <header class="myhome_header" ref="shopheader">
-                <!-- <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"> -->
-                <section class="description_header">
-                    <div>订单明细</div>
-                    <div class="description_top">
-                       <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
-                            <img :src="user.profileImg" @click="signout">
-                        </section> -->
-                        <section class="description_right">
-                            <h4 class="description_title ellipsis" v-if="orderList">您订阅了{{orderList.length}}家门店</h4>
-                        </section>
-                    </div>
-                </section>
-            </header>   
+            <!-- <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"> -->
+            <section class="description_header">
+                <div>订单明细</div>
+                <div class="description_top">
+                   <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
+                        <img :src="user.profileImg" @click="signout">
+                    </section> -->
+                    <section class="description_right">
+                        <h4 class="description_title ellipsis" v-if="orderList">您订阅了{{orderList.length}}家门店</h4>
+                    </section>
+                </div>
+            </section>
+        </header>   
 
         <section class="main_container">
             <section >
@@ -157,10 +157,12 @@ export default {
         }
     }
     .main_container{
+        padding-top: 4.2rem;
+        padding-bottom: 1.8rem;
     }
 
     .description_header{
-            position: relative;
+            position: fixed;
             z-index: 10;
             background-color: rgba(255,255,255,1);
             padding: 0.8rem 0.8rem 0.6rem 0.8rem;
