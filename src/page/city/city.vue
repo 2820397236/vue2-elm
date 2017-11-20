@@ -103,6 +103,7 @@
             // currentcity(this.cityid).then(res => {
             //     this.cityname = res.name;
             // })
+            console.log(1111111111);
             this.initData();
             let _this = this;
             // setTimeout(function(){
@@ -152,10 +153,15 @@
             initData(){
                 //已订阅
                 if(getStore('user') == undefined){
-                    this.$router.push('/');
+                    // this.$router.push('/');
                 }
                 this.user = JSON.parse(getStore('user'));
 
+                console.log('111');
+                console.log(getStore('shopIds'));
+                if(!getStore('shopIds')){
+                    setStore('shopIds','[]');
+                }
                 this.shopIds = JSON.parse(getStore('shopIds'));
                 console.log(this.shopIds);
 
