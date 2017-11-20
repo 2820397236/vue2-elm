@@ -7,8 +7,8 @@
                 <span>{{storeList[0].storeName}}&nbsp;</span>
             </div>
             <div class="head_brand_name"  v-if="storeList.length >0 && defaultBrand != ''">
-                <img  v-if="selectedIndex == null" class="head_brand_pic" :src="branchList[defaultBrand][0].defaultPic" />
-                <img  v-else class="head_brand_pic" :src="branchList[branchName[selectedIndex]][0].defaultPic" />
+                <img  v-if="selectedIndex == null" class="head_brand_pic" :src="branchList[defaultBrand][0].pciUrl" />
+                <img  v-else class="head_brand_pic" :src="branchList[branchName[selectedIndex]][0].pciUrl" />
 
                 <span v-if="selectedIndex == null">{{branchList[defaultBrand][0].storeName}}&nbsp;</span>
                 <span v-else>{{branchList[branchName[selectedIndex]][0].storeName}}&nbsp;</span>
