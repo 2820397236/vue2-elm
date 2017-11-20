@@ -40,13 +40,13 @@
             </section>
             <section v-if="true">
                 <ul class="rate_right">
-                    <li :class="{ active : type == 'high' }" @click="setRatingType('high',source)">
+                    <li :class="{ active : rateType == 'high' }" @click="setRatingType('high',source)">
                         <span>好评 <!-- {{rateCount[source].high}} --></span>
                     </li>
-                    <li :class="{ active : type == 'mid' }" @click="setRatingType('mid',source)">
+                    <li :class="{ active : rateType == 'mid' }" @click="setRatingType('mid',source)">
                         <span>中评 <!-- {{rateCount[source].mid}} --></span>
                     </li>
-                    <li :class="{ active : type == 'low' }" @click="setRatingType('low',source)">
+                    <li :class="{ active : rateType == 'low' }" @click="setRatingType('low',source)">
                         <span>差评 <!-- {{rateCount[source].low}} --></span>
                     </li>
                 </ul>
