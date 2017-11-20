@@ -42,7 +42,7 @@
 
         <section class="head_tab">
             <div class="tab_container" :class="{active:tabType=='dp'}" @click="clickTab('dp')">
-                <span>在店满意度</span><br/>
+                <span>到店满意度</span><br/>
                 <span class="rate_total">{{rateCount[0].amount.toFixed(0)}}条</span>
             </div>
             <div class="tab_container" :class="{active:tabType=='ele'}" @click="clickTab('ele')">
@@ -209,7 +209,7 @@
                 </li> -->
                 <li :class="{ active: name == defaultBrand}"  v-for="(name,index) in branchName" :key="index" @click="setDefaultBrand(branchList[name])">
                     <div class="store_name">
-                        <img :src="branchList[name][0].defaultPic"/>
+                        <img :src="branchList[name][0].pciUrl"/>
                         <b>{{name}}</b> 
                         <span>共{{branchList[name].length}}家门店</span>
                         <span class="brand_default_button">设为默认</span>

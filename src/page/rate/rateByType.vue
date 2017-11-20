@@ -31,7 +31,7 @@
             <section>
                 <ul class="rate_navi" v-if="false">
                     <li class="tab_container" :class="{active:tabType=='dp'}" @click="clickTab('dp')">
-                        <span>在店满意度 {{rateCount.countHigh}}条</span>
+                        <span>到店满意度 {{rateCount.countHigh}}条</span>
                     </li>
                     <li class="tab_container" :class="{active:tabType=='ele'}" @click="clickTab('ele')">
                         <span>外卖满意度 {{ratesEleOrigin.length}}条</span>

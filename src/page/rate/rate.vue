@@ -31,7 +31,7 @@
             <section>
                 <ul class="rate_navi">
                     <li class="tab_container" :class="{active:source==0}" @click="setRatingType(rateType,0)">
-                        <span v-if="rateCount[0]">在店满意度 {{rateCount[0].amount}}条</span>
+                        <span v-if="rateCount[0]">到店满意度 {{rateCount[0].amount}}条</span>
                     </li>
                     <li class="tab_container" :class="{active:source==1}" @click="setRatingType(rateType,1)">
                         <span v-if="rateCount[1]">外卖满意度 {{rateCount[1].amount}}条</span>
