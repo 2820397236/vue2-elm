@@ -4,12 +4,12 @@
             <!-- <section class="head_goback" @click="goBack()">
                 返回
             </section> -->
-            <section class="title_head ellipsis"  @click="setRatingType('xx')">
-                <img class="title_img" :src="storeImg"/>
+            <section class="title_head ellipsis"  @click="setRatingType('xx')" v-if="rateListOrigin.length > 0" >
+                <img class="title_img" :src="rateList[0].picUrl"/>
                 <div class="title_content">
-                    <div class="title_text">{{storeName}}</div>
-                    <div class="title_time" v-if="store">{{store.address}}</div>
-                    <!-- <span class="title_time" v-if="Object.keys(rateListOrigin).length>0">{{rateList[rateList.length-1].ratingTime}} 到 {{rateList[0].ratingTime}}</span> -->
+                    <div class="title_text">{{rateList[0].storeName}}</div>
+                    <!-- <div class="title_time" v-if="store">{{rateList[0].address}}</div> -->
+                    <span class="title_time" v-if="startDate !=null && endDate !=null">{{startDate | dateTime}} 到 {{ endDate | dateTime}}</span>
                 </div>
                 <!-- <div class="head_link_button">数据分析</div> -->
             </section>
@@ -30,23 +30,23 @@
             </section>
             <section>
                 <ul class="rate_navi" v-if="false">
-                    <li class="tab_container" :class="{active:tabType=='dp'}" @click="clickTab('dp')">
+                    <li class="tab_container" :class="{active:source==0}" @click="clickTab(0)">
                         <span>到店满意度 {{rateCount.countHigh}}条</span>
                     </li>
-                    <li class="tab_container" :class="{active:tabType=='ele'}" @click="clickTab('ele')">
+                    <li class="tab_container" :class="{active:source==1}" @click="clickTab(1)">
                         <span>外卖满意度 {{ratesEleOrigin.length}}条</span>
                     </li>
                 </ul>
             </section>
             <section >
                 <ul class="rate_navi">
-                    <li :class="{ active : type == 'high' }" @click="setRatingType('high')">
+                    <li :class="{ active : rateType == 'high' }" @click="setRatingType('high')">
                         <span>好评 {{rateCount.countHigh}}</span>
                     </li>
-                    <li :class="{ active : type == 'mid' }" @click="setRatingType('mid')">
+                    <li :class="{ active : rateType == 'mid' }" @click="setRatingType('mid')">
                         <span>中评 {{rateCount.countMid}}</span>
                     </li>
-                    <li :class="{ active : type == 'low' }" @click="setRatingType('low')">
+                    <li :class="{ active : rateType == 'low' }" @click="setRatingType('low')">
                         <span>差评 {{rateCount.countLow}}</span>
                     </li>
                 </ul>
@@ -56,17 +56,17 @@
         <section v-if="!showLoading" class="shop_container main_container">
 
             <section class="shoplist_container">
-                <ul v-if="rateList.length > 0 && tabType == 'dp'" >
+                <ul v-if="rateList.length > 0 && source == 0" >
                     <li v-for="(item,index) in rateList" :key="index">
                         <section class="menu_detail_list">
                             <div class="menu_detail_link">
                                 <div class="rate_head">
                                     <section class="user_profile">
                                         <div class="rate_img" :class="{ green : item.ratingStar ==50,red : item.ratingStar <30,yellow : item.ratingStar ==30}">
-                                            <img :src="item.avatar">
+                                            <img :src="item.picUrl">
                                         </div>
                                         <div class="rate_username">
-                                                {{item.username}}<br/>
+                                                {{item.storeName}} <span v-if="item.branchName">({{item.branchName}})</span><br/>
                                                 <span class="rate_time">{{item.ratingTime}}</span>
                                                 <!-- <span class="rate_tag">口味好</span>
                                                 <span class="rate_tag">环境很好</span>
@@ -82,14 +82,14 @@
                     </li>
                 </ul>
 
-                <ul v-if="rateList.length > 0 && tabType == 'ele'" >
+                <ul v-if="rateList.length > 0 && source == 1" >
                     <li v-for="(item,index) in rateList" :key="index">
                         <section class="menu_detail_list">
                             <div class="menu_detail_link">
                                 <div class="rate_head">
                                     <section class="user_profile">
                                         <div class="rate_img" :class="{ green : item.ratingStar ==5,red : item.ratingStar <3,yellow : item.ratingStar ==3}">
-                                            <img :src="item.avatar==''?'http://faas.elemecdn.com/desktop/media/img/default-avatar.38e40d.png':item.avatar">
+                                            <img :src="item.picUrl">
                                         </div>
                                         <div class="rate_username">
                                                 {{item.username}}<br/>
@@ -123,13 +123,13 @@
 
         <section class="shop_container main_container bg-gray" v-if="showRateType" @click="goBack()">
             <ul class="rate_navi">
-                <li class="green" @click="setRatingType('high')">
+                <li class="green" @click="setRatingType('high',source)">
                     <span>好评 {{rateCount.countHigh}}</span>
                 </li>
-                <li class="yellow" @click="setRatingType('mid')">
+                <li class="yellow" @click="setRatingType('mid',source)">
                     <span>中评 ({{rateCount.countMid}}</span>
                 </li>
-                <li class="red" @click="setRatingType('low')">
+                <li class="red" @click="setRatingType('low',source)">
                     <span>差评 {{rateCount.countLow}}</span>
                 </li>
             </ul>
@@ -153,17 +153,19 @@
                licenseImg: null,
                showRateType: false,
                dateFormat: new Date().getTime(),
-               rateListOrigin:[],
                rateList:[],
+               rateListOrigin:[],
+               ratesDpOrigin:[],
                ratesEleOrigin:[],
                ratesEle:[],
                rateCount:{},
                storeName:'',
                storeImg:'',
                store:null,
-               tabType:'dp',
-               rateType:'负面评论',
-               type:'',
+               source:0,
+               rateType:'low',
+               endDate:null,
+               startDate:null
             }
         },
         mounted(){
@@ -181,13 +183,13 @@
         mixins:[getImgPath],
         methods: {
             clickTab(type){
-                this.tabType = type;
+                this.source = type;
                 switch(type){
-                    case "dp":
-                    this.rateList = this.rateListOrigin;
+                    case 0:
+                    this.rateList = this.ratesDpOrigin;
                     break;
 
-                    case "ele":
+                    case 1:
                     this.rateList = this.ratesEleOrigin;
                     break;
 
@@ -218,71 +220,138 @@
 
                 this.storeId = this.$route.query.storeId;
                 this.storeName = this.$route.query.storeName;
+                this.rateType = this.$route.query.rateType || 'low';
+                this.source = this.$route.query.source || 0;
 
-                let resStore = await getStoreInfo([this.storeId]);
-                if(resStore.status == 0){
-                    this.store = resStore.stores[0];
-                    this.storeImg = resStore.stores[0].defaultPic;
-                    if(resStore.stores[0].branchName){
-                        this.storeName = resStore.stores[0].name + "(" + resStore.stores[0].branchName + ")";
-                    }else{
-                        this.storeName = resStore.stores[0].name;
-                    }
+                this.startDate = parseInt(this.$route.query.s);
+                this.endDate = parseInt(this.$route.query.e);
+
+
+                // let resStore = await getStoreInfo([this.storeId]);
+                // if(resStore.status == 0){
+                //     this.store = resStore.stores[0];
+                //     this.storeImg = resStore.stores[0].defaultPic;
+                //     if(resStore.stores[0].branchName){
+                //         this.storeName = resStore.stores[0].name + "(" + resStore.stores[0].branchName + ")";
+                //     }else{
+                //         this.storeName = resStore.stores[0].name;
+                //     }
                     
-                }
+                // }
 
+                // let resRate = await getStoreRate(this.user.id,this.storeId);
+                // if(resRate.status == 0){
+                //     if( resRate.rates.length == 0){
+                //         setTimeout(()=>{
+                //             this.initData();
+                //         },5000)
+                //     }
+
+                //     this.rateList = resRate.rates;
+                //     this.ratesDpOrigin = resRate.rates;
+                //     this.ratesEleOrigin = resRate.ratesEle;
+                // }
+
+                // let resCount = await getRateCount([this.store.id]);
+                // if(resCount.status == 0){
+                //     this.rateCount = resCount.rates[0];
+                // }
+                let _this = this;
                 let resRate = await getStoreRate(this.user.id,this.storeId);
                 if(resRate.status == 0){
-                    if( resRate.rates.length == 0){
-                        setTimeout(()=>{
-                            this.initData();
-                        },5000)
-                    }
+                    resRate.storeRateList.map(o=>{
+                        o.dpRatingList.map(e => {
+                            e.storeName = o.name;
+                            e.address = o.address;
+                            e.picUrl = o.picUrl;
+                            e.branchName = o.branchName;
+                        })
 
-                    this.rateList = resRate.rates;
-                    this.rateListOrigin = resRate.rates;
-                    this.ratesEleOrigin = resRate.ratesEle;
+                        _this.rateList = _this.rateList.concat(o.dpRatingList);
+
+                        o.eleRatingList.map(e => {
+                            e.storeName = o.name;
+                            e.address = o.address;
+                            e.picUrl = o.picUrl;
+                            e.branchName = o.branchName;
+                        })
+
+                        _this.ratesEle = _this.ratesEle.concat(o.eleRatingList);
+                    });
+
+                    _this.ratesDpOrigin = JSON.parse(JSON.stringify(_this.rateList));
+                    _this.ratesEleOrigin = JSON.parse(JSON.stringify(_this.ratesEle));
                 }
 
-                let resCount = await getRateCount([this.store.id]);
-                if(resCount.status == 0){
-                    this.rateCount = resCount.rates[0];
-                }
 
-                this.setRatingType('low');
+
+                this.setRatingType(this.rateType,this.source);
                 this.hideLoading();
             },
 
-            setRatingType(type){
+            setRatingType(rateType, source=0){
                 
-                this.type = type;
+                this.rateType = rateType;
+                this.source = source;
+                let _this = this;
 
-                switch(type){
+                switch(source){
+                    case 0:
+                    this.rateListOrigin = this.ratesDpOrigin.filter(o=>{
+                        return o.rateDate >= _this.startDate && o.rateDate <= _this.endDate
+                    });
+                    this.ratesDpOrigin = JSON.parse(JSON.stringify(this.rateListOrigin));
+                    break;
+
+                    case 1:
+                    this.rateListOrigin = this.ratesEleOrigin.filter(o=>{
+                        return o.rateDate >= _this.startDate && o.rateDate <= _this.endDate
+                    });
+                    this.ratesDpOrigin = JSON.parse(JSON.stringify(this.rateListOrigin));
+                    break;
+
+                    default:
+                    this.rateListOrigin = this.ratesDpOrigin.filter(o=>{
+                        return o.rateDate >= _this.startDate && o.rateDate <= _this.endDate
+                    });
+                    this.ratesDpOrigin = JSON.parse(JSON.stringify(this.rateListOrigin));
+                    break
+                }
+
+                switch(rateType){
                     case 'low':
                     this.rateList = this.rateListOrigin.filter(item=>{
                         return item.ratingStar < 30
                     });
-                    this.rateType = '负面评论';
                     break;
 
                     case 'mid':
                     this.rateList = this.rateListOrigin.filter(item=>{
                         return item.ratingStar == 30
                     });
-                    this.rateType = '中性评论';
                     break;
 
                     case 'high':
                     this.rateList = this.rateListOrigin.filter(item=>{
                         return item.ratingStar > 30
                     });
-                    this.rateType = '正面评论';
                     break;
 
                     default:
                     this.rateList = this.rateListOrigin;
-                    this.rateType = '全部评论';
                     break;
+                }
+
+                this.rateCount = {
+                    countHigh   :   this.rateListOrigin.filter(item=>{
+                                        return item.ratingStar > 30
+                                    }).length,
+                    countMid    :   this.rateListOrigin.filter(item=>{
+                                        return item.ratingStar == 30
+                                    }).length,
+                    countLow    :   this.rateListOrigin.filter(item=>{
+                                        return item.ratingStar < 30
+                                    }).length,
                 }
             },
 
@@ -361,7 +430,8 @@
         }
         .title_time{
             @include sc(0.55rem, #595F79);
-            padding-top:.3rem;
+            padding-top:.5rem;
+            display: block;
             /*font-weight: bold;*/
         }
         .head_link_button{

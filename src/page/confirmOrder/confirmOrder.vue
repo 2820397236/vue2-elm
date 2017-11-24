@@ -7,7 +7,7 @@
                     <div>门店列表</div>
                     <div class="description_top">
                         <section class="description_right">
-                            <h4 class="description_title ellipsis">您已选择2家门店</h4>
+                            <h4 class="description_title ellipsis" v-if="storeList">您已选择{{storeList.length}}家门店</h4>
                         </section>
                     </div>
 

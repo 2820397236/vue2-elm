@@ -22,7 +22,7 @@ Vue.use(Vue2Filters)
 Vue.use(VueRouter)
 Vue.use(weixin)
 Vue.filter('dateTime', function (value,format) {
-    return moment(value).format(format || 'YYYY-MM-DD HH:mm');
+    return moment(value).format(format || 'YYYY年MM月DD日');
 });
 
 const router = new VueRouter({

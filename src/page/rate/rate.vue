@@ -31,10 +31,10 @@
             <section>
                 <ul class="rate_navi">
                     <li class="tab_container" :class="{active:source==0}" @click="setRatingType(rateType,0)">
-                        <span v-if="rateCount[0]">到店满意度 {{rateCount[0].amount}}条</span>
+                        <span v-if="rateCount[0]">到店满意度 {{rateListOrigin.length}}条</span>
                     </li>
                     <li class="tab_container" :class="{active:source==1}" @click="setRatingType(rateType,1)">
-                        <span v-if="rateCount[1]">外卖满意度 {{rateCount[1].amount}}条</span>
+                        <span v-if="rateCount[1]">外卖满意度 {{ratesEleOrigin.length}}条</span>
                     </li>
                 </ul>
             </section>
@@ -150,9 +150,9 @@
                calendar2:{
                     show:false,
                     range:true,
-                    value:[[2015,0,1],[new Date().getFullYear(),new Date().getMonth(),new Date().getDate()]], //默认日期
+                    value:[[2017,0,1],[new Date().getFullYear(),new Date().getMonth(),new Date().getDate()]], //默认日期
                     // lunar:true, //显示农历
-                    begin:[2015,0,1], //可选开始日期
+                    begin:[2017,0,1], //可选开始日期
                     end:[new Date().getFullYear(),new Date().getMonth(),new Date().getDate()], //可选结束日期
                     select:(begin,end)=>{
                         console.log(begin,end);
@@ -271,21 +271,21 @@
                     
                 }
 
-                let resRate = await getStoreRate(this.user.id,this.storeId);
+                let resRate = await getStoreRate(this.user.id,[this.storeId]);
                 if(resRate.status == 0){
-                    if( resRate.rates.length == 0){
-                        setTimeout(()=>{
-                            this.initData();
-                        },5000)
-                    }
+                    // if( resRate.rates.length == 0){
+                    //     setTimeout(()=>{
+                    //         this.initData();
+                    //     },5000)
+                    // }
 
-                    if(resRate.rates){
-                        this.rateList = resRate.rates;
-                        this.rateListOrigin = resRate.rates;
+                    if(resRate.storeRateList[0].dpRatingList.length > 0 ){
+                        this.rateList = resRate.storeRateList[0].dpRatingList;
+                        this.rateListOrigin = resRate.storeRateList[0].dpRatingList;
                     }
                     
-                    if(resRate.ratesEle){
-                        this.ratesEleOrigin = resRate.ratesEle;
+                    if(resRate.storeRateList[0].eleRatingList.length > 0 ){
+                        this.ratesEleOrigin = resRate.storeRateList[0].eleRatingList;
                         this.ratesEleOrigin.map( ele => {
                             let avatar = ele.avatar;
                             if(ele.avatar != ""){
@@ -298,12 +298,12 @@
                     console.log(this.ratesEleOrigin);
                 }
 
-                let resCount = await getRateCount([this.store.id]);
-                if(resCount.status == 0){
-                    this.rateCount = resCount.rates[0];
-                }
+                // let resCount = await getRateCount([this.store.id]);
+                // if(resCount.status == 0){
+                //     this.rateCount = resCount.rates[0];
+                // }
 
-                this.analyzaRate([this.$route.query.storeId]);
+                // this.analyzaRate([this.$route.query.storeId]);
 
                 this.setRatingType('low',0);
                 this.hideLoading();

@@ -103,9 +103,8 @@
             // currentcity(this.cityid).then(res => {
             //     this.cityname = res.name;
             // })
-            console.log(1111111111);
             this.initData();
-            let _this = this;
+            // let _this = this;
             // setTimeout(function(){
             //     _this.$refs.searchInput.focus();
             // },500)
@@ -151,26 +150,23 @@
             ]),
 
             initData(){
-                //已订阅
+                // //已订阅
                 if(getStore('user') == undefined){
                     // this.$router.push('/');
                 }
                 this.user = JSON.parse(getStore('user'));
-
-                console.log('111');
-                console.log(getStore('shopIds'));
-                if(!getStore('shopIds')){
+                
+                if(getStore('shopIds') == undefined){
                     setStore('shopIds','[]');
                 }
                 this.shopIds = JSON.parse(getStore('shopIds'));
-                console.log(this.shopIds);
 
-                //获取搜索历史记录
-                if (getStore('placeHistory')) {
-                    this.stores = JSON.parse(getStore('placeHistory'));
-                }else{
-                    this.stores = [];
-                }
+                // //获取搜索历史记录
+                // if (getStore('placeHistory')) {
+                //     this.stores = JSON.parse(getStore('placeHistory'));
+                // }else{
+                //     this.stores = [];
+                // }
 
                 if(getStore('city')) {
                     this.city = JSON.parse(getStore('city'));

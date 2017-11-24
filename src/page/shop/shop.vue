@@ -94,7 +94,7 @@
                                                 </span>
                                                 </h3>
                                                 <p class="store_content ellipsis" v-if="store.address == ''">
-                                                    {{store.regionName}}&nbsp;&nbsp;{{store.priceText}}
+                                                    同步中...请稍后
                                                 </p>
                                                 <p class="store_content ellipsis" v-else>{{store.addr}}</p>
                                                 <!-- <p class="store_time">
@@ -290,8 +290,13 @@
                     this.storeListOrigin = res.subscribeList.content;
                     // this.extra = response.extra;
                 }
+
                 // console.log('xxx')
                 console.log(this.storeList);
+                if(this.storeList.length == 0){
+                    this.gotoAddress('/city/1');
+                    return;
+                }
 
                 // //获取我的门店
                 // let response = await getMyStore(this.user.id);

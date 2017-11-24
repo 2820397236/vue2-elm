@@ -187,8 +187,7 @@
 
                 this.lock = true;
                 this.codeRes = await mobileCode(this.phone,this.inviteCode);
-                this.lock = false;
-
+                
                 if(this.codeRes.status < 0){
                     this.showAlert=true;
                     this.errorMsg = this.codeRes.msg;

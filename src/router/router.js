@@ -54,6 +54,8 @@ const confirmOrder = r => require.ensure([], () => r(require('../page/confirmOrd
 // const find = r => require.ensure([], () => r(require('../page/find/find')), 'find')
 // const download = r => require.ensure([], () => r(require('../page/download/download')), 'download')
 const analytics = r => require.ensure([], () => r(require('../page/analytics/analytics')), 'analytics')
+const chooseBrand = r => require.ensure([], () => r(require('../page/home/chooseBrand')), 'chooseBrand')
+const defaultBrand = r => require.ensure([], () => r(require('../page/home/defaultBrand')), 'defaultBrand')
 const chart = r => require.ensure([], () => r(require('../page/analytics/chart')), 'chart')
 const myOrder = r => require.ensure([], () => r(require('../page/confirmOrder/myOrder')), 'myOrder')
 const myOrderDetail = r => require.ensure([], () => r(require('../page/confirmOrder/myOrderDetail')), 'myOrderDetail')
@@ -303,12 +305,24 @@ export default [{
         //商铺详情页
         {
             path: '/analytics',
-            component: analytics,
+            component: analytics
+        },
+        {
+            path: '/analytics/:brand',
+            component: analytics
+        },
+        {
+            path: '/chooseBrand',
+            component: chooseBrand
+        },
+        {
+            path: '/defaultBrand',
+            component: defaultBrand
         },
         {
             path: '/chart',
             component: chart,
-            meta: { keepAlive: true },
+            meta: { keepAlive: true }
         },
         {
             path: '/myOrder',

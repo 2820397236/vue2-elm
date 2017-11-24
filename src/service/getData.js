@@ -237,9 +237,9 @@ export const getRateByDate = (storeId,date) => fetch('/v1/store/getRateByDate', 
 }, 'POST');
 
 
-export const getStoreRate = (userId,storeId) => fetch('/v1/store/getRate', {
+export const getStoreRate = (userId,storeIds) => fetch('/v1/store/getRates', {
 	userId,
-	storeId
+	storeIds
 }, 'POST');
 
 export const getUser = () => fetch('/v1/user', {userId: JSON.parse(getStore('user')).id,token: JSON.parse(getStore('user')).token});
