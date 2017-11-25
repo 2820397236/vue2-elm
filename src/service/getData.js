@@ -237,9 +237,11 @@ export const getRateByDate = (storeId,date) => fetch('/v1/store/getRateByDate', 
 }, 'POST');
 
 
-export const getStoreRate = (userId,storeIds) => fetch('/v1/store/getRates', {
+export const getStoreRate = (userId,storeIds,start,end) => fetch('/v1/store/getRates', {
 	userId,
-	storeIds
+	storeIds,
+	start,
+	end
 }, 'POST');
 
 export const getUser = () => fetch('/v1/user', {userId: JSON.parse(getStore('user')).id,token: JSON.parse(getStore('user')).token});
@@ -255,6 +257,11 @@ export const getMyStore = userId => fetch('/v1/user/home', {
 export const getUserRate = (userId,level) => fetch('/v1/store/getUserRate', {
 	userId,
 	level
+});
+
+export const getAlertRating = (openId,ratingStar) => fetch('/v1/store/getAlertRating', {
+	openId,
+	ratingStar
 });
 
 export const cancelMyStore = (userId,storeIds) => fetch('/v1/user/cancelMyStore', {

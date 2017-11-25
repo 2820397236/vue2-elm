@@ -5,9 +5,9 @@
                 返回
             </section> -->
             <section class="title_head ellipsis"  @click="setRatingType('xx')" v-if="rateListOrigin.length > 0" >
-                <img class="title_img" :src="rateList[0].picUrl"/>
+                <img class="title_img" :src="rateListOrigin[0].picUrl"/>
                 <div class="title_content">
-                    <div class="title_text">{{rateList[0].storeName}}</div>
+                    <div class="title_text">{{rateListOrigin[0].storeName}}</div>
                     <!-- <div class="title_time" v-if="store">{{rateList[0].address}}</div> -->
                     <span class="title_time" v-if="startDate !=null && endDate !=null">{{startDate | dateTime}} 到 {{ endDate | dateTime}}</span>
                 </div>
@@ -219,7 +219,7 @@
                 this.user = JSON.parse(getStore('user'));
 
                 this.storeId = this.$route.query.storeId;
-                this.storeName = this.$route.query.storeName;
+                // this.storeName = this.$route.query.storeName;
                 this.rateType = this.$route.query.rateType || 'low';
                 this.source = this.$route.query.source || 0;
 
@@ -257,7 +257,7 @@
                 //     this.rateCount = resCount.rates[0];
                 // }
                 let _this = this;
-                let resRate = await getStoreRate(this.user.id,this.storeId);
+                let resRate = await getStoreRate(this.user.id,this.storeId,this.startDate,this.endDate);
                 if(resRate.status == 0){
                     resRate.storeRateList.map(o=>{
                         o.dpRatingList.map(e => {

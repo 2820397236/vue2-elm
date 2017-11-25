@@ -240,7 +240,7 @@
                 calendar2:{
                     show:false,
                     range:true,
-                    value:[[new Date().getFullYear(),new Date().getMonth(),1],[new Date().getFullYear(),new Date().getMonth(),new Date().getDate()]], //默认日期
+                    value:[[new Date().getFullYear(),0,1],[new Date().getFullYear(),new Date().getMonth(),new Date().getDate()]], //默认日期
                     // lunar:true, //显示农历
                     begin:[2017,0,1], //可选开始日期
                     end:[new Date().getFullYear(),new Date().getMonth(),new Date().getDate()], //可选结束日期
@@ -248,10 +248,11 @@
 
                         this.calendar2.value[0] = [begin[0],begin[1],begin[2]];
                         this.calendar2.value[1] = [end[0],end[1],end[2]];
-                        if(_this.currentBrand != ''){
+                        console.log(1);
+                        if(this.currentBrand != ''){
                             this.chartInit(this.branchList[this.currentBrand]);
                             // this.currentBrand = '';
-                        } else if(_this.defaultBrand != ''){
+                        } else if(this.defaultBrand != ''){
                             this.chartInit(this.branchList[this.defaultBrand]);
                         }
                     }
@@ -527,6 +528,12 @@
             },
             saveCalendar(){
                 this.calendar2.show = false;
+                if(this.currentBrand != ''){
+                    this.chartInit(this.branchList[this.currentBrand]);
+                    // this.currentBrand = '';
+                } else if(this.defaultBrand != ''){
+                    this.chartInit(this.branchList[this.defaultBrand]);
+                }
             },
 
             chooseDate(){ 

@@ -48,11 +48,12 @@
                                 <div class="rate_head">
                                     <section class="user_profile">
                                         <div class="rate_img" :class="{ green : item.ratingStar ==50,red : item.ratingStar <30,yellow : item.ratingStar ==30}">
-                                            <img :src="item.defaultPic">
+                                            <img :src="item.pic" v-if="item.source == 'DP'">
+                                            <img :src="item.pic" v-if="item.source == 'ELE'">
                                         </div>
                                         <div class="rate_username">
-                                                {{item.storeName}}<br/>
-                                                <span class="rate_address">{{item.ratingTime}}</span>
+                                                {{item.name}} {{item.addr}} <br/>
+                                                <span class="rate_address">{{item.rateDate | dateTime}}</span>
                                                 <!-- <span class="rate_tag">口味好</span>
                                                 <span class="rate_tag">环境很好</span>
                                                 <span class="rate_tag">服务好</span> -->
@@ -96,7 +97,7 @@
 <script>
     import headTop from 'src/components/header/head'
     import {mapState} from 'vuex'
-    import {getUserRate,getMyStore} from 'src/service/getData'
+    import {getAlertRating,getMyStore} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import footGuide from '../../components/footer/footGuide'
     import loading from 'src/components/common/loading'
@@ -157,34 +158,30 @@
 
 
                 //获取我的门店
-                let storeRes = await getMyStore(this.user.id);
-                if(storeRes.status == 0){
-                    // this.storeList = storeRes.stores;
-                    // this.extra = storeRes.extra;
-
-                    for(var i=0;i<storeRes.stores.length;i++){
-                        if( this.storeList[storeRes.stores[i].id] == undefined){
-                            this.storeList[storeRes.stores[i].id] = storeRes.stores[i];
-                        }
-                    }
-
-                }
+                // let storeRes = await getMyStore(this.user.id);
+                // if(storeRes.status == 0){
+                //     // this.storeList = storeRes.stores;
+                //     // this.extra = storeRes.extra;
+                //     // for(var i=0; i<storeRes.stores.length;i++){
+                //     //     if( this.storeList[storeRes.stores[i].id] == undefined){
+                //     //         this.storeList[storeRes.stores[i].id] = storeRes.stores[i];
+                //     //     }
+                //     // }
+                // }
                 
                 let _this = this;
-                let rateRes = await getUserRate(this.user.id, this.warningType);
+                let rateRes = await getAlertRating(this.user.openId, 31);
                 if(rateRes.status == 0){
-                    rateRes.rates.map(rate=>{
-                        if(_this.storeList[rate.storeId].branchName == ''){
-                            rate.storeName = _this.storeList[rate.storeId].name;
-                        }else{
-                            rate.storeName = _this.storeList[rate.storeId].name + " (" + _this.storeList[rate.storeId].branchName + ")";
+                    rateRes.rateList.map(o=>{
+                        if(o.source=='DP'){
+                            o.pic = o.pic;
+                        }else if(o.source=='ELE'){
+                            o.pic = "http://fuss10.elemecdn.com/"+ o.pic.substr(0,1)+"/"+ o.pic.substr(1,2) +"/"+ 
+                                o.pic.substr(3,o.pic.length - 1)+".jpeg?imageMogr2/thumbnail/60x60/format/webp/quality/85" ; 
                         }
-                        rate.address = _this.storeList[rate.storeId].address;
-                        rate.defaultPic = _this.storeList[rate.storeId].defaultPic;
-                        return rate;
                     })
-                    this.rateList = rateRes.rates;
-                    this.rateListOrigin = rateRes.rates;
+                    this.rateList = rateRes.rateList;
+                    this.rateListOrigin = rateRes.rateList;
                 }
 
                 // let resStore = await getStoreInfo([this.storeId]);
