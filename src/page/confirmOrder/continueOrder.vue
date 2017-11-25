@@ -22,14 +22,14 @@
                                 <section class="menu_detail_list">
                                     <div class="menu_detail_link">
                                         <section class="menu_food_img">
-                                            <img :src="store.defaultPic">
+                                            <img :src="store.pciUrl">
                                         </section>
                                         <section class="menu_food_description">
                                             <h3 class="food_description_head">
-                                                <span class="description_foodname" v-if="!store.branchName">{{store.name}}</span>
-                                                <span class="description_foodname" v-else>{{store.name}}({{store.branchName}})</span>
+                                                <span class="description_foodname" v-if="!store.branchName">{{store.storeName}}</span>
+                                                <span class="description_foodname" v-else>{{store.storeName}}({{store.branchName}})</span>
                                             </h3>
-                                            <p class="food_description_content">{{store.regionName}} {{store.priceText}}</p>
+                                            <p class="food_description_content">{{store.addr}}</p>
                                             <p class="cancel">
                                                     {{store.expireDate | dateTime('将于YYYY年MM月DD日取消订阅')}}</p>
                                         </section>
@@ -256,22 +256,29 @@
 
                 });
 
-                getStoreInfo(_this.storeIds).then(function(response){
-                    _this.showLoading = false;
+                _this.storeList = JSON.parse(getStore('continuePay'));
+                for(var i=0;i<_this.storeList.length;i++){
+                    _this.storeIds.push(_this.storeList[i].id);
+                }
 
-                    if(response.status == 0 ){
-                        _this.storeList = response.stores;
-                        if(_this.storeList.length > 0){
-                            _this.storeIds = [];
-                            for(var i=0;i<_this.storeList.length;i++){
-                                _this.storeIds.push(_this.storeList[i].id);
-                            }
+                // getStoreInfo(_this.storeIds).then(function(response){
+                //     _this.showLoading = false;
+
+                //     if(response.status == 0 ){
+                //         _this.storeList = response.stores;
+                //         if(_this.storeList.length > 0){
+                //             _this.storeIds = [];
+                //             for(var i=0;i<_this.storeList.length;i++){
+                //                 _this.storeIds.push(_this.storeList[i].id);
+                //             }
 
                             
-                        }
-                    }
+                //         }
+                //     }
 
-                });
+                // });
+
+
                 
                 
 

@@ -40,13 +40,13 @@
             </section>
             <section >
                 <ul class="rate_navi">
-                    <li :class="{ active : rateType == 'high' }" @click="setRatingType('high')">
+                    <li :class="{ active : rateType == 'high' }" @click="setRatingType('high',source)">
                         <span>好评 {{rateCount.countHigh}}</span>
                     </li>
-                    <li :class="{ active : rateType == 'mid' }" @click="setRatingType('mid')">
+                    <li :class="{ active : rateType == 'mid' }" @click="setRatingType('mid',source)">
                         <span>中评 {{rateCount.countMid}}</span>
                     </li>
-                    <li :class="{ active : rateType == 'low' }" @click="setRatingType('low')">
+                    <li :class="{ active : rateType == 'low' }" @click="setRatingType('low',source)">
                         <span>差评 {{rateCount.countLow}}</span>
                     </li>
                 </ul>
@@ -88,12 +88,12 @@
                             <div class="menu_detail_link">
                                 <div class="rate_head">
                                     <section class="user_profile">
-                                        <div class="rate_img" :class="{ green : item.ratingStar ==5,red : item.ratingStar <3,yellow : item.ratingStar ==3}">
+                                        <div class="rate_img" :class="{ green : item.ratingStar ==50,red : item.ratingStar <30,yellow : item.ratingStar ==30}">
                                             <img :src="item.picUrl">
                                         </div>
                                         <div class="rate_username">
-                                                {{item.username}}<br/>
-                                                <span class="rate_time">{{item.ratedAt}}</span>
+                                                {{item.storeName}} <span v-if="item.branchName">({{item.branchName}})</span><br/>
+                                                <span class="rate_time">{{item.rateDate | dateTime}}</span>
                                                 <!-- <span class="rate_tag">口味好</span>
                                                 <span class="rate_tag">环境很好</span>
                                                 <span class="rate_tag">服务好</span> -->
@@ -121,7 +121,7 @@
         </section>
 
 
-        <section class="shop_container main_container bg-gray" v-if="showRateType" @click="goBack()">
+        <section class="shop_container main_container bg-gray" v-if="showRateType">
             <ul class="rate_navi">
                 <li class="green" @click="setRatingType('high',source)">
                     <span>好评 {{rateCount.countHigh}}</span>
@@ -165,7 +165,7 @@
                source:0,
                rateType:'low',
                endDate:null,
-               startDate:null
+               startDate:null,
             }
         },
         mounted(){
@@ -221,7 +221,7 @@
                 this.storeId = this.$route.query.storeId;
                 // this.storeName = this.$route.query.storeName;
                 this.rateType = this.$route.query.rateType || 'low';
-                this.source = this.$route.query.source || 0;
+                this.source = this.$route.query.source;
 
                 this.startDate = parseInt(this.$route.query.s);
                 this.endDate = parseInt(this.$route.query.e);
@@ -289,8 +289,8 @@
                 this.hideLoading();
             },
 
-            setRatingType(rateType, source=0){
-                
+            setRatingType(rateType, source){
+                console.log(source);
                 this.rateType = rateType;
                 this.source = source;
                 let _this = this;

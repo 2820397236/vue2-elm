@@ -290,7 +290,7 @@
             /*border-radius: .7rem;
             border-top-left-radius:0;
             border-top-right-radius:0;*/
-            padding-bottom: .4rem;
+            padding-bottom: 4rem;
             width:100%;
             min-height:100%;
             overflow: scroll;

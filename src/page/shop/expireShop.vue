@@ -81,7 +81,7 @@
                                 <li v-for="(store,index) in branchMap[branch]" :key="index" v-if="listStatusMap[branch].active == true" @click='active(store,index)'>
 
                                     <section class="store_detail_list">
-                                        <section class="store_select"   v-if="selectStores.indexOf(store.storeId) == -1">
+                                        <section class="store_select"   v-if="selectStoreIdList.indexOf(store.storeId) == -1">
                                             <svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                                 <defs></defs>
                                                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -91,7 +91,7 @@
                                                 </g>
                                             </svg>
                                         </section>
-                                        <section class="store_select"   v-if="selectStores.indexOf(store.storeId) > -1">
+                                        <section class="store_select"   v-if="selectStoreIdList.indexOf(store.storeId) > -1">
                                             <svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                                 <defs></defs>
                                                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -135,8 +135,8 @@
             </transition>
 
 
-            <div class="button_container" v-if="selectStores.length > 0">
-                <span> 已选: {{selectStores.length}}  家 </span>
+            <div class="button_container" v-if="selectStoreIdList.length > 0">
+                <span> 已选: {{selectStoreIdList.length}}  家 </span>
                 <a class="button" @click="continuePay()">去续订</a>
             </div>
 
@@ -230,7 +230,8 @@
                 branchMap:{},
                 listStatusMap:{},
                 branchList:[],
-                selectStores:[]
+                selectStoreIdList:[],
+                selectStoreList:[]
             }
         },
         created(){
@@ -294,17 +295,19 @@
                'RECORD_MYSHOPS'
             ]),
             continuePay(){
-                this.$router.push({path:'/continueOrder', query:{ ids: this.selectStores }});
+                setStore('continuePay',JSON.stringify(this.selectStoreList));
+                this.$router.push({path:'/continueOrder', query:{ ids: this.selectStoreIdList }});
             },
             active(item,index){
 
-                if(this.selectStores.indexOf(item.storeId) == -1){
-                    this.selectStores.push(item.storeId);
+                if(this.selectStoreIdList.indexOf(item.storeId) == -1){
+                    this.selectStoreIdList.push(item.storeId);
+                    this.selectStoreList.push(item);
                 }else{
-                    this.selectStores.splice(this.selectStores.indexOf(item.storeId),1);
+                    this.selectStoreIdList.splice(index,1);
+                    this.selectStoreList.splice(index,1);
                 }
                 
-                console.log(this.selectStores);
             },
             //初始化时获取基本数据
             async initData(){
@@ -317,6 +320,8 @@
                     this.seletedCity = true;
                 }
                 this.user = JSON.parse(getStore('user'));
+
+                setStore('continuePay','[]');
 
                 //提示绑定
                 if(this.user.username==null || this.user.username == ''){
