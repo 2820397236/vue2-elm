@@ -4,10 +4,10 @@
 
             <header class="shop_detail_header" ref="shopheader">
                 <section class="description_header">
-                    <div>门店列表</div>
+                    <div>确认续订</div>
                     <div class="description_top">
                         <section class="description_right">
-                            <h4 class="description_title ellipsis" v-if="storeList">您已选择{{storeList.length}}家门店</h4>
+                            <h4 class="description_title ellipsis" v-if="storeList">您正在续订{{storeList.length}}家门店</h4>
                         </section>
                     </div>
 
@@ -30,6 +30,8 @@
                                                 <span class="description_foodname" v-else>{{store.name}}({{store.branchName}})</span>
                                             </h3>
                                             <p class="food_description_content">{{store.regionName}} {{store.priceText}}</p>
+                                            <p class="cancel">
+                                                    {{store.expireDate | dateTime('将于YYYY年MM月DD日取消订阅')}}</p>
                                         </section>
                                         <section class="menu_action">
                                         <svg class="address_empty_right"  @click="deleteFromCart(store.id, index)">
@@ -959,6 +961,14 @@
                                     }
                                 }
                             }
+                        }
+                        .cancel{
+                            display: inline-block;
+                            background-color: #fc997a;
+                            @include sc(.4rem, #fff);
+                            padding:.1rem .3rem;
+                            border-radius: .1rem;
+                            width:75%;
                         }
                         .food_description_content{
                             @include sc(.7rem, #969696);

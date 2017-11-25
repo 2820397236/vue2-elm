@@ -7,6 +7,7 @@ const city = r => require.ensure([], () => r(require('../page/city/city')), 'cit
 // const msite = r => require.ensure([], () => r(require('../page/msite/msite')), 'msite')
 // const search = r => require.ensure([], () => r(require('../page/search/search')), 'search')
 const shop = r => require.ensure([], () => r(require('../page/shop/shop')), 'shop')
+const expireShop = r => require.ensure([], () => r(require('../page/shop/expireShop')), 'expireShop')
 const rate = r => require.ensure([], () => r(require('../page/rate/rate')), 'rate')
 const rateByType = r => require.ensure([], () => r(require('../page/rate/rateByType')), 'rateByType')
 const rateByShop = r => require.ensure([], () => r(require('../page/rate/rateByShop')), 'rateByShop')
@@ -24,6 +25,7 @@ const code = r => require.ensure([], () => r(require('../page/login/code')), 'co
 // const vipDescription = r => require.ensure([], () => r(require('../page/vipcard/children/vipDescription')), 'vipDescription')
 // const food = r => require.ensure([], () => r(require('../page/food/food')), 'food')
 const confirmOrder = r => require.ensure([], () => r(require('../page/confirmOrder/confirmOrder')), 'confirmOrder')
+const continueOrder = r => require.ensure([], () => r(require('../page/confirmOrder/continueOrder')), 'continueOrder')
 // const remark = r => require.ensure([], () => r(require('../page/confirmOrder/children/remark')), 'remark')
 // const payment = r => require.ensure([], () => r(require('../page/confirmOrder/children/payment')), 'payment')
 // const userValidation = r => require.ensure([], () => r(require('../page/confirmOrder/children/userValidation')), 'userValidation')
@@ -108,6 +110,10 @@ export default [{
         // },
         //商铺详情页
         {
+            path: '/expireShop',
+            component: expireShop
+        },
+        {
             path: '/shop',
             component: shop,
             // meta: { keepAlive: true },
@@ -142,6 +148,10 @@ export default [{
         {
             path: '/warning',
             component: warning
+        },
+        {
+            path: '/continueOrder',
+            component: continueOrder,
         },
         //确认订单页
         {
