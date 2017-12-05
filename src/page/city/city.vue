@@ -202,7 +202,7 @@
                 this.startLoading();
                 let _this = this;
                 console.log(cityName,keyword,this.$route.params.cityid);
-                searchplace(cityName,keyword,this.city.dpCityId).then(res => {
+                searchplace(cityName,keyword,this.city.id).then(res => {
                         // _this.inputVaule = '';  
                         if(res.status == -1){
                             this.stopLoading();
