@@ -142,7 +142,8 @@
                         <section>
                             <div class="reply_progress">
                                 <div class="reply_progress green" :style="{ width: rateCount[1].high/rateCount[1].amount * 100 + '%'}">
-                                    {{ (rateCount[1].high/rateCount[1].amount * 100 ).toFixed(1) }}%
+                                    <span v-if=" rateCount[1].high / rateCount[1].amount * 100  > 20">{{ (rateCount[1].high/rateCount[1].amount * 100 ).toFixed(1) }}%</span>
+                                    <span v-else style="color:#767D95">{{ ( rateCount[1].high / rateCount[1].amount * 100 ).toFixed(1) }}%</span>
                                 </div>
                             </div> 
                             <div class="reply_view_button" @click="gotoAddress({path:'/rateByType','query':
@@ -158,7 +159,8 @@
                         <section>
                             <div class="reply_progress">
                                 <div class="reply_progress yellow" :style="{ width: rateCount[1].mid/rateCount[1].amount * 100 + '%'}">
-                                    {{ ( rateCount[1].mid / rateCount[1].amount * 100 ).toFixed(1) }}%
+                                    <span v-if=" rateCount[1].mid / rateCount[1].amount * 100  > 20">{{ ( rateCount[1].mid / rateCount[1].amount * 100 ).toFixed(1) }}%</span>
+                                    <span v-else style="color:#767D95">{{ ( rateCount[1].mid / rateCount[1].amount * 100 ).toFixed(1) }}%</span>
                                 </div>
                             </div>
                             <div class="reply_view_button" @click="gotoAddress({path:'/rateByType','query':
@@ -175,7 +177,8 @@
                         <section>
                             <div class="reply_progress">
                                 <div class="reply_progress red" :style="{ width: rateCount[1].low/rateCount[1].amount * 100+ '%'}">
-                                   {{ (rateCount[1].low / rateCount[1].amount * 100 ).toFixed(1) }}%
+                                   <span v-if=" rateCount[1].low / rateCount[1].amount * 100  > 20">{{ (rateCount[1].low / rateCount[1].amount * 100 ).toFixed(1) }}%</span>
+                                   <span v-else style="color:#767D95">{{ ( rateCount[1].low / rateCount[1].amount * 100 ).toFixed(1) }}%</span>
                                 </div>
                             </div>
                             <div class="reply_view_button" @click="gotoAddress({path:'/rateByType','query':
