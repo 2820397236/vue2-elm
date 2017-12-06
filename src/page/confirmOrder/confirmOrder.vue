@@ -87,6 +87,15 @@
 
                         <li  v-for="(item,index) in plans" :key="item.id" :class="{choose: payWayIndex == index}"
                         @click="choosePayWay(item.planCode,index)">
+                            <svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="确认订阅3" transform="translate(-28.000000, -498.000000)" stroke-width="2" stroke="#FFA73F">
+                                        <g id="Group-8-Copy" transform="translate(28.000000, 498.000000)">
+                                            <circle id="Oval-2" cx="7" cy="7" r="6"></circle>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
                             <span class="pay_way_title">
                                 {{item.description}}<br/>
                                 <span class="pay_way_subtitle" v-if="item.info">{{item.info}}</span>

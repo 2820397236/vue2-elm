@@ -38,7 +38,26 @@
                     </li>
                 </ul>
             </section>
-            <section v-if="true">
+            <section class="rate_button" @click="openRateLevel">
+                <span>
+                    <b v-if="rateType=='high'">好评</b>
+                    <b v-if="rateType=='mid'">中评</b>
+                    <b v-if="rateType=='low'">差评</b>
+                    <svg width="8px" height="12px" viewBox="0 0 8 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+                        <title>disclosure indicator</title>
+                        <desc>Created with Sketch.</desc>
+                        <defs></defs>
+                        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g id="首页-无预警" transform="translate(-349.000000, -152.000000)" fill="#007BE6">
+                                <path d="M354.929466,155.894975 L354.996555,155.082271 L354.996555,155.082271 C355.041992,154.531859 354.632629,154.048827 354.082217,154.00339 C354.054851,154.001131 354.027404,154 353.999945,154 L348,154 L348,154 C347.447715,154 347,154.447715 347,155 L347,155 L347,161 L347,161 C347,161.552285 347.447715,162 348,162 C348.027459,162 348.054906,161.998869 348.082272,161.99661 L348.894962,161.92952 L348.894962,156.894975 C348.894962,156.342691 349.342677,155.894975 349.894962,155.894975 L354.929466,155.894975 Z" id="disclosure-indicator" transform="translate(351.000000, 158.000000) rotate(-225.000000) translate(-351.000000, -158.000000) "></path>
+                            </g>
+                        </g>
+                    </svg>
+                </span>
+
+            </section>
+            <section v-if="showLevel">
                 <ul class="rate_right">
                     <li :class="{ active : rateType == 'high' }" @click="setRatingType('high',source)">
                         <span>好评 <!-- {{rateCount[source].high}} --></span>
@@ -160,6 +179,7 @@
                         this.calendar2.value[1] = [end[0],end[1],end[2]];
 
                         console.log(begin,end);
+                        
                         console.log(new Date(this.calendar2.value[0][0],this.calendar2.value[0][1],this.calendar2.value[0][2]).getTime());
                         console.log(new Date(this.calendar2.value[1][0],this.calendar2.value[1][1],this.calendar2.value[1][2]).getTime());
 
@@ -177,6 +197,7 @@
                     high:0,
                     amount:0
                 }],
+                showLevel:false,
                 showLoading: true, //显示加载动画 
                 licenseImg: null,
                 showRateType: false,
@@ -234,6 +255,9 @@
                     default:
                     break
                 }
+            },
+            openRateLevel(){
+                this.showLevel = true;
             },
             //隐藏动画
             hideLoading(){
@@ -370,6 +394,7 @@
                 
                 this.rateType = rateType;
                 this.source = source;
+                this.showLevel = false;
 
 
                 switch(source){
@@ -428,7 +453,6 @@
         left: 0;
         top: 0;
         @include wh(100%, auto);
-        border-bottom:0.025rem solid #e5e5e5;
     }
     .head_goback{
         left: 0.4rem;
@@ -548,11 +572,27 @@
             }
         }
     }
+    .rate_button{
+            display:block;
+        span{
+            float:right;
+            display:block;
+            vertical-align:middle;
+            padding: 0 .4rem;
+            b{
+                @include sc(0.6rem, #4399EF);
+                line-height: 2rem;
+            }
+            svg{
+                transform:rotate(90deg);
+            }
+        }
+    }
     .rate_right{
         width: 20%;
         position: absolute;
-        right: -1rem;
-        top: 8.4rem;
+        right: -0.7rem;
+        top: 8.7rem;
         background: #fff;
         flex-direction: column;
         span{
@@ -560,7 +600,6 @@
             vertical-align:middle;
             padding: 0 .4rem;
             @include sc(0.6rem, #b1b8ca);
-            font-weight: bold;
         }
         .active{
             span{
@@ -575,6 +614,7 @@
             border-radius: .7rem;
             border-top-left-radius:0;
             border-top-right-radius:0;
+            border-bottom:0.025rem solid #e5e5e5;
             
             li{
                 flex:1;
@@ -644,7 +684,7 @@
         }
     }
     .main_container{
-        padding-top:8.5rem;
+        padding-top:10.5rem;
     }
 
     .bg-gray{
