@@ -67,7 +67,7 @@
                         setStore('user',userRes.user);
 
                         if(userRes.user.username && userRes.user.username != ''){
-                            this.$router.push({path:'/home'});
+                            this.$router.push({path:'/analytics'});
                         }else{
                             this.$router.push({path:'/login'});
                         }
