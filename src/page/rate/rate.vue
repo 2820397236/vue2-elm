@@ -107,7 +107,7 @@
                             <div class="menu_detail_link">
                                 <div class="rate_head">
                                     <section class="user_profile">
-                                        <div class="rate_img" :class="{ green : item.ratingStar ==5,red : item.ratingStar <3,yellow : item.ratingStar ==3}">
+                                        <div class="rate_img" :class="{ green : item.ratingStar >30,red : item.ratingStar <30,yellow : item.ratingStar ==30}">
                                             <img :src="item.avatar==''?'http://faas.elemecdn.com/desktop/media/img/default-avatar.38e40d.png':item.avatar">
                                         </div>
                                         <div class="rate_username">
