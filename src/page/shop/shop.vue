@@ -93,7 +93,7 @@
                                                     <span class="store_status red" v-if="store.status!=0">停业</span> -->
                                                 </span>
                                                 </h3>
-                                                <p class="store_content ellipsis" v-if="store.address == ''">
+                                                <p class="store_content ellipsis" v-if="store.addr == null">
                                                     同步中...请稍后
                                                 </p>
                                                 <p class="store_content ellipsis" v-else>{{store.addr}}</p>
@@ -222,7 +222,7 @@
         },
         computed: {
             ...mapState([
-                'shopIds',
+                'shopIdList',
             ]),
             // promotionInfo: function (){
             //     return this.shopDetailData.promotion_info || '欢迎光临，用餐高峰期请提前下单，谢谢。'
@@ -259,7 +259,7 @@
         // props: ['alertText','alertSubText','alertTime','alertImg'],
         methods: {
             ...mapMutations([
-               'RECORD_MYSHOPS'
+               'RECORD_MYSHOPIDS'
             ]),
             //初始化时获取基本数据
             async initData(){
@@ -277,7 +277,6 @@
                 if(this.user.username==null || this.user.username == ''){
                     this.checkPhoneNumber();
                 }
-
 
                 if(this.shopList){
                     this.storeList = this.shopList;
@@ -338,19 +337,24 @@
                 _self.branchMap = {};
                 _self.listStatusMap = {};
                 this.storeList.map(s=>{
-                    if( false == _self.branchMap[s.storeName] instanceof Array){
-                        _self.branchMap[s.storeName] = [];
-                        _self.branchList.push(s.storeName);
-                        _self.listStatusMap[s.storeName]={};
-                        _self.listStatusMap[s.storeName].active = false;
+
+                    // this.shopIds.push(s.storeId); 
+                    //
+                    let storeName = s.brand;
+                    
+                    if( false == _self.branchMap[storeName] instanceof Array){
+                        _self.branchMap[storeName] = [];
+                        _self.branchList.push(storeName);
+                        _self.listStatusMap[storeName]={};
+                        _self.listStatusMap[storeName].active = false;
                     }
-                    _self.branchMap[s.storeName].push(s);
+                    _self.branchMap[storeName].push(s);
                 });
 
 
                 console.log(_self.branchMap);
 
-                // this.RECORD_MYSHOPS(this.storeListOrigin.map(item=>item.id));
+                this.RECORD_MYSHOPIDS(this.storeListOrigin.map(o=>o.storeId));
                 
                 //隐藏加载动画
                 this.hideLoading();

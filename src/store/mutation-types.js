@@ -29,3 +29,4 @@ export const ADD_ADDRESS = 'ADD_ADDRESS'
 export const BUY_CART = 'BUY_CART'
 
 export const RECORD_MYSHOPS = 'RECORD_MYSHOPS'
+export const RECORD_MYSHOPIDS = 'RECORD_MYSHOPIDS'

@@ -33,6 +33,8 @@ const state = {
 	addAddress:'',		//新增地址
 	question: null,//问题详情
 	cartPrice: null, //会员卡价格
+	shopList:[],
+	shopIdList:[],
 }
 
 export default new Vuex.Store({

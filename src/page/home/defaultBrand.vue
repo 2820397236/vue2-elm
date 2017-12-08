@@ -101,10 +101,10 @@
                     this.storeList = response.subscribeList.content;
                     this.storeListOrigin = response.subscribeList.content;
                     this.storeListOrigin.map(item=>{
-                        if(!_this.branchList[item.storeName]){
-                            _this.branchList[item.storeName]=[];
+                        if(!_this.branchList[item.brand]){
+                            _this.branchList[item.brand]=[];
                         }
-                        _this.branchList[item.storeName].push(item);
+                        _this.branchList[item.brand].push(item);
                         return item;
                     })
                     this.branchName = Object.keys(this.branchList);
@@ -125,7 +125,7 @@
             },
             setDefaultBrand(data){
 
-                this.defaultBrand = data[0].storeName;
+                this.defaultBrand = data[0].brand;
                 
             },
             saveDefaultBrand(){
