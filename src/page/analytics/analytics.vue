@@ -4,14 +4,14 @@
         <section class="head_brand"  @click="eventSearch()">
             <div class="head_brand_name"  v-if="storeList.length >0 && currentBrand !=''">
                 <img class="head_brand_pic" :src="branchList[currentBrand][0].pciUrl" />
-                <span>{{branchList[currentBrand][0].storeName}}&nbsp;</span>
+                <span>{{branchList[currentBrand][0].brand}}&nbsp;</span>
             </div>
             <div class="head_brand_name"  v-if="storeList.length >0 && defaultBrand != '' && currentBrand ==''">
                 <img  v-if="selectedIndex == null" class="head_brand_pic" :src="branchList[defaultBrand][0].pciUrl" />
                 <img  v-else class="head_brand_pic" :src="branchList[branchName[selectedIndex]][0].pciUrl" />
 
-                <span v-if="selectedIndex == null">{{branchList[defaultBrand][0].storeName}}&nbsp;</span>
-                <span v-else>{{branchList[branchName[selectedIndex]][0].storeName}}&nbsp;</span>
+                <span v-if="selectedIndex == null">{{branchList[defaultBrand][0].brand}}&nbsp;</span>
+                <span v-else>{{branchList[branchName[selectedIndex]][0].brand}}&nbsp;</span>
             </div>
             <div class="head_brand_button">
                 选择其他品牌
@@ -492,10 +492,10 @@
                     _this.storeList = response.subscribeList.content;
                     _this.storeListOrigin = response.subscribeList.content;
                     _this.storeListOrigin.map(item=>{
-                        if(!_this.branchList[item.storeName]){
-                            _this.branchList[item.storeName]=[];
+                        if(!_this.branchList[item.brand]){
+                            _this.branchList[item.brand]=[];
                         }
-                        _this.branchList[item.storeName].push(item);
+                        _this.branchList[item.brand].push(item);
                         return item;
                     })
                     _this.branchName = Object.keys(_this.branchList);
