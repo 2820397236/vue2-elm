@@ -115,7 +115,7 @@
                 <section class="confrim_order" @click="confrimOrder" v-if="plans.length >0">
                     <p v-if="plans[payWayIndex].packagePlan == false">
                     <!-- 总计 {{storeList.length}} 家门店， -->共计: ¥{{storeList.length * plans[payWayIndex].price /100}}, 确认订阅</p>
-                    <p v-else>共计: ¥{{payments[payWayIndex].price}}, 确认订阅</p>
+                    <p v-else>共计: ¥{{plans[payWayIndex].price}}, 确认订阅</p>
                     
                 </section>
             </section>
