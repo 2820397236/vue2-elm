@@ -390,10 +390,10 @@
                 }
 
                 let json = JSON.parse(res.paymentJson);
-                json.timestamp = json.timeStamp;
-                this.$router.push('/shop');
-                // console.log(json);
-                // weixin.chooseWXPay(json);
+                // json.timestamp = json.timeStamp;
+                // this.$router.push('/shop');
+                console.log(json);
+                weixin.chooseWXPay(json);
             },
         },
         watch: {
