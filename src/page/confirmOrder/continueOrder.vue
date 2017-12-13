@@ -390,9 +390,12 @@
                 }
 
                 let json = JSON.parse(res.paymentJson);
-                // json.timestamp = json.timeStamp;
+                json.timestamp = json.timeStamp;
+                json.success = function (res) {
+                    this.$router.push('/shop');
+                }
                 // this.$router.push('/shop');
-                console.log(json);
+                // console.log(json);
                 weixin.chooseWXPay(json);
             },
         },
