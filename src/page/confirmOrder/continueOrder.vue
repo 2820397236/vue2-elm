@@ -106,7 +106,7 @@
                     <span>* 备注：请核对订阅信息，信息订阅后暂不可退订。</span>
                 </section> -->
                 <section class="confrim_order" @click="confrimOrder" v-if="plans.length >0">
-                    <p v-if="plans[payWayIndex].packagePlan == flase">
+                    <p v-if="plans[payWayIndex].packagePlan == false">
                     <!-- 总计 {{storeList.length}} 家门店， -->共计: ¥{{storeList.length * plans[payWayIndex].price /100}}, 确认订阅</p>
                     <p v-else>共计: ¥{{payments[payWayIndex].price}}, 确认订阅</p>
                     
