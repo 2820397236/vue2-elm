@@ -13,7 +13,7 @@
                         </section>
                     </div>
                 </section>
-                <section  v-if="user" class="img_header">
+                <section  v-if="user" class="img_header" @click="checkPhoneNumber()">
                     <img :src="user.profileImg"/>
                 </section>
             </header>   
@@ -62,6 +62,16 @@
         <foot-guide></foot-guide>
 
         <loading v-show="showLoading"></loading>
+
+        <alert-tip v-if="showAlert" @closeTip="showAlert = false" 
+            :alertText="alertText" 
+            :alertSubText="alertSubText" 
+            :alertTime="alertTime" 
+            :alertImg="alertImg"
+            :alertFunc="alertFunc"
+            :confirmBtn="confirmBtn"
+            :format="format"
+        ></alert-tip>
     </div>
 </template>
 
@@ -69,6 +79,7 @@
 import headTop from '../../components/header/head'
 import {cityGuess, hotcity, groupcity} from '../../service/getData'
 import {getStore, setStore, removeStore} from 'src/config/mUtils'
+import alertTip from 'src/components/common/alertStore'
 import footGuide from '../../components/footer/footGuide'
 import loading from 'src/components/common/loading'
 
@@ -85,7 +96,8 @@ export default {
             inChina:[],
             outChina:[],
             cityList:[],
-            showLoading:false
+            showLoading:false,
+            showAlert: false,
         }
     },
 
@@ -103,6 +115,7 @@ export default {
     components: {
         loading,
         footGuide,
+        alertTip
     },
 
     computed:{
@@ -133,6 +146,24 @@ export default {
         },
         gotoAddress(path){
             this.$router.push(path);
+        },
+
+        checkPhoneNumber(){
+            console.log(this.user.profileImg);
+
+            this.showAlert = true;
+
+            this.alertText = this.user.realName;
+
+            this.alertSubText = '欢迎使用蜜蜂点评，请先绑定手机';
+            this.alertTime = new Date();
+            this.alertImg = this.user.profileImg;
+
+            this.confirmBtn = "立刻绑定";
+            this.format = 'YYYY年MM月DD日';
+            this.alertFunc = ()=>{
+               this.$router.push({path:'/login'});
+            }
         },
     },
 }
