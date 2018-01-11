@@ -162,6 +162,7 @@ export default {
             this.confirmBtn = "立刻绑定";
             this.format = 'YYYY年MM月DD日';
             this.alertFunc = ()=>{
+               localStorage.clear();
                this.$router.push({path:'/login'});
             }
         },
