@@ -2,16 +2,16 @@
     <div>
         <section class="head_tips" @click="gotoAddress({path:'/warning'})">您没有未读预警，点击查看历史预警</section>
         <section class="head_brand"  @click="eventSearch()">
-            <div class="head_brand_name"  v-if="storeList.length >0 && defaultBrand == ''">
-                <img class="head_brand_pic" :src="storeList[0].defaultPic" />
-                <span>{{storeList[0].name}}&nbsp;</span>
+            <div class="head_brand_name"  v-if="storeList.length >0 && currentBrand !=''">
+                <img class="head_brand_pic" :src="branchList[currentBrand][0].pciUrl" />
+                <span>{{branchList[currentBrand][0].brand}}&nbsp;</span>
             </div>
-            <div class="head_brand_name"  v-if="storeList.length >0 && defaultBrand != ''">
-                <img  v-if="selectedIndex == null" class="head_brand_pic" :src="branchList[defaultBrand][0].defaultPic" />
-                <img  v-else class="head_brand_pic" :src="branchList[branchName[selectedIndex]][0].defaultPic" />
+            <div class="head_brand_name"  v-if="storeList.length >0 && defaultBrand != '' && currentBrand ==''">
+                <img  v-if="selectedIndex == null" class="head_brand_pic" :src="branchList[defaultBrand][0].pciUrl" />
+                <img  v-else class="head_brand_pic" :src="branchList[branchName[selectedIndex]][0].pciUrl" />
 
-                <span v-if="selectedIndex == null">{{branchList[defaultBrand][0].name}}&nbsp;</span>
-                <span v-else>{{branchList[branchName[selectedIndex]][0].name}}&nbsp;</span>
+                <span v-if="selectedIndex == null">{{branchList[defaultBrand][0].brand}}&nbsp;</span>
+                <span v-else>{{branchList[branchName[selectedIndex]][0].brand}}&nbsp;</span>
             </div>
             <div class="head_brand_button">
                 选择其他品牌
@@ -27,8 +27,8 @@
         <section class="head_calendar">
             <span>请选择日期</span>
             <section>
-                <div class="head_calendar_date">{{startDate | dateTime('MM月DD日')}}-{{endDate | dateTime('MM月DD日')}} <span>今天</span></div>
-                <div class="head_calendar_button" @click="chooseDate()">
+                <div class="head_calendar_date">{{calendar2.value[0][1]+1}}月{{calendar2.value[0][2]}}日 - {{calendar2.value[1][1]+1}}月{{calendar2.value[1][2]}}日 <!-- <span>今天</span> --></div>
+                <div class="head_calendar_button" @click="openCalendar()">
                     <svg width="22px" height="21px" viewBox="0 0 22 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                             <g id="首页-无预警" transform="translate(-337.000000, -215.000000)" fill="#007BE6">
@@ -40,237 +40,27 @@
             </section>
         </section>
 
-        <date-picker ref="myDate" field="myDate"
-                 placeholder="选择日期"
-                 v-model="datePiker"
-                 format="yyyy/mm/dd" readOnly="readOnly"></date-picker>
-
         <section class="head_tab">
             <div class="tab_container" :class="{active:tabType=='dp'}" @click="clickTab('dp')">
-                <span>在店满意度</span><br/>
+                <span>到店满意度</span><br/>
+                <!-- <span class="rate_total">{{rateCount[0].amount.toFixed(0)}}条</span> -->
             </div>
             <div class="tab_container" :class="{active:tabType=='ele'}" @click="clickTab('ele')">
                 <span>外卖满意度</span><br/>
+                <!-- <span class="rate_total">{{rateCount[1].amount.toFixed(0)}}条</span> -->
             </div>
         </section>
-        <!-- <header id='head_top'>
-            <section class="title_head ellipsis">
-                <span class="title_text" >{{date | dateTime('YYYY年MM月DD日') }}</span>
-            </section>
-            <section class="head_login" @click="eventSearch()">
-                <svg class="icon_style">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#search"></use>
-                </svg>
-            </section>
-        </header> -->
-        <section v-if="!showLoading" class="shop_container main_container">
+         <section v-if="!showLoading" class="shop_container main_container">
             
             <section class="chart_container">
                 <IEcharts :option="bar" :height="100" theme="customer" @ready="onReady" @click="onClick"></IEcharts>
             </section>
-            <!-- <section class="detail_container">
-                <div class="search_submit"  v-if="storeIds.length > 1"  @click="gotoAddress({path:'/rateByShop',query:{ids:storeIds,date:dateFormat}})">
-                    <svg class="icon_style">
-                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#more"></use>
-                    </svg>
-                    <span>查看详情</span>
-                </div>
-
-                <div class="search_submit" v-else  @click="gotoAddress({'path': 'rate', 'query':{storeId:storeIds[0]}})">
-                    <svg class="icon_style">
-                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#more"></use>
-                    </svg>
-                    <span>查看详情</span>
-                </div>
-            </section> -->
-
-            <section class="reply_container" v-if="tabType=='dp'">
-               <div class="reply_item">
-                   <div class="reply_item_border">
-                        <section>
-                            <div class="reply_progress">
-                                <div class="reply_progress green" :style="{ width: rateCount[0].high/rateCount[0].amount * 100+ '%'}">
-                                    {{ (rateCount[0].high/rateCount[0].amount * 100 ).toFixed(1) }}%
-                                </div>
-                            </div> 
-                            <div class="reply_view_button" @click="gotoAddress({path:'rateByType','query':{storeId:storeIds[0]}})">
-                                查看
-                            </div>
-                        </section>
-                        <div class="reply_item_count green">好评数量： {{rateCount[0].high}}条</div>
-                    </div>
-               </div>
-               <div class="reply_item">
-                   <div class="reply_item_border">
-                        <section>
-                            <div class="reply_progress">
-                                <div class="reply_progress yellow" :style="{ width: rateCount[0].mid/rateCount[0].amount * 100 + '%'}">
-                                    {{ ( rateCount[0].mid / rateCount[0].amount * 100 ).toFixed(1) }}%
-                                </div>
-                            </div>
-                            <div class="reply_view_button">
-                                查看
-                            </div>
-                        </section>
-                        <div class="reply_item_count yellow">中评数量： {{rateCount[0].mid}}条</div>
-                    </div>
-                    
-               </div>
-               <div class="reply_item">
-                   <div class="reply_item_border">
-                        <section>
-                            <div class="reply_progress">
-                                <div class="reply_progress red" :style="{ width: rateCount[0].low/rateCount[0].amount * 100+ '%'}">
-                                   {{ (rateCount[0].low / rateCount[0].amount * 100 ).toFixed(1) }}%
-                                </div>
-                            </div>
-                            <div class="reply_view_button">
-                                查看
-                            </div>
-                        </section>
-                        <div class="reply_item_count">差评数量： {{rateCount[0].low}}条</div>
-                   </div>
-               </div>
-            </section>
-
-            <!-- <section class="reply_container" v-if="tabType=='ele'">
-               <div class="reply_item">
-                   <div class="reply_item_border">
-                        <section>
-                            <div class="reply_progress">
-                                <div class="reply_progress green" :style="{ width: rateCount[1].high/rateCount[1].amount * 100+ '%'}">
-                                    {{ (rateCount[1].high/rateCount[1].amount * 100 ).toFixed(1) }}%
-                                </div>
-                            </div> 
-                            <div class="reply_view_button" @click="gotoAddress({path:'rateByType','query':{storeId:storeIds[0]}})">
-                                查看
-                            </div>
-                        </section>
-                        <div class="reply_item_count green">好评数量： {{rateCount[1].high}}条</div>
-                    </div>
-               </div>
-               <div class="reply_item">
-                   <div class="reply_item_border">
-                        <section>
-                            <div class="reply_progress">
-                                <div class="reply_progress yellow" :style="{ width: rateCount[1].mid/rateCount[1].amount * 100 + '%'}">
-                                    {{ ( rateCount[1].mid / rateCount[1].amount * 100 ).toFixed(1) }}%
-                                </div>
-                            </div>
-                            <div class="reply_view_button">
-                                查看
-                            </div>
-                        </section>
-                        <div class="reply_item_count yellow">中评数量： {{rateCount[1].mid}}条</div>
-                    </div>
-                    
-               </div>
-               <div class="reply_item">
-                   <div class="reply_item_border">
-                        <section>
-                            <div class="reply_progress">
-                                <div class="reply_progress red" :style="{ width: rateCount[1].low/rateCount[1].amount * 100+ '%'}">
-                                   {{ (rateCount[1].low / rateCount[1].amount * 100 ).toFixed(1) }}%
-                                </div>
-                            </div>
-                            <div class="reply_view_button">
-                                查看
-                            </div>
-                        </section>
-                        <div class="reply_item_count">差评数量： {{rateCount[1].low}}条</div>
-                   </div>
-               </div>
-            </section> -->
         </section>
+        
             
        <foot-guide></foot-guide>
 
        <loading v-show="showLoading"></loading>
-
-       <section class="shop_container main_container bg-gray" v-if="showDefault">
-            <section class="description_header">
-                <div>设置默认品牌</div>
-                <div class="description_top">
-                    <section class="description_right">
-                        <h4 class="description_title ellipsis">首页默认品牌门店信息</h4>
-                    </section>
-                    <!-- <section class="description_more">
-                        <span class="shop_detail_vip" @click="eventDefault()">
-                            <span>设置默认品牌</span>        
-                            <svg class="icon_style">
-                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#add"></use>
-                            </svg>                    
-                        </span>
-                    </section> -->
-                </div>
-            </section>
-            <ul class="search_list">
-                <!-- <li>
-                    <span class="store_name" @click="selectSearchResult(storeListOrigin)">
-                        全部 ({{storeListOrigin.length}}家门店)
-                    </span>
-                </li> -->
-                <li :class="{ active: name == defaultBrand}"  v-for="(name,index) in branchName" :key="index" @click="setDefaultBrand(branchList[name])">
-                    <div class="store_name">
-                        <img :src="branchList[name][0].defaultPic"/>
-                        <b>{{name}}</b> 
-                        <span>共{{branchList[name].length}}家门店</span>
-                        <span class="brand_default_button">设为默认</span>
-                    </div>
-                    <!-- <span class="store_address" v-if="branchList[name].length > 1">{{branchList[name][0].branchName}} 等</span>
-                    <span class="store_address" v-else>{{branchList[name][0].branchName?branchList[name][0].branchName:branchList[name][0].name}}</span> -->
-                </li>
-                <li  v-for="(store,index) in storeList" :key="index" @click="selectSearchResult([store],index)" v-if="storeList.length < storeListOrigin.length">
-                    <span class="store_name">{{store.name}} {{store.branchName}}</span>
-                    <span class="store_address">{{store.address}}</span>
-                </li>
-            </ul>
-            <div class="set_brand_default_button" @click="saveDefaultBrand()">确认</div>
-       </section>
-
-       <section class="shop_container main_container bg-gray" v-if="showSearch">
-            <section class="description_header">
-                <div>选择品牌</div>
-                <div class="description_top">
-                    <section class="description_right">
-                        <h4 class="description_title ellipsis">展示相应品牌门店信息</h4>
-                    </section>
-                    <section class="description_more">
-                        <span class="shop_detail_vip" @click="eventDefault()">
-                            <span>设置默认品牌</span>        
-                            <svg width="8px" height="12px" viewBox="0 0 8 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <g id="箭头-左" transform="translate(-349.000000, -152.000000)" fill="#007BE6">
-                                        <path d="M354.929466,155.894975 L354.996555,155.082271 L354.996555,155.082271 C355.041992,154.531859 354.632629,154.048827 354.082217,154.00339 C354.054851,154.001131 354.027404,154 353.999945,154 L348,154 L348,154 C347.447715,154 347,154.447715 347,155 L347,155 L347,161 L347,161 C347,161.552285 347.447715,162 348,162 C348.027459,162 348.054906,161.998869 348.082272,161.99661 L348.894962,161.92952 L348.894962,156.894975 C348.894962,156.342691 349.342677,155.894975 349.894962,155.894975 L354.929466,155.894975 Z" id="disclosure-indicator" transform="translate(351.000000, 158.000000) rotate(-225.000000) translate(-351.000000, -158.000000) "></path>
-                                    </g>
-                                </g>
-                            </svg>                  
-                        </span>
-                    </section>
-                </div>
-            </section>
-
-            <ul class="search_list">
-                <li :class="{ active: name == defaultBrand }"  v-for="(name,index) in branchName" :key="index" @click="selectSearchResult(branchList[name],index)">
-                    <div class="store_name">
-                        <img :src="branchList[name][0].defaultPic"/>
-                        <b>{{name}}</b> 
-                        <span>共{{branchList[name].length}}家门店</span>
-                        <span class="brand_default">默认</span>
-                        <span v-if="selectedIndex == index" class="brand_select">
-                            <svg width="15px" height="11px" viewBox="0 0 15 11" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <g id="选择品牌-" transform="translate(-342.000000, -196.000000)" fill="#007BE6">
-                                        <path d="M347.267767,203.267767 L354.096194,196.43934 C354.681981,195.853553 355.631728,195.853553 356.217514,196.43934 C356.803301,197.025126 356.803301,197.974874 356.217514,198.56066 L348.43934,206.338835 L348.43934,206.338835 C347.971408,206.806767 347.271233,206.90091 346.709851,206.621264 C346.440501,206.561628 346.184404,206.427045 345.974874,206.217514 L345.974874,206.217514 L342.43934,202.681981 C341.853553,202.096194 341.853553,201.146447 342.43934,200.56066 L342.43934,200.56066 C343.025126,199.974874 343.974874,199.974874 344.56066,200.56066 L344.56066,200.56066 L347.267767,203.267767 Z" id="Combined-Shape"></path>
-                                    </g>
-                                </g>
-                            </svg>
-                        </span>
-                    </div>
-                </li>
-            </ul>
-            
-        </section>
 
         <!-- <section class="animation_opactiy shop_back_svg_container" v-if="showLoading">
            <img src="../../images/shop_back_svg.svg">
@@ -278,18 +68,31 @@
         <transition name="router-slid" mode="out-in">
             <router-view></router-view>
         </transition>
+
+        <transition name="fade">
+        <div class="bg-gray" v-if="calendar2.show">
+            <div class="calendar-dialog">
+                <calendar :range="calendar2.range" :lunar="calendar2.lunar" :value="calendar2.value" :begin="calendar2.begin" :end="calendar2.end" @select="calendar2.select"></calendar>
+                <div class="calendar-button">
+                    <span @click="cancelCalendar">取消</span>
+                    <span @click="saveCalendar">确定</span>
+                </div>
+            </div>
+        </div>
+        </transition>
+
     </div>
 </template>
 
 <script>
     import {mapState, mapMutations} from 'vuex'
-    import {getAnalyzeRate,getMyStore,getRateAnalytics,getStoreRate} from 'src/service/getData'
+    import {getAnalyzeRate,getMyStore,getRateAnalytics,getStoreRate,getSubscribeList} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import loading from 'src/components/common/loading'
     // import {loadMore} from 'src/components/common/mixin'
     // import BScroll from 'better-scroll'
     import footGuide from '../../components/footer/footGuide'
-    import myDatepicker from 'vue-datepicker-simple/datepicker-2.vue';
+    import calendar from 'src/components/common/calendar.vue'
 
     import IEcharts from 'vue-echarts-v3/src/lite.vue'
     import echarts from 'vue-echarts-v3/node_modules/echarts/lib/echarts'
@@ -306,12 +109,32 @@
     export default {
         data(){
             return{
-                datePiker:'2017/10/31',
+                calendar2:{
+                    show:false,
+                    range:true,
+                    value:[[new Date().getFullYear(),0,1],[new Date().getFullYear(),new Date().getMonth(),new Date().getDate()]], //默认日期
+                    // lunar:true, //显示农历
+                    begin:[2017,0,1], //可选开始日期
+                    end:[new Date().getFullYear(),new Date().getMonth(),new Date().getDate()], //可选结束日期
+                    select:(begin,end)=>{
+
+                        this.calendar2.value[0] = [begin[0],begin[1],begin[2]];
+                        this.calendar2.value[1] = [end[0],end[1],end[2]];
+                        console.log(1);
+                        if(this.currentBrand != ''){
+                            this.chartInit(this.branchList[this.currentBrand]);
+                            // this.currentBrand = '';
+                        } else if(this.defaultBrand != ''){
+                            this.chartInit(this.branchList[this.defaultBrand]);
+                        }
+                    }
+                },
                 tabType:'dp',
                 showLoading: true, //显示加载动画
                 showSearch:false,
                 showDefault:false,
                 defaultBrand:'',
+                currentBrand:'',
                 selectedIndex:null,
                 storeListOrigin:[],
                 storeList: [],
@@ -374,7 +197,6 @@
                     },
                     xAxis : [
                         {
-                            data:[],
                             position: 'bottom',
                             offset:4,
                             type : 'category',
@@ -479,8 +301,8 @@
         components: {
             loading,
             footGuide,
-            'date-picker': myDatepicker,
-            IEcharts,
+            calendar,
+            IEcharts
         },
         computed: {
             ...mapState([
@@ -494,7 +316,8 @@
             ]),
             //初始化时获取基本数据
             async initData(){
-                
+                // console.log([new Date().getFullYear(),new Date().getMonth(),new Date().getDate()]);
+
                 if(getStore('user') == undefined){
                     this.$router.push('/');
                 }
@@ -504,34 +327,88 @@
                     this.defaultBrand = getStore('defaultBrand');
                 }
 
-                let response = await getMyStore(this.user.id);
+                if(this.$route.params.brand != undefined){
+                    this.currentBrand = this.$route.params.brand;
+                }else if(this.defaultBrand != undefined){
+                    this.currentBrand = this.defaultBrand;
+                }
+
+                console.log(this.$route.params.brand);
+
+
+                // let response = await getMyStore(this.user.id);
+                // if(response.status == 0){
+                //     let _this = this;
+                //     _this.storeList = response.stores;
+                //     _this.storeListOrigin = response.stores;
+                //     _this.storeListOrigin.map(item=>{
+                //         if(!_this.branchList[item.name]){
+                //             _this.branchList[item.name]=[];
+                //         }
+                //         _this.branchList[item.name].push(item);
+                //         return item;
+                //     })
+                //     _this.branchName = Object.keys(_this.branchList);
+                //     console.log(_this.branchName,_this.defaultBrand);
+                // }
+                let _this = this;
+                let response = await getSubscribeList(this.user.openId);
                 if(response.status == 0){
-                    let _this = this;
-                    _this.storeList = response.stores;
-                    _this.storeListOrigin = response.stores;
+
+                    _this.storeList = response.subscribeList.content;
+                    _this.storeListOrigin = response.subscribeList.content;
                     _this.storeListOrigin.map(item=>{
-                        if(!_this.branchList[item.name]){
-                            _this.branchList[item.name]=[];
+                        if(!_this.branchList[item.brand]){
+                            _this.branchList[item.brand]=[];
                         }
-                        _this.branchList[item.name].push(item);
+                        _this.branchList[item.brand].push(item);
                         return item;
                     })
                     _this.branchName = Object.keys(_this.branchList);
-                    console.log(_this.branchName,_this.defaultBrand);
+
+                    if(_this.currentBrand == '' && _this.defaultBrand == ''){
+                        // setStore('currentBrand',_this.branchName[0]);
+                        _this.currentBrand = _this.branchName[0];
+                    }
+                    console.log(_this.branchName,_this.currentBrand,_this.branchList[_this.currentBrand]);
+                    // this.extra = response.extra;
+                }
+                // console.log('xxx')
+                // console.log(this.storeList);
+
+                if(this.storeList.length == 0){
+                    this.gotoAddress('/city/1');
+                    return;
                 }
 
-                if(this.defaultBrand == ''){
-                    this.chartInit(response.stores);
-                }else{
+                if(_this.currentBrand != ''){
+                    this.chartInit(this.branchList[this.currentBrand]);
+                    // this.currentBrand = '';
+                } else if(_this.defaultBrand != ''){
                     this.chartInit(this.branchList[this.defaultBrand]);
                 }
+                
 
                 //隐藏加载动画
                 this.hideLoading();
             },
+            openCalendar(){
+                this.calendar2.show = true;
+            },
+            cancelCalendar(){
+                this.calendar2.show = false;
+            },
+            saveCalendar(){
+                this.calendar2.show = false;
+                if(this.currentBrand != ''){
+                    this.chartInit(this.branchList[this.currentBrand]);
+                    // this.currentBrand = '';
+                } else if(this.defaultBrand != ''){
+                    this.chartInit(this.branchList[this.defaultBrand]);
+                }
+            },
 
             chooseDate(){ 
-                document.getElementById("myDate").focus();
             },
 
             clickTab(type){
@@ -543,9 +420,10 @@
 
                 this.storeIds = [];
                 this.storeList = list;
-                console.log(this.storeIds);
+                // console.log(list);
+                // console.log(this.storeIds);
                 this.storeList.map(item=>{
-                    this.storeIds.push(item.id+"");
+                    this.storeIds.push(item.storeId+"");
                     
                 })
 
@@ -554,24 +432,17 @@
                 // }
 
                 let _this = this;
-                let start,end;
+                _this.startDate = new Date();
+                _this.endDate = new Date();
 
-                if( _this.startDate != null && _this.endDate != null){
-                    start =  _this.startDate;
-                    end =  _this.endDate;
-                }else{
-                    start = new Date();
-                    end = new Date();
-                    start.setMonth(start.getMonth() - 1);
-                    _this.startDate = start.getTime();
-                    _this.endDate = end.getTime();
-                }
+                _this.startDate.setFullYear(_this.calendar2.value[0][0],    _this.calendar2.value[0][1],  _this.calendar2.value[0][2]);
+                _this.endDate.setFullYear(_this.calendar2.value[1][0],      _this.calendar2.value[1][1],  _this.calendar2.value[1][2]);
 
                 getAnalyzeRate({
                     dpStoreIds  :   _this.storeIds,
                     eleStoreIds :   null,
-                    startDate   :   _this.startDate,
-                    endDate     :   _this.endDate,
+                    startDate   :   _this.startDate.getTime(),
+                    endDate     :   _this.endDate.getTime(),
                     source      :   0
                 }).then(function(data){
 
@@ -580,24 +451,21 @@
                         low:0,
                         mid:0,
                         high:0,
-                        amount:0
+                        amount:0.00001
                     },{
                         low:0,
                         mid:0,
                         high:0,
-                        amount:0
+                        amount:0.00001
                     }];
                     _this.originData.map(rate=>{
-                        console.log(rate.rateDate)
-                        // _this.xAxis[0].data.push()
-                        // _this.rateCount[rate.source].high += rate.rate5  += rate.rate4;
-                        // _this.rateCount[rate.source].mid += rate.rate3;
-                        // _this.rateCount[rate.source].low += rate.rate2  += rate.rate1 += rate.rate0;
-                        // _this.rateCount[rate.source].amount += rate.rate5 += rate.rate4 += rate.rate3 += rate.rate2 += rate.rate1 += rate.rate0;
-
+                        _this.rateCount[rate.source].high += rate.rate5  + rate.rate4;
+                        _this.rateCount[rate.source].mid += rate.rate3;
+                        _this.rateCount[rate.source].low += rate.rate2  + rate.rate1 + rate.rate0;
+                        _this.rateCount[rate.source].amount += rate.rateCount;
                     })
 
-                    console.log(_this.originData);
+                    // console.log(_this.originData);
 
                 })
                 // getRateAnalytics(_this.storeIds).then(function(resCount){
@@ -664,7 +532,7 @@
                 if (keyword && keyword != " ") {
 
                     this.storeList = this.storeListOrigin.filter(store=>{
-                        return store.name.indexOf(keyword) > -1;
+                        return store.storeName.indexOf(keyword) > -1;
                     });
 
                 }else if(keyword == "") {
@@ -686,7 +554,7 @@
                 
                 console.log('setDefault:' +　this.defaultBrand);
 
-                this.defaultBrand = data[0].name;
+                this.defaultBrand = data[0].storeName;
                 
             },
             saveDefaultBrand(){
@@ -716,11 +584,8 @@
 
             },
             eventSearch(){
-                this.showSearch = !this.showSearch;
-                this.showDefault = false;
-                if(this.showSearch){
-                    this.storeList = this.storeListOrigin;
-                }
+                this.gotoAddress('/chooseBrand');
+                return;
             },
             eventDefault(){
                 this.showDefault = !this.showDefault;
@@ -734,20 +599,7 @@
 
         },
         watch: {
-            datePiker: function (value,oldValue) {
-                // console.log(value,oldValue);
-                this.startDate = new Date(value).getTime();
 
-
-                // let date = value.substr(5);
-                // let index = this.originData.date.indexOf(date);
-
-                // this.rateCount.countHigh = this.originData.countHigh[index]; 
-                // this.rateCount.countMid = this.originData.countMid[index]; 
-                // this.rateCount.countLow = this.originData.countLow[index]; 
-                // this.rateCount.amount = this.rateCount.countHigh + this.rateCount.countMid + this.rateCount.countLow + 0.00001;
-                
-            }
         }
     }
 </script>
@@ -855,15 +707,16 @@
         justify-content: space-around;
         padding:0 .75rem;
         .tab_container{
-            @include sc(.9rem, #969FB7);
+            @include sc(.6rem, #969FB7);
             @include wh(6.6rem, auto);
             border-bottom:0.2rem solid #fff;
             text-align: center;
-            padding:.6rem .3rem .3rem;
-            line-height: .9rem;
+            padding:.8rem .3rem .3rem;
+            line-height: .6rem;
             span{
-                @include sc(.65rem, #969FB7);
+                @include sc(.6rem, #969FB7);
                 display: inline-block;
+                line-height: .6rem;
             }
             .rate_total{
                 @include sc(.5rem, #969FB7);
@@ -879,7 +732,8 @@
         }
     }
     .description_header{
-            position: relative;
+            position: absolute;
+            top:0;
             z-index: 10;
             background-color: rgba(255,255,255,1);
             padding: 0.8rem 0.8rem 0.6rem 0.8rem;
@@ -1075,6 +929,37 @@
     .main_container{
         
     }
+    .calendar-dialog{
+        width:90%;
+    }
+    .calendar-button{
+        border-bottom-left-radius: .4rem;
+        border-bottom-right-radius: .4rem;
+        background-color: #fff;
+        display: flex;
+        justify-content: space-between;
+        span{
+            @include sc(.65rem, #24253D);
+            display: inline-block;
+            padding: .2rem 1rem .8rem;
+            &:last-child{
+                color:#007BE6;
+            }
+        }
+    }
+    .bg-gray{
+        background-color: rgba(0,0,0,0.5);
+        position: fixed;
+        top:0;
+        right: 0;
+        left: 0;
+        bottom:0;
+        height: 100%;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     .shop_container{
         display: flex;
         flex-direction: column;
@@ -1082,16 +967,7 @@
         right: 0;
         left: 0;
         background:#eef3fa;
-        &.bg-gray{
-            background-color: rgba(255,255,255,1);
-            position: fixed;
-            top:0;
-            right: 0;
-            left: 0;
-            bottom:0;
-            height: 100%;
-            z-index: 101;
-        }
+        
         .set_brand_default_button{
             position: fixed;
             left:10%;
@@ -1110,6 +986,7 @@
             border-top-left-radius:0;
             border-top-right-radius:0;
             padding-bottom: .4rem;
+            width:100%;
             min-height:83%;
             overflow: scroll;
 
@@ -1305,9 +1182,11 @@
                     border-radius: .9rem;
                     background-color: #f6f9fc;
                     line-height: 1.6rem;
+                    span{
 
+                        @include sc(0.65rem, #fff);
+                    }
                     @include wh(100%, 1.6rem);
-                    @include sc(0.65rem, #fff);
 
                     &.green{
                         width:0%;

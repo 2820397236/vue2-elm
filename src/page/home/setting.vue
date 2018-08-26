@@ -53,6 +53,10 @@
                                 </g>
                             </svg>
                         </li>  
+                        <li @click="checkPhoneNumber()">
+                            <span>退出</span>
+                            
+                        </li>  
                     </ul>
                 </section>
             </section>
