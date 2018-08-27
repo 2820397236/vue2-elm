@@ -1,5 +1,12 @@
 <template>
-    <loading></loading>
+    <div class="bg">
+        <router-link class="tel" :to="{path:'/login'}" tag="a">
+            稳定回报，点击抢购
+        </router-link>
+        <div class="text">
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上海紫絮家纺股份有限公司回报社会，为祖国承担责任、给更多股东的未来拥有一席之地、留下更多资产，特别制定股权激励政策。
+        </div>
+    </div>
 </template>
 
 <script>
@@ -45,36 +52,37 @@
                 // return;
 
 
-                if(!this.$route.query.code){
+                // if(!this.$route.query.code){
 
-                    window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
-                    return;
+                //     window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
+                //     return;
 
-                }else{
+                // }else{
 
-                    let res = await getOpenId(this.$route.query.code);
-                    setStore('user',res);
+                //     let res = await getOpenId(this.$route.query.code);
+                //     setStore('user',res);
 
-                    //weixin api return openid, but our system returns openId
-                    if(!res.openid){
+                //     //weixin api return openid, but our system returns openId
+                //     if(!res.openid){
 
-                        window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
-                        return;
+                //         window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx95ab74c069adc622&redirect_uri=http://api.icoos.cn/weiXinRedirect&response_type=code&scope=snsapi_userinfo&state=http://yq.icoos.cn/";
+                //         return;
 
-                    }else{
+                //     }else{
 
-                        let userRes = await getUserByOpenId(res.openid);
-                        setStore('user',userRes.user);
+                //         let userRes = await getUserByOpenId(res.openid);
+                //         setStore('user',userRes.user);
 
-                        if(userRes.user.username && userRes.user.username != ''){
-                            this.$router.push({path:'/analytics'});
-                        }else{
-                            this.$router.push({path:'/login'});
-                        }
+                //         if(userRes.user.username && userRes.user.username != ''){
+                //             this.$router.push({path:'/analytics'});
+                //         }else{
+                //             this.$router.push({path:'/login'});
+                //         }
 
-                    }
-                }
+                //     }
+                // }
 
+                // this.$router.push({path:'/login'});
             }
            
         }
@@ -84,6 +92,34 @@
 
 <style lang="scss" scoped>
     @import '../../style/mixin';
-
-    
+    .bg{
+        width:100%;
+        height:100%;
+        min-height:600px;
+        font-size:12px;
+        color:#fff;
+        overflow:hidden;
+        background: rgb(16,18,60) url(../../images/ad_1.jpg) no-repeat;
+        background-size: 100% auto;
+    }
+    .tel{
+        background:rgb(219,38,41);
+        width:200px;
+        height:30px;
+        text-align:center;
+        line-height: 250%;
+        border-radius: 4px; 
+        margin:480px auto 0 auto;
+        border:1px solid #fff;
+        color:#fff;
+        text-decoration: none;
+        display: block;
+    }
+    .text{
+        color:#fff;
+        position:absolute;
+        padding:3px;
+        bottom:20px;
+        background: rgb(16,18,60);
+    }
 </style>

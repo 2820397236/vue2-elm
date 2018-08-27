@@ -5,7 +5,7 @@ import store from './store/'
 import {routerMode} from './config/env'
 import FastClick from 'fastclick'
 import Vue2Filters from 'vue2-filters'
-import {getJsConfig} from './service/getData'
+// import {getJsConfig} from './service/getData'
 // import {getStore, setStore, removeStore} from 'src/config/mUtils'
 import moment from 'moment/min/moment.min'
 import 'moment/locale/zh-cn'
@@ -41,13 +41,18 @@ const router = new VueRouter({
 	}
 })
 
-getJsConfig(location.href).then(function(data){
-    
-    data.debug = false;
-    weixin.config(data);
+new Vue({
+    router,
+    store,
+}).$mount('#app');
 
-    new Vue({
-        router,
-        store,
-    }).$mount('#app')
-})
+// getJsConfig(location.href).then(function(data){
+    
+//     data.debug = false;
+//     weixin.config(data);
+
+//     new Vue({
+//         router,
+//         store,
+//     }).$mount('#app')
+// })

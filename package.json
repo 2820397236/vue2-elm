@@ -11,10 +11,15 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
     "debounce": "^1.0.2",
     "fastclick": "^1.0.6",
     "gulp": "^3.9.1",
     "iscroll": "^5.2.0",
+    "knex": "^0.15.2",
+    "mysql": "^2.16.0",
+    "nexmo": "^2.3.2",
     "showdown": "^1.7.4",
     "vue": "^2.4.4",
     "vue-datepicker-simple": "^1.5.1",

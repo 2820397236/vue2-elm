@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="v-body">
 		<transition name="router-fade" mode="out-in">
 			<keep-alive>
 			    <router-view v-if="$route.meta.keepAlive"></router-view>
@@ -24,6 +24,15 @@
 
 <style lang="scss">
   	@import './style/common';
+  	body,#app{
+        display: -webkit-box;
+        width:100%;
+    }
+  	.v-body{
+  		width:100%;
+  		display: -webkit-box;
+  		background: rgb(16,18,60);
+  	}
 	.router-fade-enter-active, .router-fade-leave-active {
 		.main_container{
 			transition: opacity .2s;

@@ -303,6 +303,15 @@ export const mobileCode = (phone,invite) => fetch('/v1/user/sendCode', {
 	invite
 }, 'POST');
 
+export const sendCode = (phone) => fetch('/api/v1/sendCode', {
+	phone
+}, 'POST');
+
+export const verify = (phone,code,openId) => fetch('/api/v1/verify', {
+	phone: phone,
+	code:code
+}, 'POST');
+
 export const verifyCode = (phone,code,openId) => fetch('/v1/user/verifyCode', {
 	phone: phone,
 	code:code,
