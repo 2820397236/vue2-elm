@@ -4,7 +4,7 @@
             <div slot="changeLogin" class="change_login" @click="changeLoginWay">{{loginWay? "密码登录":"短信登录"}}</div>
         </head-top> -->
         <form class="loginForm">
-            <img src="../../images/logo.png" class="title_logo"/>
+            <img src="../../images/logo1.png" class="title_logo"/>
             <!-- <section class="title_container">
             小秘蜂
             </section> -->
@@ -307,7 +307,7 @@
     }
 
     .loginForm{
-        margin-top: .6rem;
+        margin-top: 2.6rem;
         margin-bottom: 1rem;
         text-align: center;
         &.newStyle{
