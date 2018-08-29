@@ -2,19 +2,41 @@ const users = require('../service/users');
 const nexmo = require('../index').nexmo;
 const knex = require('../knex').knex;
 
+exports.createOrder = async (req, res) => {
+  const phone = req.body.phone;
+  const planId = req.body.planId;
+  const qty = req.body.qty;
+  const user = await knex("users").where("phone",phone).then(s=>s[0]);
+  const plan = await knex("plan").where("id",planId).then(s=>s[0]);
+
+  await knex("order").insert({
+    "orderId":"1xxxx",
+    "userId": user.id,
+    "title":"资金池股权计划",
+    "planId":plan.id,
+    "price": plan.price * qty,
+    "status": "WAIT",
+    "createTime": Date.now()
+  });
+
+  res.status(202).send({"status":0});
+
+}
+
 exports.sendCode = async (req, res) => {
   const phone = req.body.phone;
-  const from = '紫絮家纺';
+  const from = '紫金池';
   const to = '86' + phone;
   let requestId='';
-  // const text = '【酷师科技】欢迎使用蜜蜂点评，您的注册验证码为：2521，该验证码30分钟内有效。若非您本人操作，可忽略本消息。';
-  // nexmo.message.sendSms(from, to, text);
+  
   
   const exist = await knex('verify').where("phone",phone).andWhere("expireTime",">", Date.now() + 5*60*1000).then(s => s[0]);
   if(exist) {
     res.status(202).send({"error":"exist"});
     return;
   }else{
+    const text = '【零卡科技】尊敬的用户，您的验证码是：4520，该验证码3分钟内有效，请妥善保管。';
+    // nexmo.message.sendSms({from, to, text, async (err, result) => {
     nexmo.verify.request({number: to, brand: from}, async (err, result) => {
       if(err) {
         res.sendStatus(500);
@@ -56,6 +78,27 @@ exports.verify = async (req, res) => {
           await knex('verify').update({
             "verify":code
           }).where("requestId",requestId);
+
+          const user = await knex('users').where("phone",phone).then(s=>s[0]);
+          if(user){
+
+            await knex('users').update({
+              "verify":code,
+              "requestId":requestId,
+              "loginTime":Date.now()
+            }).where("photo",phone);
+
+          }else{
+            await knex('users').insert({
+              "phone":phone,
+              "username":phone,
+              "verify":code,
+              "requestId":requestId,
+              "createTime":Date.now(),
+              "loginTime":Date.now()
+            });
+          }
+
           res.status(200).send({"status":0});
         } else {
           res.status(401).send({"status":-2,"error":result.error_text});

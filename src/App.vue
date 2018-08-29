@@ -31,7 +31,8 @@
   	.v-body{
   		width:100%;
   		display: -webkit-box;
-  		background: rgb(16,18,60);
+  		/*background: rgb(16,18,60);*/
+  		background: #fff!important;
   	}
 	.router-fade-enter-active, .router-fade-leave-active {
 		.main_container{

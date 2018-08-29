@@ -27,5 +27,7 @@ exports.nexmo = nexmo;
 
 require('./db/users').createTable();
 require('./db/verify').createTable();
+require('./db/plan').createTable();
+require('./db/order').createTable();
 require('./route');
 

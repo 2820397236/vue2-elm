@@ -312,6 +312,13 @@ export const verify = (phone,code,openId) => fetch('/api/v1/verify', {
 	code:code
 }, 'POST');
 
+export const createOrder = (phone,planId,qty) => fetch('/api/v1/createOrder', {
+	phone,
+	planId,
+	qty
+}, 'POST');
+
+
 export const verifyCode = (phone,code,openId) => fetch('/v1/user/verifyCode', {
 	phone: phone,
 	code:code,

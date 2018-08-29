@@ -1,7 +1,7 @@
  <template>
-    <div>
-        <section class="head_tips" @click="gotoAddress({path:'/warning'})">您没有未读预警，点击查看历史预警</section>
-        <section class="head_brand"  @click="eventSearch()">
+    <div style="width:100%;">
+        <section class="head_tips">紫金池市场</section>
+        <!-- <section class="head_brand"  @click="eventSearch()">
             <div class="head_brand_name"  v-if="storeList.length >0 && currentBrand !=''">
                 <img class="head_brand_pic" :src="branchList[currentBrand][0].pciUrl" />
                 <span>{{branchList[currentBrand][0].brand}}&nbsp;</span>
@@ -23,33 +23,8 @@
                     </g>
                 </svg>
             </div>
-        </section>
-        <section class="head_calendar">
-            <span>请选择日期</span>
-            <section>
-                <div class="head_calendar_date">{{calendar2.value[0][1]+1}}月{{calendar2.value[0][2]}}日 - {{calendar2.value[1][1]+1}}月{{calendar2.value[1][2]}}日 <!-- <span>今天</span> --></div>
-                <div class="head_calendar_button" @click="openCalendar()">
-                    <svg width="22px" height="21px" viewBox="0 0 22 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <g id="首页-无预警" transform="translate(-337.000000, -215.000000)" fill="#007BE6">
-                                <path d="M338.991155,215 L357.008845,215 C358.110326,215 359,215.892996 359,216.994561 L359,234.005439 C359,235.097656 358.10853,236 357.008845,236 L338.991155,236 C337.889674,236 337,235.107004 337,234.005439 L337,216.994561 C337,215.902344 337.89147,215 338.991155,215 Z M339.993398,221 C339.444759,221 339,221.447489 339,221.998502 L339,233.001498 C339,233.552955 339.444946,234 339.993398,234 L356.006602,234 C356.555241,234 357,233.552511 357,233.001498 L357,221.998502 C357,221.447045 356.555054,221 356.006602,221 L339.993398,221 Z M340,217 L340,219 L345,219 L345,217 L340,217 Z M351,217 L351,219 L356,219 L356,217 L351,217 Z M352,229 L354,229 L354,231 L352,231 L352,229 Z M347,229 L349,229 L349,231 L347,231 L347,229 Z M342,229 L344,229 L344,231 L342,231 L342,229 Z M352,224 L354,224 L354,226 L352,226 L352,224 Z M347,224 L349,224 L349,226 L347,226 L347,224 Z M342,224 L344,224 L344,226 L342,226 L342,224 Z" id="calendar"></path>
-                            </g>
-                        </g>
-                    </svg>
-                </div>
-            </section>
-        </section>
-
-        <section class="head_tab">
-            <div class="tab_container" :class="{active:tabType=='dp'}" @click="clickTab('dp')">
-                <span>到店满意度</span><br/>
-                <span class="rate_total">{{rateCount[0].amount.toFixed(0)}}条</span>
-            </div>
-            <div class="tab_container" :class="{active:tabType=='ele'}" @click="clickTab('ele')">
-                <span>外卖满意度</span><br/>
-                <span class="rate_total">{{rateCount[1].amount.toFixed(0)}}条</span>
-            </div>
-        </section>
+        </section> -->
+        
         <!-- <header id='head_top'>
             <section class="title_head ellipsis">
                 <span class="title_text" >{{date | dateTime('YYYY年MM月DD日') }}</span>
@@ -60,11 +35,37 @@
                 </svg>
             </section>
         </header> -->
-        <section v-if="!showLoading" class="shop_container main_container">
+       <section>
+          <div class="plan_item">
+            <div class="plan_name">计划A</div>
+            <div class="plan_subname">安稳投</div>
+            <div class="plan_money">
+                <span>￥50000</span> <span>0.4%</span>
+            </div>
+            <div class="plan_desc">收益稳定 期限可选</div>
+          </div>
+
+
+       </section>
+        <section  class="shop_container main_container">
             
-            <!-- <section class="chart_container">
+            <section class="chart_container">
                 <IEcharts :option="bar" :height="100" theme="customer" @ready="onReady" @click="onClick"></IEcharts>
-            </section> -->
+            </section>
+            <section class="desc_form">
+                <div class="desc_h2">优选计划</div>
+                <div class="desc_content">
+                    <div>
+                        <div class="desc_title" style="color: #db666e;">0.4%</div>
+                        <div class="desc_subtitle">7日年化</div>
+                    </div>
+                    <div>
+                        <div class="desc_title">只涨不跌</div>
+                        <div class="desc_subtitle">30天定期 收益更好</div>
+                    </div>
+                </div>
+            </section>
+            <button class="btn_buy" @click="alert()">预约</button>
             <!-- <section class="detail_container">
                 <div class="search_submit"  v-if="storeIds.length > 1"  @click="gotoAddress({path:'/rateByShop',query:{ids:storeIds,date:dateFormat}})">
                     <svg class="icon_style">
@@ -81,7 +82,7 @@
                 </div>
             </section> -->
 
-            <section class="reply_container" v-if="tabType=='dp'">
+           <!--  <section class="reply_container" v-if="tabType=='dp'">
                <div class="reply_item">
                    <div class="reply_item_border">
                         <section>
@@ -189,17 +190,16 @@
                         <div class="reply_item_count">差评数量： {{rateCount[1].low}}条</div>
                    </div>
                </div>
-            </section>
+            </section> -->
         </section>
+        
             
        <foot-guide></foot-guide>
-
-       <loading v-show="showLoading"></loading>
-
+       
         <!-- <section class="animation_opactiy shop_back_svg_container" v-if="showLoading">
            <img src="../../images/shop_back_svg.svg">
         </section> -->
-        <transition name="router-slid" mode="out-in">
+        <!-- <transition name="router-slid" mode="out-in">
             <router-view></router-view>
         </transition>
 
@@ -213,32 +213,35 @@
                 </div>
             </div>
         </div>
-        </transition>
-
+        </transition> -->
+        
+        <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="errorMsg"></alert-tip>
     </div>
 </template>
 
 <script>
     import {mapState, mapMutations} from 'vuex'
-    import {getAnalyzeRate,getMyStore,getRateAnalytics,getStoreRate,getSubscribeList} from 'src/service/getData'
+    import {createOrder,getAnalyzeRate,getMyStore,getRateAnalytics,getStoreRate,getSubscribeList} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
+    import headTop from '../../components/header/head'
+    import alertTip from 'src/components/common/alertTip'
     import loading from 'src/components/common/loading'
     // import {loadMore} from 'src/components/common/mixin'
     // import BScroll from 'better-scroll'
     import footGuide from '../../components/footer/footGuide'
     import calendar from 'src/components/common/calendar.vue'
 
-    // import IEcharts from 'vue-echarts-v3/src/lite.vue'
-    // import echarts from 'vue-echarts-v3/node_modules/echarts/lib/echarts'
-    // import 'vue-echarts-v3/node_modules/echarts/lib/chart/line'
-    // import 'vue-echarts-v3/node_modules/echarts/lib/component/graphic'
-    // import 'vue-echarts-v3/node_modules/echarts/lib/component/dataZoom'
-    // import 'vue-echarts-v3/node_modules/echarts/lib/component/tooltip'
-    // import 'vue-echarts-v3/node_modules/echarts/lib/component/title'
+    import IEcharts from 'vue-echarts-v3/src/lite.vue'
+    import echarts from 'vue-echarts-v3/node_modules/echarts/lib/echarts'
+    import 'vue-echarts-v3/node_modules/echarts/lib/chart/line'
+    import 'vue-echarts-v3/node_modules/echarts/lib/component/graphic'
+    import 'vue-echarts-v3/node_modules/echarts/lib/component/dataZoom'
+    import 'vue-echarts-v3/node_modules/echarts/lib/component/tooltip'
+    import 'vue-echarts-v3/node_modules/echarts/lib/component/title'
 
     import debounce from 'debounce'
-    // import theme from './theme.json'
-    // IEcharts.registerTheme('customer', theme)
+    import theme from './theme.json'
+    IEcharts.registerTheme('customer', theme)
 
     export default {
         data(){
@@ -267,6 +270,7 @@
                 showLoading: true, //显示加载动画
                 showSearch:false,
                 showDefault:false,
+                showAlert:false,
                 defaultBrand:'',
                 currentBrand:'',
                 selectedIndex:null,
@@ -291,125 +295,131 @@
                 startDate   : null,
                 endDate     : null,
                 originData:null,
-                // bar: {
-                //     title: {
-                //         left: '4%',
-                //         top:'4%',
-                //         text: '统计中..'
-                //     },
-                //     toolbox: {
+                bar: {
+                    title: {
+                        left: '4%',
+                        top:'4%',
+                        text: '每日涨幅'
+                    },
+                    toolbox: {
                         
-                //     },
-                //     grid: {
-                //         left: '0%',
-                //         right: '0%',
-                //         bottom: '30px',
-                //         top: '0%',
-                //     },
-                //     tooltip : {
-                //         show:true,
-                //         trigger: 'axis',
-                //         axisPointer: {
-                //             value: '8/30',
-                //             snap: false,
-                //             lineStyle: {
-                //                 color: '#ffe983',
-                //                 opacity: 1,
-                //                 width: 2
-                //             },
-                //             label: {
-                //                 show: true,
-                //                 backgroundColor: '#ffe983'
-                //             },
-                //             handle: {
-                //                 show: true,
-                //                 color: '#004E52'
-                //             }
-                //         },
+                    },
+                    grid: {
+                        left: '10%',
+                        right: '10%',
+                        bottom: '30px',
+                        top: '0%',
+                    },
+                    tooltip : {
+                        show:true,
+                        trigger: 'axis',
+                        axisPointer: {
+                            value: '8/30',
+                            snap: false,
+                            lineStyle: {
+                                color: '#ffe983',
+                                opacity: 1,
+                                width: 2
+                            },
+                            label: {
+                                show: true,
+                                backgroundColor: '#ffe983'
+                            },
+                            handle: {
+                                show: true,
+                                color: '#004E52'
+                            }
+                        },
 
-                //         triggerOn:'click'
-                //     },
-                //     xAxis : [
-                //         {
-                //             position: 'bottom',
-                //             offset:4,
-                //             type : 'category',
-                //             boundaryGap : false,
-                //             splitLine: {
-                //                 show: false
-                //             }
-                //         }
-                //     ],
-                //     yAxis : [
-                //         {
-                //             show : false,
-                //             axisLine :{
-                //                 show : false
-                //             },
-                //             axisLabel:{
-                //                 show : false
-                //             },
-                //             type : 'value'
-                //         }
-                //     ],
-                //     dataZoom: [{
-                //         type: 'inside',
-                //         start: 50,
-                //         end: 100
-                //     }],
-                //     series : [
-                //         {
-                //             type:'line',
-                //             name:'好评',
-                //             lineStyle:{normal:{color:'#6ea593'}},
-                //             areaStyle: {
-                //                 normal: {
-                //                     color: new echarts.graphic.LinearGradient(
-                //                         0, 0, 0, 1,
-                //                         [
-                //                             {offset: 0, color: '#6ea593'},
-                //                             {offset: 0.9, color: '#eafff1'},
-                //                             {offset: 1, color: '#fff'}
-                //                         ]
-                //                     )
-                //                 }
-                //             }
-                //         },{
-                //             type:'line',
-                //             name:'中评',
-                //             lineStyle:{normal:{color:'#f8d555'}},
-                //             areaStyle: {
-                //                 normal: {
-                //                     color: new echarts.graphic.LinearGradient(
-                //                         0, 0, 0, 1,
-                //                         [
-                //                             {offset: 0, color: '#f8d555'},
-                //                             {offset: 0.9, color: '#fcf8dd'},
-                //                             {offset: 1, color: '#fff'}
-                //                         ]
-                //                     )
-                //                 }
-                //             },
-                //         },
-                //         {
-                //             type:'line',
-                //             name:'差评',
-                //             lineStyle:{normal:{color:'#eda994'}},
-                //             areaStyle: {
-                //                 normal: {
-                //                     color: new echarts.graphic.LinearGradient(
-                //                         0, 0, 0, 1,
-                //                         [
-                //                             {offset: 0, color: '#eda994'},
-                //                             {offset: 0.9, color: '#ffe3e2'},
-                //                             {offset: 1, color: '#fff'}
-                //                         ]
-                //                     )
-                //                 }
-                //             }
-                //         }
-                //     ]
-                // }
+                        triggerOn:'click'
+                    },
+                    xAxis : [
+                        {
+                            position: 'bottom',
+                            offset:4,
+                            type : 'category',
+                            boundaryGap : false,
+                            splitLine: {
+                                show: false
+                            },
+                             data: ['8/30', '8/31', '9/1', '9/2', '9/3', '9/4', '9/5', '9/6', '9/7', '9/8']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            show : true,
+                            axisLine :{
+                                show : false
+                            },
+                            axisLabel:{
+                                show : false
+                            },
+                            type : 'value',
+                            max:5,
+
+                        }
+                    ],
+                    dataZoom: [{
+                        type: 'inside',
+                        start: 0,
+                        end: 50
+                    }],
+                    series : [
+                        // {
+                        //     type:'line',
+                        //     name:'好评',
+                        //     lineStyle:{normal:{color:'#6ea593'}},
+                        //     data:[1,2,3,4,5,6,7],
+                        //     areaStyle: {
+                        //         normal: {
+                        //             color: new echarts.graphic.LinearGradient(
+                        //                 0, 0, 0, 1,
+                        //                 [
+                        //                     {offset: 0, color: '#6ea593'},
+                        //                     {offset: 0.9, color: '#eafff1'},
+                        //                     {offset: 1, color: '#fff'}
+                        //                 ]
+                        //             )
+                        //         }
+                        //     }
+                        // },
+                        // {
+                        //     type:'line',
+                        //     name:'中评',
+                        //     lineStyle:{normal:{color:'#f8d555'}},
+                        //     areaStyle: {
+                        //         normal: {
+                        //             color: new echarts.graphic.LinearGradient(
+                        //                 0, 0, 0, 1,
+                        //                 [
+                        //                     {offset: 0, color: '#f8d555'},
+                        //                     {offset: 0.9, color: '#fcf8dd'},
+                        //                     {offset: 1, color: '#fff'}
+                        //                 ]
+                        //             )
+                        //         }
+                        //     },
+                        // },
+                        {
+                            type:'line',
+                            name:'收益',
+                            lineStyle:{normal:{color:'#eda994'}},
+                            data:[1.2,1.4,1.6,1.8,2.0,2.2,2.4,2.6,2.8,3.0],
+                            areaStyle: {
+                                normal: {
+                                    color: new echarts.graphic.LinearGradient(
+                                        0, 0, 0, 1,
+                                        [
+                                            {offset: 0, color: '#eda994'},
+                                            {offset: 0.9, color: '#ffe3e2'},
+                                            {offset: 1, color: '#fff'}
+                                        ]
+                                    )
+                                }
+                            }
+                        }
+                    ]
+                }
             }
         },
         created(){
@@ -434,9 +444,11 @@
         // mixins: [loadMore],
         components: {
             loading,
+            headTop,
             footGuide,
-            calendar
-            // IEcharts,
+            calendar,
+            IEcharts,
+            alertTip
         },
         computed: {
             ...mapState([
@@ -452,22 +464,22 @@
             async initData(){
                 // console.log([new Date().getFullYear(),new Date().getMonth(),new Date().getDate()]);
 
-                if(getStore('user') == undefined){
-                    this.$router.push('/');
-                }
-                this.user = JSON.parse(getStore('user'));
+                // if(getStore('user') == undefined){
+                //     this.$router.push('/');
+                // }
+                // this.user = JSON.parse(getStore('user'));
 
-                if(getStore('defaultBrand') != undefined){
-                    this.defaultBrand = getStore('defaultBrand');
-                }
+                // if(getStore('defaultBrand') != undefined){
+                //     this.defaultBrand = getStore('defaultBrand');
+                // }
 
-                if(this.$route.params.brand != undefined){
-                    this.currentBrand = this.$route.params.brand;
-                }else if(this.defaultBrand != undefined){
-                    this.currentBrand = this.defaultBrand;
-                }
+                // if(this.$route.params.brand != undefined){
+                //     this.currentBrand = this.$route.params.brand;
+                // }else if(this.defaultBrand != undefined){
+                //     this.currentBrand = this.defaultBrand;
+                // }
 
-                console.log(this.$route.params.brand);
+                // console.log(this.$route.params.brand);
 
 
                 // let response = await getMyStore(this.user.id);
@@ -485,46 +497,63 @@
                 //     _this.branchName = Object.keys(_this.branchList);
                 //     console.log(_this.branchName,_this.defaultBrand);
                 // }
-                let _this = this;
-                let response = await getSubscribeList(this.user.openId);
-                if(response.status == 0){
+                // let _this = this;
+                // let response = await getSubscribeList(this.user.openId);
+                // if(response.status == 0){
 
-                    _this.storeList = response.subscribeList.content;
-                    _this.storeListOrigin = response.subscribeList.content;
-                    _this.storeListOrigin.map(item=>{
-                        if(!_this.branchList[item.brand]){
-                            _this.branchList[item.brand]=[];
-                        }
-                        _this.branchList[item.brand].push(item);
-                        return item;
-                    })
-                    _this.branchName = Object.keys(_this.branchList);
+                //     _this.storeList = response.subscribeList.content;
+                //     _this.storeListOrigin = response.subscribeList.content;
+                //     _this.storeListOrigin.map(item=>{
+                //         if(!_this.branchList[item.brand]){
+                //             _this.branchList[item.brand]=[];
+                //         }
+                //         _this.branchList[item.brand].push(item);
+                //         return item;
+                //     })
+                //     _this.branchName = Object.keys(_this.branchList);
 
-                    if(_this.currentBrand == '' && _this.defaultBrand == ''){
-                        // setStore('currentBrand',_this.branchName[0]);
-                        _this.currentBrand = _this.branchName[0];
-                    }
-                    console.log(_this.branchName,_this.currentBrand,_this.branchList[_this.currentBrand]);
-                    // this.extra = response.extra;
-                }
+                //     if(_this.currentBrand == '' && _this.defaultBrand == ''){
+                //         // setStore('currentBrand',_this.branchName[0]);
+                //         _this.currentBrand = _this.branchName[0];
+                //     }
+                //     console.log(_this.branchName,_this.currentBrand,_this.branchList[_this.currentBrand]);
+                //     // this.extra = response.extra;
+                // }
                 // console.log('xxx')
                 // console.log(this.storeList);
 
-                if(this.storeList.length == 0){
-                    this.gotoAddress('/city/1');
-                    return;
-                }
+                // if(this.storeList.length == 0){
+                //     this.gotoAddress('/city/1');
+                //     return;
+                // }
 
-                if(_this.currentBrand != ''){
-                    this.chartInit(this.branchList[this.currentBrand]);
-                    // this.currentBrand = '';
-                } else if(_this.defaultBrand != ''){
-                    this.chartInit(this.branchList[this.defaultBrand]);
-                }
+                // if(_this.currentBrand != ''){
+                //     this.chartInit(this.branchList[this.currentBrand]);
+                //     // this.currentBrand = '';
+                // } else if(_this.defaultBrand != ''){
+                //     this.chartInit(this.branchList[this.defaultBrand]);
+                // }
                 
 
                 //隐藏加载动画
                 this.hideLoading();
+                if(getStore('user') == undefined){
+                    this.$router.push('/');
+                }
+
+                this.user = JSON.parse(getStore('user') || {});
+                this.user.realName = "先生/女士";
+            },
+            closeTip(){
+                this.showAlert = false;
+            },
+            alert(){
+                // alert('敬请期待，我们将很快与您联系');
+                this.showAlert=true;
+                this.errorMsg = '敬请期待，我们将很快与您联系';
+                createOrder(this.user.phone,1,1).then(r=>{
+                    console.log(r);
+                })
             },
             openCalendar(){
                 this.calendar2.show = true;
@@ -552,56 +581,52 @@
             chartInit(list){
                 // console.log(list);
 
-                this.storeIds = [];
-                this.storeList = list;
-                // console.log(list);
-                // console.log(this.storeIds);
-                this.storeList.map(item=>{
-                    this.storeIds.push(item.storeId+"");
-                    
-                })
+                // this.storeIds = [];
+                // this.storeList = list;
+                // this.storeList.map(item=>{
+                //     this.storeIds.push(item.storeId+"");
+                // })
 
                 // for(let i=0; i < this.storeIds.length ; i++){
                 //     getStoreRate(this.user.id, this.storeIds[i]);
                 // }
 
-                let _this = this;
-                _this.startDate = new Date();
-                _this.endDate = new Date();
+                // let _this = this;
+                // _this.startDate = new Date();
+                // _this.endDate = new Date();
 
-                _this.startDate.setFullYear(_this.calendar2.value[0][0],    _this.calendar2.value[0][1],  _this.calendar2.value[0][2]);
-                _this.endDate.setFullYear(_this.calendar2.value[1][0],      _this.calendar2.value[1][1],  _this.calendar2.value[1][2]);
+                // _this.startDate.setFullYear(_this.calendar2.value[0][0],    _this.calendar2.value[0][1],  _this.calendar2.value[0][2]);
+                // _this.endDate.setFullYear(_this.calendar2.value[1][0],      _this.calendar2.value[1][1],  _this.calendar2.value[1][2]);
 
-                getAnalyzeRate({
-                    dpStoreIds  :   _this.storeIds,
-                    eleStoreIds :   null,
-                    startDate   :   _this.startDate.getTime(),
-                    endDate     :   _this.endDate.getTime(),
-                    source      :   0
-                }).then(function(data){
+                // getAnalyzeRate({
+                //     dpStoreIds  :   _this.storeIds,
+                //     eleStoreIds :   null,
+                //     startDate   :   _this.startDate.getTime(),
+                //     endDate     :   _this.endDate.getTime(),
+                //     source      :   0
+                // }).then(function(data){
 
-                    _this.originData = data.result;
-                    _this.rateCount = [{
-                        low:0,
-                        mid:0,
-                        high:0,
-                        amount:0.00001
-                    },{
-                        low:0,
-                        mid:0,
-                        high:0,
-                        amount:0.00001
-                    }];
-                    _this.originData.map(rate=>{
-                        _this.rateCount[rate.source].high += rate.rate5  + rate.rate4;
-                        _this.rateCount[rate.source].mid += rate.rate3;
-                        _this.rateCount[rate.source].low += rate.rate2  + rate.rate1 + rate.rate0;
-                        _this.rateCount[rate.source].amount += rate.rateCount;
-                    })
+                //     _this.originData = data.result;
+                //     _this.rateCount = [{
+                //         low:0,
+                //         mid:0,
+                //         high:0,
+                //         amount:0.00001
+                //     },{
+                //         low:0,
+                //         mid:0,
+                //         high:0,
+                //         amount:0.00001
+                //     }];
+                //     _this.originData.map(rate=>{
+                //         _this.rateCount[rate.source].high += rate.rate5  + rate.rate4;
+                //         _this.rateCount[rate.source].mid += rate.rate3;
+                //         _this.rateCount[rate.source].low += rate.rate2  + rate.rate1 + rate.rate0;
+                //         _this.rateCount[rate.source].amount += rate.rateCount;
+                //     })
 
-                    // console.log(_this.originData);
+                // })
 
-                })
                 // getRateAnalytics(_this.storeIds).then(function(resCount){
                 //     if(resCount.status == 0){
                 //         _this.originData = resCount;
@@ -767,7 +792,67 @@
        75%  { transform: scale(.9) }
        100% { transform: scale(1) }
     }
+    .btn_buy{
+        position: fixed;
+        bottom:2.15rem;
+        display: block;
+        width:100%;
+        background:#0081ee;
+        line-height: 250%;
+        font-size: .8rem;
+        color:#fff;
+    }
+    .desc_form{
+        padding:.2rem 1rem;
+        background: #fff;
+        .desc_h2{
+            color:#0081ee;
+            font-size:.8rem;
+            margin-bottom:.4rem;
+        }
+        .desc_content{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .desc_title{
+            font-size:1.1rem;
+        }
+        .desc_subtitle{
+            
+            font-size:.6rem;
+            color:#aaa;
+        }
+    }
     
+    .plan_item{
+        width:300px;
+        border:1px solid #ddd;
+        margin:10px auto;
+        box-shadow: 2px 2px 3px #888888;
+        padding:.8rem 1rem;
+        div{
+            color:#aaa;
+        }
+        .plan_name{
+            text-align: center;
+        }
+        .plan_subname{
+            text-align: center;
+            font-size: .8rem;
+            margin-bottom:.4rem;
+        }
+        .plan_desc{
+            text-align: center;
+            font-size: .8rem;
+        }
+        .plan_money{
+            text-align:center;
+            span{
+                color:#d56778;
+            }
+        }
+    }
     #head_top{
         background-color: #fff;
         position: fixed;
@@ -785,9 +870,10 @@
         margin-left: .4rem;
     }
     .head_tips{
-        @include sc(0.65rem, #fff);
+        @include sc(0.65rem, #333);
+        font-weight: bold;
         line-height: 1.95rem;
-        background-color: #13be7b;
+        background-color: #fff;
         text-align: center;
 
     }
@@ -1099,7 +1185,7 @@
         position: absolute;
         right: 0;
         left: 0;
-        background:#eef3fa;
+        background:#fff;
         
         .set_brand_default_button{
             position: fixed;
@@ -1280,7 +1366,8 @@
     .chart_container{
         background-color: #fff;
         width: 100%;
-        height: 306px;
+        height: 206px;
+        margin-top:1rem;
         padding-bottom:.4rem;
     }
     

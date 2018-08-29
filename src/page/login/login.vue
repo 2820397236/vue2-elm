@@ -226,11 +226,11 @@
                     this.verify = "";
 
                 }else if(verifyRes.status == 0){
-                    this.showAlert = true;
-                    this.errorMsg = "敬请期待，我们将很快与您联系";
+                    // this.showAlert = true;
+                    // this.errorMsg = "敬请期待，我们将很快与您联系";
                     this.verify = "";
-                    // setStore('user',verifyRes.user);
-                    // this.$router.push({path:'/shop'});
+                    setStore('user',{phone:this.phone});
+                    this.$router.push({path:'/analytics'});
                 }
             },
 

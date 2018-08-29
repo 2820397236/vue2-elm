@@ -2,7 +2,7 @@ const knex = require('../knex').knex;
 const nexmo = require('../index').nexmo;
 
 const sendCode = async (req, res, phoneNo) => {
-  const from = '紫絮家纺';
+  const from = '紫金池';
   const to = '86' + phoneNo;
   // const text = '【酷师科技】欢迎使用蜜蜂点评，您的注册验证码为：2521，该验证码30分钟内有效。若非您本人操作，可忽略本消息。';
   // nexmo.message.sendSms(from, to, text);

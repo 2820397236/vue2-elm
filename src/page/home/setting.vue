@@ -1,73 +1,59 @@
 <template>
-  	<div>
-        <header class="myhome_header" ref="shopheader">
-                <!-- <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"> -->
-                <section class="description_header">
-                    <div v-if="user">{{user.realName}}</div>
-                    <div class="description_top">
-                       <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
-                            <img :src="user.profileImg" @click="signout">
-                        </section> -->
-                        <section class="description_right">
-                            <h4 class="description_title ellipsis">个人中心</h4>
-                        </section>
-                    </div>
-                </section>
-                <section  v-if="user" class="img_header" @click="checkPhoneNumber()">
-                    <img :src="user.profileImg"/>
-                </section>
-            </header>   
+  	<div style="width:100%;">
+       <section class="head_tips">我的</section>
 
         <section class="main_container">
-            <section >
-                <!-- <div class="form_title">xxxx</div> -->
-                <section id="hot_city_container">
-                    <ul class="citylistul clear">
-                        <li @click="gotoAddress('/myOrder')">
-                            <span>我的订单</span>
-                            <svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <g id="个人中心" transform="translate(-331.000000, -176.000000)" fill="#CAD2D9">
-                                        <path d="M344,202 C336.820298,202 331,196.179702 331,189 C331,181.820298 336.820298,176 344,176 C351.179702,176 357,181.820298 357,189 C357,196.179702 351.179702,202 344,202 Z M344,200 C350.075133,200 355,195.075133 355,189 C355,182.924867 350.075133,178 344,178 C337.924867,178 333,182.924867 333,189 C333,195.075133 337.924867,200 344,200 Z M338.8,192.6 L349.2,192.6 L349.2,194.6 L338.8,194.6 L338.8,192.6 Z M338.8,188.2 L349.2,188.2 L349.2,190.2 L338.8,190.2 L338.8,188.2 Z M338.8,183.8 L349.2,183.8 L349.2,185.8 L338.8,185.8 L338.8,183.8 Z" id="icon-bars"></path>
-                                    </g>
-                                </g>
-                            </svg>
-                        </li>  
-                        <li @click="gotoAddress('/expireShop')">
-                            <span>门店续订管理</span>
-                            <svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <g id="个人中心" transform="translate(-331.000000, -249.000000)" fill="#CAD2D9">
-                                        <path d="M340.45,256.8 L351.7,256.8 L351.7,258.8 L340.8,258.8 L340.8,266.5 L342.7,266.5 L342.7,268.5 L340.45,268.5 L338.8,268.5 L338.8,256.8 L340.45,256.8 Z M351.700012,260.7 L354.923987,260.7 C354.280849,255.237561 349.635292,251 344,251 C337.924867,251 333,255.924867 333,262 C333,267.635292 337.237561,272.280849 342.7,272.923987 L342.7,261.7 L342.7,260.7 L349.700012,260.7 L349.700012,258.800003 L351.700012,258.800003 L351.700012,260.7 Z M344.7,272.978087 C350.217511,272.631593 354.631593,268.217511 354.978087,262.7 L344.7,262.7 L344.7,272.978087 Z M344,275 C336.820298,275 331,269.179702 331,262 C331,254.820298 336.820298,249 344,249 C351.179702,249 357,254.820298 357,262 C357,269.179702 351.179702,275 344,275 Z" id="icon-calendar-/-date"></path>
-                                    </g>
-                                </g>
-                            </svg>
-                        </li>  
-                        <li @click="gotoAddress('/chooseBrand')">
-                            <span>设置</span>
-                            <svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <g id="设置" transform="translate(-331.000000, -322.000000)" fill="#CAD2D9">
-                                        <path d="M348.438478,332.4 L349.2,332.4 L349.2,333.7 L351.8,333.7 L351.8,336.3 L349.2,336.3 L349.2,337.6 L348.438478,337.6 L350.434672,339.596194 L348.596194,341.434672 L347.361522,340.2 L345.3,340.2 L345.3,342.8 L342.7,342.8 L342.7,340.2 L341.4,340.2 L341.4,339.438478 L339.403806,341.434672 L337.565328,339.596194 L339.561522,337.6 L338.8,337.6 L338.8,336.3 L336.2,336.3 L336.2,333.7 L338.8,333.7 L338.8,332.4 L339.561522,332.4 L337.565328,330.403806 L339.403806,328.565328 L341.4,330.561522 L341.4,329.8 L342.7,329.8 L342.7,327.2 L345.3,327.2 L345.3,329.8 L347.361522,329.8 L348.596194,328.565328 L350.434672,330.403806 L348.438478,332.4 Z M344,348 C336.820298,348 331,342.179702 331,335 C331,327.820298 336.820298,322 344,322 C351.179702,322 357,327.820298 357,335 C357,342.179702 351.179702,348 344,348 Z M344,346 C350.075133,346 355,341.075133 355,335 C355,328.924867 350.075133,324 344,324 C337.924867,324 333,328.924867 333,335 C333,341.075133 337.924867,346 344,346 Z M344,337.6 C345.43594,337.6 346.6,336.43594 346.6,335 C346.6,333.56406 345.43594,332.4 344,332.4 C342.56406,332.4 341.4,333.56406 341.4,335 C341.4,336.43594 342.56406,337.6 344,337.6 Z" id="calendar-icon"></path>
-                                    </g>
-                                </g>
-                            </svg>
-                        </li>  
-                        <li @click="checkPhoneNumber()">
-                            <span>退出</span>
-                            
-                        </li>  
-                    </ul>
-                </section>
+            <div class="title_profile"></div>
+            <section v-if="user">
+                <div class="title_msg">{{user.realName}}</div>
+                <div class="title_msg">{{user.phone}}</div>
+                
             </section>
 
         </section>
 
+        <section>
+            <div class="wallet" v-if="wallet">
+                <h2>我的钱包</h2>
+                <h2>{{wallet.total}}</h2>
+                <div class="wallet_other">
+                    <div class="wallet_flex">
+                        已投资<br/>
+                        {{wallet.fund}}
+                    </div>
+                    <div class="wallet_flex">
+                        剩余可用<br/>
+                        {{wallet.current}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="wallet2" v-if="wallet">
+                <h2>昨日收益(元)</h2>
+                <h1>{{wallet.yesterday}}</h1>
+                <div class="wallet_other">
+                    <div class="wallet_flex">
+                        累计收益<br/>
+                        <span>{{wallet.sum}}</span>
+                    </div>
+                    <div class="wallet_flex">
+                        7日年化(%)<br/>
+                        <span>{{wallet.per7}}</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <button class="btn_buy">
+            <div class="btn_flex cash" @click="alert()">提现</div>
+            <div class="btn_flex" @click="alert()">存入</div>
+        </button>
+
         <foot-guide></foot-guide>
 
         <loading v-show="showLoading"></loading>
-
-        <alert-tip v-if="showAlert" @closeTip="showAlert = false" 
+         <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="errorMsg"></alert-tip>
+       <!--  <alert-tip v-if="showAlert" @closeTip="showAlert = false" 
             :alertText="alertText" 
             :alertSubText="alertSubText" 
             :alertTime="alertTime" 
@@ -75,22 +61,24 @@
             :alertFunc="alertFunc"
             :confirmBtn="confirmBtn"
             :format="format"
-        ></alert-tip>
+        ></alert-tip> -->
     </div>
 </template>
 
 <script>
 import headTop from '../../components/header/head'
-import {cityGuess, hotcity, groupcity} from '../../service/getData'
+import {createOrder,cityGuess, hotcity, groupcity} from '../../service/getData'
 import {getStore, setStore, removeStore} from 'src/config/mUtils'
-import alertTip from 'src/components/common/alertStore'
+import alertTip from 'src/components/common/alertTip'
 import footGuide from '../../components/footer/footGuide'
 import loading from 'src/components/common/loading'
 
 export default {
     data(){
         return{
+
             user: null,
+            wallet: null,
             city: '',
             hotcity: [],     //热门城市列表
             areaList:[],
@@ -111,8 +99,17 @@ export default {
             this.$router.push('/');
         }
 
-        this.user = JSON.parse(getStore('user'));
+        this.user = JSON.parse(getStore('user') || {});
+        this.user.realName = "先生/女士";
 
+        this.wallet = {
+            total:0,
+            fund:0,
+            current:0,
+            yesterday:0,
+            sum:0,
+            per7:'0.4%'
+        };
         
     },
 
@@ -136,9 +133,21 @@ export default {
     },
 
     methods:{
-
+        closeTip(){
+            this.showAlert = false;
+        },
         reload(){
             window.location.reload();
+        },
+
+        alert(){
+            // alert('敬请期待，我们将很快与您联系');
+            this.showAlert=true;
+            this.errorMsg = '敬请期待，我们将很快与您联系';
+
+            createOrder(this.user.phone,1,1).then(r=>{
+                console.log(r);
+            })
         },
 
         setCity(city){    
@@ -185,23 +194,12 @@ export default {
         @include wh(2.3rem, 0.7rem);
         @include ct;
     }
-    .title_head{
-        @include center;
-        width: 50%;
-        color: #fff;
+    .head_tips{
+        @include sc(0.65rem, #333);
+        font-weight: bold;
+        line-height: 1.95rem;
+        background-color: #fff;
         text-align: center;
-        line-height: 0.8rem;
-        img{
-            @include wh(1rem, 1rem);
-            vertical-align:middle;
-            display: inline-block;
-        }
-        .title_text{
-            @include sc(0.6rem, #666);
-            text-align: center;
-            vertical-align:middle;
-            /*font-weight: bold;*/
-        }
     }
     .myhome_header{
         display: flex;
@@ -216,120 +214,96 @@ export default {
         }
     }
     .main_container{
+        display: flex;
+        padding:.8rem;
+        .title_profile{
+            width:2.5rem;
+            height:2.5rem;
+            display: block;
+            border:.025rem solid #ddd;
+            background:#ccc;
+            margin-right:.6rem;
+            border-radius: .4rem;
+        }
+        .title_msg{
+            font-size: .8rem;
+            color:#767676;
+            line-height: 1.3rem;
+        }
     }
-
-    .description_header{
-            position: relative;
-            z-index: 10;
-            background-color: rgba(255,255,255,1);
-            padding: 0.8rem 0.8rem 0.6rem 0.8rem;
-            width: 100%;
-            overflow: hidden;
-            .description_top{
-                display: flex;
-                margin-top:0.2rem;
-                .description_left{
-                    margin-right: 0.5rem;
-                    img{
-                        @include wh(2.9rem, 2.9rem);
-                        display: block;
-                        border-radius: 3rem;
-                    }
-                }
-                .description_right{
-                    flex: 3;
-                    .description_title{
-                        @include sc(.6rem, #949aac);
-                        line-height: 1.4rem;
-                        /*font-weight: bold;*/
-                        width: 100%;
-                        /*margin-bottom: 0.3rem;*/
-                    }
-                    .description_text{
-                        @include sc(.5rem, #282828);
-                        /*margin-bottom: 0.3rem;*/
-                    }
-                    .description_promotion{
-                        @include sc(.5rem, #282828);
-                        width: 11.5rem;
-                    }
-                }
-                .description_more{
-                    flex:2;
-                }
-                .description_arrow{
-                    @include ct;
-                    right: 0.3rem;
-                    z-index: 11;
-                }
-                .shop_detail_vip{
-
-                }
-            }
-            .description_footer{
-                @include fj;
-                margin-top: 0.5rem;
-                padding-right: 1rem;
-                p{
-                    @include sc(.5rem, #fff);
-                    span{
-                        color: #fff;
-                    }
-                    .tip_icon{
-                        padding: 0 .04rem;
-                        border: 0.025rem solid #fff;
-                        border-radius: 0.1rem;
-                        font-size: .4rem;
-                        display: inline-block;
-                    }
-                }
-                .ellipsis{
-                    width: 84%;
-                }
-                .footer_arrow{
-                    @include wh(.45rem, .45rem);
-                    position: absolute;
-                    right: .3rem;
-                }
-            }
-
-            &.empty{
-                padding: 1rem 0.8rem 1rem 0.8rem;
-                .description_top{
-                    img{
-                        @include wh(3.4rem, 3.4rem);
-                    }
-                    .shop_detail_vip{
-                        display: none;
-                    }
-                    .description_title {
-                        @include sc(.9rem, #282828);
-                    }
-                }
-            }
-        }   
-  
-    
-    .group_city_container{
-        width:100%;
-    }
-    .citylistul{
-        padding:0 1rem;
-        li{
-            @include wh(100%, 3rem);
-            border-bottom: 0.025rem solid $bc;
+    .wallet{
+        width:90%;
+        border:0.025rem solid #ddd;
+        box-shadow: 2px 2px 3px #888888;
+        margin:0 auto;
+        h2{
+            margin-top:.4rem;
+            text-align: center;
+            font-size: .8rem;
+            color:#666;
+        }
+        .wallet_other{
+            border-top:0.025rem solid #ddd;
+            margin-top:.4rem;
             display: flex;
-            align-items: center;
-            span{
-                display: inline-block;
-                @include font(0.7rem, 3rem);
+            .wallet_flex{
                 flex:1;
+                text-align: center;
+                font-size: .6rem;
+                color:#666;
+                padding:0.6rem;
             }
 
         }
-        li:nth-of-type(3n){
-            border-right: none;
+    }
+    .wallet2{
+        width:90%;
+        margin:0 auto;
+        margin-top:1rem;
+        h2{
+            margin-top:.4rem;
+            text-align: center;
+            font-size: .8rem;
+            color:#666;
+        }
+        h1{
+            margin-top:.4rem;
+            text-align: center;
+            font-size: 1.6rem;
+            color:#e16072;
+        }
+        .wallet_other{
+            margin-top:.4rem;
+            display: flex;
+            .wallet_flex{
+                flex:1;
+                text-align: center;
+                font-size: .6rem;
+                color:#666;
+                padding:0.6rem;
+                span{
+                    display: block;
+                    line-height: 1.4rem;
+                    color:#a4a4a4;
+                }
+            }
+
         }
     }
-
+    .btn_buy{
+        position: fixed;
+        bottom:2.15rem;
+        display: flex;
+        width:100%;
+        background:#0081ee;
+        .btn_flex{
+            flex:1;
+            line-height: 250%;
+            font-size: .8rem;
+            color:#fff;
+        }
+        .cash{
+            background:#249ef5;
+        }
+    }
 </style>

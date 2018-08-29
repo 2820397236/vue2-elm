@@ -194,27 +194,27 @@
             <span>预警</span>
         </section> -->
 
-        <section @click = "gotoAddress({path: '/analytics'})" class="guide_item" :class="$route.path.indexOf('analytics') !== -1 
+     <!--    <section @click = "gotoAddress({path: '/analytics'})" class="guide_item" :class="$route.path.indexOf('analytics') !== -1 
         || $route.path.indexOf('rateByShop') !== -1
         || $route.path.indexOf('rate') !== -1? 'active' : ''">
         	<svg class="icon_style">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('analytics') !== -1? '#homeActive' : '#home'"></use>
             </svg>
             <span>首页</span>
-        </section>
+        </section> -->
 
-        <section @click = "gotoAddress('/shop')" class="guide_item" :class="$route.path.indexOf('shop') !== -1? 'active' : ''">
+  <!--       <section @click = "gotoAddress('/shop')" class="guide_item" :class="$route.path.indexOf('shop') !== -1? 'active' : ''">
             <svg class="icon_style">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('shop') !== -1? '#storeActive' : '#store'"></use>
             </svg>
-            <span>门店</span>
-        </section>
+            <span>首页</span>
+        </section> -->
 
-        <section @click = "gotoAddress({path: '/city/1'})" class="guide_item" :class="$route.path.indexOf('city') !== -1? 'active' : ''">
+        <section @click = "gotoAddress({path: '/analytics'})" class="guide_item" :class="$route.path.indexOf('analytics') !== -1? 'active' : ''">
             <svg class="icon_style">
-                <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('city') !== -1? '#goSearchActive' : '#goSearch'"></use>
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('analytics') !== -1? '#storeActive' : '#store'"></use>
             </svg>
-            <span>订阅更多</span>
+            <span>市场</span>
         </section>
 
         <section @click = "gotoAddress('/setting')" class="guide_item" :class="$route.path.indexOf('setting') !== -1? 'active' : ''">
@@ -222,7 +222,7 @@
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" 
                 :xlink:href="$route.path.indexOf('setting') >=0 ? '#myHomeActive' : '#myHome'"></use>
             </svg>
-            <span>个人中心</span>
+            <span>我的</span>
         </section>
     </section>
 </template>
