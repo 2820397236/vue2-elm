@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-app.listen(3000);
+app.listen(3000,"127.0.0.1");
 
 exports.app = app;
 exports.nexmo = nexmo;
