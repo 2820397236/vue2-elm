@@ -9,7 +9,7 @@
 // let baseUrl = 'http://api.icoos.cn'; 
 // let baseUrl = 'http://192.168.199.210:8890'; 
 // let baseUrl = 'http://yq.icoos.cn:8890'; 
-let baseUrl = 'http://localhost:3000'; 
+let baseUrl = 'http://hk2.linkersocks.com:3000'; 
 // let baseUrl = 'http://127.0.0.1:8890'; 
 // let baseUrl = ''; 
 let routerMode = 'history';

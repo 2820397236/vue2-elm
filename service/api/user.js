@@ -86,7 +86,7 @@ exports.verify = async (req, res) => {
               "verify":code,
               "requestId":requestId,
               "loginTime":Date.now()
-            }).where("photo",phone);
+            }).where("phone",phone);
 
           }else{
             await knex('users').insert({
