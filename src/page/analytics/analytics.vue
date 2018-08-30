@@ -1182,9 +1182,7 @@
     .shop_container{
         display: flex;
         flex-direction: column;
-        position: absolute;
-        right: 0;
-        left: 0;
+        margin-bottom:90px;
         background:#fff;
         
         .set_brand_default_button{
