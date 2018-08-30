@@ -133,6 +133,9 @@
                 // 
                 // console.log("verifyCode Get Openid:" + this.weixin.openId);
 
+                if(getStore('user') != undefined){
+                    this.$router.push({path:'/analytics'});
+                }
             },
 
             login(){
