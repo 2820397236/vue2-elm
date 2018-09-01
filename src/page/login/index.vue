@@ -119,7 +119,7 @@
         color:#fff;
         position:absolute;
         padding:3px;
-        bottom:20px;
+        bottom:3px;
         background: rgb(16,18,60);
     }
 </style>
