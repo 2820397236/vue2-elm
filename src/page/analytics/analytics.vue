@@ -37,12 +37,15 @@
         </header> -->
        <section>
           <div class="plan_item">
-            <div class="plan_name">计划A</div>
-            <div class="plan_subname">安稳投</div>
+            <div class="plan_prev" @click="changePlanPrev()"><</div>
+            <div class="plan_next" @click="changePlanNext   ()">></div>
+
+            <div class="plan_name">{{planList[planIndex].title}}</div>
+            <div class="plan_subname">{{planList[planIndex].subtitle}}</div>
             <div class="plan_money">
-                <span>￥50000</span> <span>0.4%</span>
+                <span>￥{{planList[planIndex].min}}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{planList[planIndex].rate}}%</span>
             </div>
-            <div class="plan_desc">收益稳定 期限可选</div>
+            <div class="plan_desc">{{planList[planIndex].desc}}</div>
           </div>
 
 
@@ -56,8 +59,8 @@
                 <div class="desc_h2">优选计划</div>
                 <div class="desc_content">
                     <div>
-                        <div class="desc_title" style="color: #db666e;">0.4%</div>
-                        <div class="desc_subtitle">7日年化</div>
+                        <div class="desc_title" style="color: #db666e;">{{planList[planIndex].rate}}%</div>
+                        <div class="desc_subtitle">稳定收益</div>
                     </div>
                     <div>
                         <div class="desc_title">只涨不跌</div>
@@ -295,6 +298,49 @@
                 startDate   : null,
                 endDate     : null,
                 originData:null,
+                planIndex:0,
+                planList:[
+                    {
+                        "title":"计划A",
+                        "subtitle":"安稳投",
+                        "desc":"起步低 收益稳定",
+                        "min":5000,
+                        "rate":0.12,
+                        "rateYear":1.44
+                    },
+                    {
+                        "title":"计划B",
+                        "subtitle":"安稳投",
+                        "desc":"收益稳定 期限可选",
+                        "min":10000,
+                        "rate":0.15,
+                        "rateYear":1.8
+                    },
+                    {
+                        "title":"计划C",
+                        "subtitle":"安稳投",
+                        "desc":"收益稳定 期限可选",
+                        "min":20000,
+                        "rate":0.18,
+                        "rateYear":2.16
+                    },
+                    {
+                        "title":"计划D",
+                        "subtitle":"安稳投",
+                        "desc":"收益稳定 期限可选",
+                        "min":30000,
+                        "rate":0.22,
+                        "rateYear":1.44
+                    },
+                    {
+                        "title":"计划E",
+                        "subtitle":"安稳投",
+                        "desc":"收益稳定 期限可选",
+                        "min":50000,
+                        "rate":0.4,
+                        "rateYear":1.44
+                    }
+                ],
                 bar: {
                     title: {
                         left: '4%',
@@ -460,6 +506,24 @@
             ...mapMutations([
                
             ]),
+            changePlanPrev(flag){
+                this.planIndex --;
+                if(this.planIndex <= 0){
+                    this.planIndex = this.planList.length -1;
+                }else if(this.planIndex >= this.planList.length -1){
+                    this.planIndex =0;
+                }
+            },
+
+             changePlanNext(flag){
+               
+                this.planIndex ++;
+                if(this.planIndex <= 0){
+                    this.planIndex = this.planList.length -1;
+                }else if(this.planIndex >= this.planList.length -1){
+                    this.planIndex =0;
+                }
+            },
             //初始化时获取基本数据
             async initData(){
                 // console.log([new Date().getFullYear(),new Date().getMonth(),new Date().getDate()]);
@@ -831,6 +895,33 @@
         margin:10px auto;
         box-shadow: 2px 2px 3px #888888;
         padding:.8rem 1rem;
+        position:relative;
+        .plan_prev{
+            position:absolute;
+            top:40%;
+            left:8px;
+            background:#ddd;
+            color:#fff;
+            border-radius: 1.2rem;
+            width:1.2rem;
+            height:1.2rem;
+            font-size: .8rem;
+            line-height:1.2rem;
+            padding-left:.3rem;
+        }
+        .plan_next{
+            position:absolute;
+            top:40%;
+            right:8px;
+            background:#ddd;
+            color:#fff;
+            border-radius: 1.2rem;
+            width:1.2rem;
+            height:1.2rem;
+            font-size: .8rem;
+            line-height:1.2rem;
+            padding-left:.3rem;
+        }
         div{
             color:#aaa;
         }
