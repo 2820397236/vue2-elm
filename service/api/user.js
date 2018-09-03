@@ -25,7 +25,7 @@ exports.createOrder = async (req, res) => {
 
 exports.sendCode = async (req, res) => {
   const phone = req.body.phone;
-  const from = '紫金池';
+  const from = 'NEXMO';
   const to = '86' + phone;
   let requestId='';
   
@@ -35,9 +35,22 @@ exports.sendCode = async (req, res) => {
     res.status(202).send({"error":"exist"});
     return;
   }else{
-    const text = '【零卡科技】尊敬的用户，您的验证码是：4520，该验证码3分钟内有效，请妥善保管。';
-    // nexmo.message.sendSms({from, to, text, async (err, result) => {
-    nexmo.verify.request({number: to, brand: from}, async (err, result) => {
+    // const text = '【霖咖科技】尊敬的用户，您的验证码是：4520，该验证码3分钟内有效，请妥善保管。';
+    // nexmo.message.sendSms(from, to, text, (error, response) => {
+    //   if(error) {
+    //     // res.status(401).send({"status":-1,"error":response.error_text});
+    //     throw error;
+    //   } else if(response.messages[0].status != '0') {
+    //     console.error(response);
+    //     // res.status(401).send({"status":-1,"error":response.error_text});
+    //     throw 'Nexmo returned back a non-zero status';
+    //   } else {
+    //     console.log(response);
+    //     res.send(response);
+    //   }
+    // });
+    const brand = '资金池';
+    nexmo.verify.request({number: to, brand: brand}, async (err, result) => {
       if(err) {
         res.sendStatus(500);
       } else {
@@ -117,4 +130,14 @@ exports.verify = async (req, res) => {
   //   console.log(err);
   //   res.status(403).end();
   // });
+};
+
+exports.getUserFinance = async (req, res) => {
+  const phone = req.body.phone;
+  const finace = await knex('order').where({"phone":phone,"status":"FINISH"}).then(s=>s[0]);
+  if(finace){
+    res.status(200).send(finace);
+  }else{
+    res.status(401).send({"status":-1,"error":"未购买"});
+  }
 };

@@ -58,7 +58,7 @@ const continueOrder = r => require.ensure([], () => r(require('../page/confirmOr
 const analytics = r => require.ensure([], () => r(require('../page/analytics/analytics')), 'analytics')
 const chooseBrand = r => require.ensure([], () => r(require('../page/home/chooseBrand')), 'chooseBrand')
 const defaultBrand = r => require.ensure([], () => r(require('../page/home/defaultBrand')), 'defaultBrand')
-const chart = r => require.ensure([], () => r(require('../page/analytics/chart')), 'chart')
+const shareTeam = r => require.ensure([], () => r(require('../page/home/shareTeam')), 'shareTeam')
 const myOrder = r => require.ensure([], () => r(require('../page/confirmOrder/myOrder')), 'myOrder')
 const myOrderDetail = r => require.ensure([], () => r(require('../page/confirmOrder/myOrderDetail')), 'myOrderDetail')
 
@@ -330,8 +330,8 @@ export default [{
             component: defaultBrand
         },
         {
-            path: '/chart',
-            component: chart,
+            path: '/shareTeam',
+            component: shareTeam,
             meta: { keepAlive: true }
         },
         {

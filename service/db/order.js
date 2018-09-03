@@ -9,6 +9,7 @@ const createTable = async () => {
     table.string('orderId');
     table.string('title');
     table.integer('userId');
+    table.string('phone');
     table.integer('planId');
     table.integer('qty');
     table.string('price');

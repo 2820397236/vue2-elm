@@ -1,15 +1,15 @@
 <template>
-    <div>
+    <div style="width:100%">
         <header class="myhome_header" ref="shopheader">
             <!-- <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"> -->
             <section class="description_header">
-                <div>我的订单</div>
+                <div>LYNCA 套餐/PLAN</div>
                 <div class="description_top">
                    <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
                         <img :src="user.profileImg" @click="signout">
                     </section> -->
                     <section class="description_right">
-                        <h4 class="description_title ellipsis" v-if="orderList">您有{{orderList.length}}个订单</h4>
+                        <h4 class="description_title ellipsis" >您可选择4个套餐</h4>
                     </section>
                 </div>
             </section>
@@ -17,12 +17,11 @@
 
         <section class="main_container">
             <section >
-                <!-- <div class="form_title">xxxx</div> -->
                 <section id="hot_city_container">
-                    <ul class="citylistul clear" v-for="(item, index) in orderList">
+                    <ul class="citylistul clear" >
                         <li>
-                            <span>订单时间：{{ item.createDate | dateTime}}</span>
-                            <a @click="gotoAddress('/myOrderDetail/'+item.orderId)">查看详情</a>
+                            <span>套餐A：</span>
+                            <a @click="payNow(1)">Pay Now</a>
                             <svg width="8px" height="12px" viewBox="0 0 8 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                     <g id="首页-无预警" transform="translate(-349.000000, -152.000000)" fill="#007BE6">
@@ -33,51 +32,112 @@
                         </li>
                         <li >
                             <section class="store_detail_list">
-                                <section class="store_img">
-                                    <img :src="item.itemList[0].picUrl">
-                                </section>
+                                <!-- <section class="store_img">
+                                </section> -->
 
                                 <section class="store_info">
                                     <h3 class="store_head">
-                                        <span class="store_name ellipsis">
-                                            <span>{{item.itemList[0].name}}</span>
-                                            <!-- <span>(上海)</span>  -->
-                                            <!-- <span class="store_status green" v-if="store.status==0">营业</span>
-                                            <span class="store_status red" v-if="store.status!=0">停业</span> -->
+                                        <span class="store_name ellipsis">20GB/月
                                         </span>
                                     </h3>
-                                    <p class="store_content ellipsis">
-                                       门店数: {{item.itemList.length}}家
-                                    </p>
-                                    <p class="store_content ellipsis">
-                                       套餐: {{item.info}}
+                                    <p class="store_content ellipsis">包月 Youtube看片、Instagram刷图无压力
                                     </p>
                                 </section>
                             </section>
                         </li>
                         <li  class="order_total">
-                            <span>
-                            合计: {{ item.price/100 | currency('￥')}}元
+                            <span><s>原价:￥48</s> 现价:￥28 
                             </span>
                         </li>
                         
                     </ul>
+
+                    <ul class="citylistul clear" >
+                        <li>
+                            <span>套餐B：</span>
+                            <a  @click="payNow(2)">Pay Now</a>
+                            <svg width="8px" height="12px" viewBox="0 0 8 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="首页-无预警" transform="translate(-349.000000, -152.000000)" fill="#007BE6">
+                                        <path d="M354.929466,155.894975 L354.996555,155.082271 L354.996555,155.082271 C355.041992,154.531859 354.632629,154.048827 354.082217,154.00339 C354.054851,154.001131 354.027404,154 353.999945,154 L348,154 L348,154 C347.447715,154 347,154.447715 347,155 L347,155 L347,161 L347,161 C347,161.552285 347.447715,162 348,162 C348.027459,162 348.054906,161.998869 348.082272,161.99661 L348.894962,161.92952 L348.894962,156.894975 C348.894962,156.342691 349.342677,155.894975 349.894962,155.894975 L354.929466,155.894975 Z" id="disclosure-indicator" transform="translate(351.000000, 158.000000) rotate(-225.000000) translate(-351.000000, -158.000000) "></path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </li>
+                        <li >
+                            <section class="store_detail_list">
+                                <!-- <section class="store_img">
+                                </section> -->
+
+                                <section class="store_info">
+                                    <h3 class="store_head">
+                                        <span class="store_name ellipsis">20GB/月 * 12
+                                        </span>
+                                    </h3>
+                                    <p class="store_content ellipsis">包年 Youtube Netflix看片、Instagram刷图无压力
+                                    </p>
+                                </section>
+                            </section>
+                        </li>
+                        <li  class="order_total">
+                            <span><s>原价:￥458</s> 现价:￥258 
+                            </span>
+                        </li>
+                        
+                    </ul>
+
+                    <ul class="citylistul clear" >
+                        <li>
+                            <span>套餐B：</span>
+                            <a  @click="payNow(3)">Pay Now</a>
+                            <svg width="8px" height="12px" viewBox="0 0 8 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="首页-无预警" transform="translate(-349.000000, -152.000000)" fill="#007BE6">
+                                        <path d="M354.929466,155.894975 L354.996555,155.082271 L354.996555,155.082271 C355.041992,154.531859 354.632629,154.048827 354.082217,154.00339 C354.054851,154.001131 354.027404,154 353.999945,154 L348,154 L348,154 C347.447715,154 347,154.447715 347,155 L347,155 L347,161 L347,161 C347,161.552285 347.447715,162 348,162 C348.027459,162 348.054906,161.998869 348.082272,161.99661 L348.894962,161.92952 L348.894962,156.894975 C348.894962,156.342691 349.342677,155.894975 349.894962,155.894975 L354.929466,155.894975 Z" id="disclosure-indicator" transform="translate(351.000000, 158.000000) rotate(-225.000000) translate(-351.000000, -158.000000) "></path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </li>
+                        <li >
+                            <section class="store_detail_list">
+                                <!-- <section class="store_img">
+                                </section> -->
+
+                                <section class="store_info">
+                                    <h3 class="store_head">
+                                        <span class="store_name ellipsis">无限流量/月 * 12
+                                        </span>
+                                    </h3>
+                                    <p class="store_content ellipsis">包年 Youtube 4K看片、Instagram刷图无压力。支持下载，另有亚洲游戏加速线路。
+                                    </p>
+                                </section>
+                            </section>
+                        </li>
+                        <li  class="order_total">
+                            <span><s>原价:￥1158</s> 现价:￥558 
+                            </span>
+                        </li>
+                        
+                    </ul>
+
+
                 </section>
             </section>
 
         </section>
 
-        <foot-guide></foot-guide>
-
+       <!--  <foot-guide></foot-guide> -->
+        <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="errorMsg"></alert-tip>
         <loading v-show="showLoading"></loading>
     </div>
 </template>
 
 <script>
 import headTop from '../../components/header/head'
+import alertTip from '../../components/common/alertTip'
 import {getOrderList} from '../../service/getData'
 import {getStore, setStore, removeStore} from 'src/config/mUtils'
-import footGuide from '../../components/footer/footGuide'
+// import footGuide from '../../components/footer/footGuide'
 import loading from 'src/components/common/loading'
 
 export default {
@@ -85,7 +145,9 @@ export default {
         return{
             user: null,
             orderList:[],
-            showLoading:false
+            showLoading:false,
+            showAlert:false,
+            errorMsg :''
         }
     },
 
@@ -102,18 +164,19 @@ export default {
 
     components: {
         loading,
-        footGuide,
+        alertTip
+        // footGuide,
     },
 
     methods:{
         //初始化时获取基本数据
         async initData(){
             console.log(this.user);
-            let res = await getOrderList(this.user.openId);
-            this.orderList = res.orderList.content;
-            this.orderList.map(o=>{
-                o.itemList = JSON.parse(o.additionalInfo);
-            })
+            // let res = await getOrderList(this.user.openId);
+            // this.orderList = res.orderList.content;
+            // this.orderList.map(o=>{
+            //     o.itemList = JSON.parse(o.additionalInfo);
+            // })
         },
         reload(){
             window.location.reload();
@@ -125,6 +188,27 @@ export default {
         gotoAddress(path){
             this.$router.push(path);
         },
+        payNow(planId){
+
+            if(planId == 1){
+                this.showAlert=true;
+                this.errorMsg = '手机号不能为空';
+            }
+
+            if(planId == 2){
+                this.showAlert=true;
+                this.errorMsg = '验证码不能为空';
+            }
+
+            if(planId == 3){
+                this.showAlert=true;
+                this.errorMsg = '验证码不能为空';
+            }
+        },
+        closeTip(){
+            this.showAlert = false;
+        },
+
     },
 }
 
@@ -270,6 +354,7 @@ export default {
     .citylistul{
         padding:0 1rem;
         border-bottom: .5rem solid #EBEFF3;
+        background:#fff;
         li{
             @include wh(100%, auto);
             min-height:2.2rem;

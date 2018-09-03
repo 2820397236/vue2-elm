@@ -7,46 +7,61 @@
             <section v-if="user">
                 <div class="title_msg">{{user.realName}}</div>
                 <div class="title_msg">{{user.phone}}</div>
-                
             </section>
-
         </section>
 
         <section>
             <div class="wallet" v-if="wallet">
-                <h2>我的钱包</h2>
-                <h2>{{wallet.total}}</h2>
+                <h2>我的钱包(元)</h2>
+                <h2>{{wallet.getTotalMoney}}</h2>
                 <div class="wallet_other">
                     <div class="wallet_flex">
-                        已投资<br/>
-                        {{wallet.fund}}
+                        累计收益(元)<br/>
+                        {{wallet.getStockMoney}}
                     </div>
                     <div class="wallet_flex">
-                        剩余可用<br/>
-                        {{wallet.current}}
+                        总投资(元)<br/>
+                        {{wallet.getTotalPay}}
+                    </div>
+                    <div class="wallet_flex">
+                        可用余额(元)<br/>
+                        {{wallet.getBalance}}
                     </div>
                 </div>
             </div>
 
             <div class="wallet2" v-if="wallet">
-                <h2>昨日收益(元)</h2>
-                <h1>{{wallet.yesterday}}</h1>
+                <h2>昨日收益(股)</h2>
+                <h1>{{wallet.getStockYesterday}}</h1>
                 <div class="wallet_other">
                     <div class="wallet_flex">
-                        累计收益<br/>
-                        <span>{{wallet.sum}}</span>
+                        累计收益(股)<br/>
+                        <span>{{wallet.getStockSum}}</span>
                     </div>
                     <div class="wallet_flex">
-                        7日年化(%)<br/>
+                        预计收益(股)<br/>
+                        <span>{{wallet.getStockTotal}}</span>
+                    </div>
+                    <div class="wallet_flex">
+                        每日获得(%)<br/>
                         <span>{{wallet.per7}}</span>
                     </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="button-section" @click="goTo('/shareTeam')">
+                    <h4>我的团队</h4>
+                    <div class="ico-team"></div>
                 </div>
             </div>
         </section>
 
         <button class="btn_buy">
-            <div class="btn_flex cash" @click="alert()">提现</div>
-            <div class="btn_flex" @click="alert()">存入</div>
+            <div class="btn_flex draw" @click="alert()">
+            <i></i>转出</div>
+            <div class="btn_flex deposit" @click="alert()">
+            <i></i>转入</div>
         </button>
 
         <foot-guide></foot-guide>
@@ -67,7 +82,7 @@
 
 <script>
 import headTop from '../../components/header/head'
-import {createOrder,cityGuess, hotcity, groupcity} from '../../service/getData'
+import {getUserFinance,createOrder,cityGuess, hotcity, groupcity} from '../../service/getData'
 import {getStore, setStore, removeStore} from 'src/config/mUtils'
 import alertTip from 'src/components/common/alertTip'
 import footGuide from '../../components/footer/footGuide'
@@ -102,13 +117,19 @@ export default {
         this.user = JSON.parse(getStore('user') || {});
         this.user.realName = "先生/女士";
 
+        getUserFinance(this.user.phone).then((result)=>{
+            console.log(result);
+        })
+
         this.wallet = {
-            total:0,
-            fund:0,
-            current:0,
-            yesterday:0,
-            sum:0,
-            per7:'0.4%'
+            getTotalPay:0,
+            getTotalMoney:0,
+            getStockYesterday:0,
+            getStockSum:0,
+            getStockTotal:0,
+            getStockMoney:0,
+            getBalance:0,
+            per7:'0.22%'
         };
         
     },
@@ -138,6 +159,10 @@ export default {
         },
         reload(){
             window.location.reload();
+        },
+
+        goTo(path){
+            this.$router.push({path:path});
         },
 
         alert(){
@@ -215,7 +240,9 @@ export default {
     }
     .main_container{
         display: flex;
-        padding:.8rem;
+        padding:.5rem .8rem;
+        margin-bottom: .8rem;
+        background: rgba(244,244,244,1);
         .title_profile{
             width:2.5rem;
             height:2.5rem;
@@ -224,9 +251,11 @@ export default {
             background:#ccc;
             margin-right:.6rem;
             border-radius: .4rem;
+            background: url(../../images/account.png) center center no-repeat;
+            background-size:100% auto;
         }
         .title_msg{
-            font-size: .8rem;
+            font-size: .7rem;
             color:#767676;
             line-height: 1.3rem;
         }
@@ -237,14 +266,14 @@ export default {
         box-shadow: 2px 2px 3px #888888;
         margin:0 auto;
         h2{
-            margin-top:.4rem;
+            margin-top:.3rem;
             text-align: center;
             font-size: .8rem;
             color:#666;
         }
         .wallet_other{
             border-top:0.025rem solid #ddd;
-            margin-top:.4rem;
+            margin-top:.3rem;
             display: flex;
             .wallet_flex{
                 flex:1;
@@ -257,30 +286,30 @@ export default {
         }
     }
     .wallet2{
-        width:90%;
-        margin:0 auto;
+        width:100%;
+        padding:.3rem 5%;
         margin-top:1rem;
+        background: rgba(244,244,244,1);
         h2{
-            margin-top:.4rem;
+            margin-top:.2rem;
             text-align: center;
             font-size: .8rem;
             color:#666;
         }
         h1{
-            margin-top:.4rem;
+            margin-top:.2rem;
             text-align: center;
             font-size: 1.6rem;
             color:#e16072;
         }
         .wallet_other{
-            margin-top:.4rem;
+            margin-top:.2rem;
             display: flex;
             .wallet_flex{
                 flex:1;
                 text-align: center;
                 font-size: .6rem;
                 color:#666;
-                padding:0.6rem;
                 span{
                     display: block;
                     line-height: 1.4rem;
@@ -295,15 +324,54 @@ export default {
         bottom:2.15rem;
         display: flex;
         width:100%;
-        background:#0081ee;
         .btn_flex{
             flex:1;
             line-height: 250%;
-            font-size: .8rem;
+            font-size: .6rem;
+            padding:.2rem ;
             color:#fff;
+            i{
+
+                width:12px;
+                height:18px;
+                display: inline-block;
+                margin-right:10px;
+                vertical-align:sub;
+            }
         }
-        .cash{
+        .draw{
             background:#249ef5;
+            i{
+                background: url(../../images/ico-out.png) no-repeat center center;
+                background-size:100% auto;
+            }
+            span{
+                
+            }
+        }
+        .deposit{
+            background:#0081ee;
+            i{
+                background: url(../../images/ico-in.png) no-repeat center center;
+                background-size:100% auto;
+            }
+            span{
+                
+            }
+        }
+    }
+    .button-section{
+        padding-bottom:.8rem;
+        h4{
+            text-align: center;
+            @include sc(.8rem,#666);
+            padding:.4rem;
+        }
+        .ico-team{
+            width:28px;
+            height:33px;
+            margin:0 auto;
+            background:url(../../images/ico-team.png);
         }
     }
 </style>

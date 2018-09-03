@@ -5,29 +5,30 @@ const sendCode = async (req, res, phoneNo) => {
   const from = '紫金池';
   const to = '86' + phoneNo;
   // const text = '【酷师科技】欢迎使用蜜蜂点评，您的注册验证码为：2521，该验证码30分钟内有效。若非您本人操作，可忽略本消息。';
-  // nexmo.message.sendSms(from, to, text);
+  const text = '【霖咖科技】尊敬的用户，您的验证码是：4520，该验证码3分钟内有效，请妥善保管。';
+  nexmo.message.sendSms(from, to, text);
   let requestId='';
-  const nexmSendCode = async (phoneNo) => {
-    nexmo.verify.request({number: to, brand: from},(err, result) => {
-      if(err) {
-        res.sendStatus(500);
-      } else {
-        requestId = result.request_id;
-        if(result.status == '0') {
-          res.render('verify', {requestId: requestId}); // Success! Now, have your user enter the PIN
-          //  knex('verify').insert({
-          //   "requestId":requestId,
-          //   "phone":phoneNo,
-          //   "expireTime": Date.now() + 5*3600,
-          // });
-        } else {
-          res.status(401).send(result.error_text);
-        }
-      }
-    });
-  }
-
-  const send = await nexmSendCode(phoneNo);
+  // const nexmSendCode = async (phoneNo) => {
+  //   nexmo.verify.request({number: to, brand: from},(err, result) => {
+  //     if(err) {
+  //       res.sendStatus(500);
+  //     } else {
+  //       requestId = result.request_id;
+  //       if(result.status == '0') {
+  //         res.render('verify', {requestId: requestId}); // Success! Now, have your user enter the PIN
+  //         //  knex('verify').insert({
+  //         //   "requestId":requestId,
+  //         //   "phone":phoneNo,
+  //         //   "expireTime": Date.now() + 5*3600,
+  //         // });
+  //       } else {
+  //         res.status(401).send(result.error_text);
+  //       }
+  //     }
+  //   });
+  // }
+  //
+  // const send = await nexmSendCode(phoneNo);
 }
 
 

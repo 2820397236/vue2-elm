@@ -318,6 +318,10 @@ export const createOrder = (phone,planId,qty) => fetch('/api/v1/createOrder', {
 	qty
 }, 'POST');
 
+export const getUserFinance = (phone) => fetch('/api/v1/getUserFinance',{
+	phone
+})
+
 
 export const verifyCode = (phone,code,openId) => fetch('/v1/user/verifyCode', {
 	phone: phone,

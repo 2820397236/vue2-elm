@@ -6,6 +6,7 @@ const users = require('./api/user');
 app.post('/api/v1/sendCode', users.sendCode);
 app.post('/api/v1/verify', users.verify);
 app.post('/api/v1/createOrder', users.createOrder);
+app.post('/api/v1/getUserFinance', users.getUserFinance);
 
 app.get('*', (req, res) => {
   res.redirect('/');

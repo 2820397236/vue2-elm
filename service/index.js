@@ -4,8 +4,10 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const Nexmo = require('nexmo')
 const nexmo = new Nexmo({
-  apiKey: 'e0297837',
-  apiSecret: 'a453c6c8d6327016'
+  // apiKey: 'e0297837',
+  // apiSecret: 'a453c6c8d6327016'
+  apiKey: '2edd0889',
+  apiSecret: '560784601f490785'
 })
 
 const corsOptions = {
