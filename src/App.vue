@@ -29,8 +29,6 @@
         width:100%;
     }
     #app{
-
-  		padding-bottom:6rem!important;
     }
   	.v-body{
   		width:100%;
