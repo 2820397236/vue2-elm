@@ -43,7 +43,7 @@
             <div class="plan_name">{{planList[planIndex].title}}</div>
             <div class="plan_subname">{{planList[planIndex].subtitle}}</div>
             <div class="plan_money">
-                <span>￥{{planList[planIndex].min}}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{planList[planIndex].rate}}%</span>
+                <span>￥{{planList[planIndex].min}}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>送{{planList[planIndex].stock}}股</span>
             </div>
             <div class="plan_desc">{{planList[planIndex].desc}}</div>
           </div>
@@ -60,7 +60,7 @@
                 <div class="desc_content">
                     <div>
                         <div class="desc_title" style="color: #db666e;">{{planList[planIndex].rate}}%</div>
-                        <div class="desc_subtitle">稳定收益</div>
+                        <div class="desc_subtitle">每日稀释股权</div>
                     </div>
                     <div>
                         <div class="desc_title">只涨不跌</div>
@@ -306,39 +306,39 @@
                         "desc":"起步低 收益稳定",
                         "min":5000,
                         "rate":0.12,
-                        "rateYear":1.44
+                        "stock":0
                     },
                     {
                         "title":"计划B",
                         "subtitle":"安稳投",
-                        "desc":"收益稳定 期限可选",
+                        "desc":"收益稳定 赠送股权",
                         "min":10000,
                         "rate":0.15,
-                        "rateYear":1.8
+                        "stock":4650
                     },
                     {
                         "title":"计划C",
                         "subtitle":"安稳投",
-                        "desc":"收益稳定 期限可选",
+                        "desc":"收益稳定 赠送股权",
                         "min":20000,
                         "rate":0.18,
-                        "rateYear":2.16
+                        "stock":4650
                     },
                     {
                         "title":"计划D",
                         "subtitle":"安稳投",
-                        "desc":"收益稳定 期限可选",
+                        "desc":"收益稳定 赠送股权",
                         "min":30000,
                         "rate":0.22,
-                        "rateYear":1.44
+                        "stock":6900
                     },
                     {
                         "title":"计划E",
                         "subtitle":"安稳投",
-                        "desc":"收益稳定 期限可选",
+                        "desc":"收益稳定 赠送股权",
                         "min":50000,
-                        "rate":0.4,
-                        "rateYear":1.44
+                        "rate":0.40,
+                        "stock":11600
                     }
                 ],
                 bar: {
@@ -510,7 +510,7 @@
                 this.planIndex --;
                 if(this.planIndex <= 0){
                     this.planIndex = this.planList.length -1;
-                }else if(this.planIndex >= this.planList.length -1){
+                }else if(this.planIndex > this.planList.length -1){
                     this.planIndex =0;
                 }
             },
@@ -520,7 +520,7 @@
                 this.planIndex ++;
                 if(this.planIndex <= 0){
                     this.planIndex = this.planList.length -1;
-                }else if(this.planIndex >= this.planList.length -1){
+                }else if(this.planIndex > this.planList.length -1){
                     this.planIndex =0;
                 }
             },
