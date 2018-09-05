@@ -134,7 +134,7 @@
                 // console.log("verifyCode Get Openid:" + this.weixin.openId);
 
                 if(getStore('user') != undefined){
-                    this.$router.push({path:'/analytics'});
+                    // this.$router.push({path:'/analytics'});
                 }
             },
 
@@ -294,8 +294,8 @@
     }
     
     .loginContainer{
-        padding-top: .35rem;
         width:100%;
+        height:768px;
         background:url(../../images/bg.jpg);
         background-size:100% auto;
         p, span, input{

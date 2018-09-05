@@ -31,7 +31,7 @@
     }
   	.v-body{
   		width:100%;
-  		padding-bottom:3rem;
+  		min-height: 736px;
   		/*background: rgb(16,18,60);*/
   		background: #fff!important;
   	}

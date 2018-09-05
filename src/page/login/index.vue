@@ -94,7 +94,7 @@
     @import '../../style/mixin';
     .bg{
         width:100%;
-        min-height:100%;
+        min-height:736px;
         font-size:12px;
         color:#fff;
         overflow:hidden;
