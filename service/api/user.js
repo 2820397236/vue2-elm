@@ -7,7 +7,9 @@ exports.createOrder = async (req, res) => {
   const planId = req.body.planId;
   const qty = req.body.qty;
   const user = await knex("users").where("phone",phone).then(s=>s[0]);
+  if(!user)  res.status(202).send({"error":"user not exist"});
   const plan = await knex("plan").where("id",planId).then(s=>s[0]);
+  if(!plan)  res.status(202).send({"error":"plan not exist"});
 
   await knex("order").insert({
     "orderId":Math.random().toString(36).substring(2),
