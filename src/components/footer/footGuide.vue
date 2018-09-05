@@ -224,22 +224,34 @@
             </svg>
             <span>我的</span>
         </section>
+
+        <section v-if="user && (user.phone == '13788997536' || user.phone == '18516202415' )" @click = "gotoAddress('/admin')" class="guide_item" :class="$route.path.indexOf('admin') !== -1? 'active' : ''">
+            <svg class="icon_style">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                :xlink:href="$route.path.indexOf('admin') >=0 ? '#goSearchActive' : '#goSearch'"></use>
+            </svg>
+            <span>管理员</span>
+        </section>
     </section>
 </template>
 
 <script>
     import {mapState} from 'vuex'
+    import {getStore} from 'src/config/mUtils'
     export default {
     	data(){
             return{
-                
+                user:null
             }
         },
         created(){
            
         },
         mounted(){
-            
+            if(getStore('user') == undefined){
+                this.$router.push('/');
+            }
+            this.user = JSON.parse(getStore('user') || {}); 
         },
         computed: {
             ...mapState([

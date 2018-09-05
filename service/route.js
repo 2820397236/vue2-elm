@@ -1,12 +1,16 @@
 const app = require('./index').app;
 const users = require('./api/user');
 
-
-
 app.post('/api/v1/sendCode', users.sendCode);
 app.post('/api/v1/verify', users.verify);
 app.post('/api/v1/createOrder', users.createOrder);
 app.post('/api/v1/getUserFinance', users.getUserFinance);
+app.post('/api/v1/getUserPlan', users.getUserPlan);
+
+app.post('/api/v2/getUserList', users.getUserList);
+app.post('/api/v2/getUserOrder', users.getUserOrder);
+app.post('/api/v2/getUserFlow', users.getUserFlow);
+app.post('/api/v2/setOrderSuccess', users.setOrderSuccess);
 
 app.get('*', (req, res) => {
   res.redirect('/');

@@ -68,7 +68,7 @@
                     </div>
                 </div>
             </section>
-            <button class="btn_buy" @click="alert()">预约</button>
+            <button class="btn_buy" @click="alert(planIndex)">预约</button>
             <!-- <section class="detail_container">
                 <div class="search_submit"  v-if="storeIds.length > 1"  @click="gotoAddress({path:'/rateByShop',query:{ids:storeIds,date:dateFormat}})">
                     <svg class="icon_style">
@@ -508,7 +508,7 @@
             ]),
             changePlanPrev(flag){
                 this.planIndex --;
-                if(this.planIndex <= 0){
+                if(this.planIndex < 0){
                     this.planIndex = this.planList.length -1;
                 }else if(this.planIndex > this.planList.length -1){
                     this.planIndex =0;
@@ -518,7 +518,7 @@
              changePlanNext(flag){
                
                 this.planIndex ++;
-                if(this.planIndex <= 0){
+                if(this.planIndex < 0){
                     this.planIndex = this.planList.length -1;
                 }else if(this.planIndex > this.planList.length -1){
                     this.planIndex =0;
@@ -611,11 +611,11 @@
             closeTip(){
                 this.showAlert = false;
             },
-            alert(){
+            alert(planIndex){
                 // alert('敬请期待，我们将很快与您联系');
                 this.showAlert=true;
                 this.errorMsg = '敬请期待，我们将很快与您联系';
-                createOrder(this.user.phone,1,1).then(r=>{
+                createOrder(this.user.phone,planIndex,1).then(r=>{
                     console.log(r);
                 })
             },
@@ -894,7 +894,7 @@
         border:1px solid #ddd;
         margin:10px auto;
         box-shadow: 2px 2px 3px #888888;
-        padding:.8rem 1rem;
+        padding:.8rem .8rem;
         position:relative;
         .plan_prev{
             position:absolute;

@@ -2,6 +2,7 @@ import App from '../App'
 
 const home = r => require.ensure([], () => r(require('../page/home/home')), 'home')
 const setting = r => require.ensure([], () => r(require('../page/home/setting')), 'setting')
+const admin = r => require.ensure([], () => r(require('../page/home/admin')), 'admin')
 const index = r => require.ensure([], () => r(require('../page/login/index')), 'index')
 const city = r => require.ensure([], () => r(require('../page/city/city')), 'city')
 // const msite = r => require.ensure([], () => r(require('../page/msite/msite')), 'msite')
@@ -82,6 +83,10 @@ export default [{
         {
             path: '/home',
             component: home
+        },
+        {
+            path: '/admin',
+            component: admin
         },
         {
             path: '/setting',

@@ -13,15 +13,15 @@
         <section>
             <div class="wallet" v-if="wallet">
                 <h2>我的钱包(元)</h2>
-                <h2>{{wallet.getTotalMoney}}</h2>
+                <h2>{{wallet.getTotalMoney | currency('')}}</h2>
                 <div class="wallet_other">
                     <div class="wallet_flex">
                         累计收益(元)<br/>
-                        {{wallet.getStockMoney}}
+                        {{plan.equity * days *  plan.rate /10000 * 4.3 | currency("")}}
                     </div>
                     <div class="wallet_flex">
                         总投资(元)<br/>
-                        {{wallet.getTotalPay}}
+                        {{wallet.getTotalMoney | currency('')}}
                     </div>
                     <div class="wallet_flex">
                         可用余额(元)<br/>
@@ -30,21 +30,21 @@
                 </div>
             </div>
 
-            <div class="wallet2" v-if="wallet">
+            <div class="wallet2" v-if="plan">
                 <h2>昨日收益(股)</h2>
-                <h1>{{wallet.getStockYesterday}}</h1>
+                <h1>{{plan.equity * 1 *  plan.rate /10000}}</h1>
                 <div class="wallet_other">
                     <div class="wallet_flex">
                         累计收益(股)<br/>
-                        <span>{{wallet.getStockSum}}</span>
+                        <span>{{plan.equity * days *  plan.rate /10000}}</span>
                     </div>
                     <div class="wallet_flex">
                         预计收益(股)<br/>
-                        <span>{{wallet.getStockTotal}}</span>
+                        <span v-if="plan.equity">{{plan.equity}}</span>
                     </div>
                     <div class="wallet_flex">
                         每日获得(%)<br/>
-                        <span>{{wallet.per7}}</span>
+                        <span v-if="plan.rate">{{plan.rate/100}}%</span>
                     </div>
                 </div>
             </div>
@@ -82,7 +82,7 @@
 
 <script>
 import headTop from '../../components/header/head'
-import {getUserFinance,createOrder,cityGuess, hotcity, groupcity} from '../../service/getData'
+import {getUserFinance,createOrder,getUserPlan} from '../../service/getData'
 import {getStore, setStore, removeStore} from 'src/config/mUtils'
 import alertTip from 'src/components/common/alertTip'
 import footGuide from '../../components/footer/footGuide'
@@ -94,6 +94,8 @@ export default {
 
             user: null,
             wallet: null,
+            plan:null,
+            days:0,
             city: '',
             hotcity: [],     //热门城市列表
             areaList:[],
@@ -104,7 +106,7 @@ export default {
             outChina:[],
             cityList:[],
             showLoading:false,
-            showAlert: false,
+            showAlert: false
         }
     },
 
@@ -117,20 +119,29 @@ export default {
         this.user = JSON.parse(getStore('user') || {});
         this.user.realName = "先生/女士";
 
-        getUserFinance(this.user.phone).then((result)=>{
-            console.log(result);
+        getUserFinance(this.user.phone).then( o=>{
+            console.log(o);
+            this.wallet = o;
+
+            this.days = parseInt((new Date().getTime() - this.wallet.createTime) / 1000 / 60 / 60 / 24);
+            console.log(this.days);
         })
 
-        this.wallet = {
-            getTotalPay:0,
-            getTotalMoney:0,
-            getStockYesterday:0,
-            getStockSum:0,
-            getStockTotal:0,
-            getStockMoney:0,
-            getBalance:0,
-            per7:'0.22%'
-        };
+
+        getUserPlan(this.user.phone).then( o=>{
+            console.log(o);
+            this.plan = o;
+        })
+        // this.wallet = {
+        //     getTotalPay:0,
+        //     getTotalMoney:0,
+        //     getStockYesterday:0,
+        //     getStockSum:0,
+        //     getStockTotal:0,
+        //     getStockMoney:0,
+        //     getBalance:0,
+        //     per7:'0.22%'
+        // };
         
     },
 

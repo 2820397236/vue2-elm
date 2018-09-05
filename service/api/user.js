@@ -10,7 +10,7 @@ exports.createOrder = async (req, res) => {
   const plan = await knex("plan").where("id",planId).then(s=>s[0]);
 
   await knex("order").insert({
-    "orderId":"1xxxx",
+    "orderId":Math.random().toString(36).substring(2),
     "userId": user.id,
     "title":"资金池股权计划",
     "planId":plan.id,
@@ -19,8 +19,19 @@ exports.createOrder = async (req, res) => {
     "createTime": Date.now()
   });
 
-  res.status(202).send({"status":0});
+  res.status(200).send({"status":0});
+}
 
+exports.setOrderSuccess = async(req, res) => {
+  
+  const phone = req.body.phone;
+  const orderId = req.body.orderId;
+
+  const user = await knex("users").where("phone",phone).then(s=>s[0]);
+  if(!user)  res.status(202).send({"error":"user not exist"});
+
+  const order = await knex("order").update({"status":"SUCCESS"}).where("id",orderId);
+  res.status(200).send({"status":0});
 }
 
 exports.sendCode = async (req, res) => {
@@ -28,7 +39,6 @@ exports.sendCode = async (req, res) => {
   const from = 'NEXMO';
   const to = '86' + phone;
   let requestId='';
-  
   
   const exist = await knex('verify').where("phone",phone).andWhere("expireTime",">", Date.now() + 5*60*1000).then(s => s[0]);
   if(exist) {
@@ -134,10 +144,97 @@ exports.verify = async (req, res) => {
 
 exports.getUserFinance = async (req, res) => {
   const phone = req.body.phone;
-  const finace = await knex('order').where({"phone":phone,"status":"FINISH"}).then(s=>s[0]);
-  if(finace){
-    res.status(200).send(finace);
+  const user = await knex("users").where({"phone":phone}).then(s=>s[0]);
+  if(!user)  res.status(202).send({"error":"user not exsit"});
+
+  const cashflow = await knex('cashflow')
+              .select(knex.raw('sum(value) as money, userId, createTime'))
+              .where({"userId":user.id})
+              .groupBy('userId')
+              .then(s=>s[0]);
+  if(cashflow){
+    res.status(200).send(
+        {
+            getTotalPay:0,
+            getTotalMoney:cashflow.money,
+            getStockYesterday:0,
+            getStockSum:0,
+            getStockTotal:0,
+            getStockMoney:0,
+            getBalance:0,
+            createTime:cashflow.createTime
+        });
   }else{
     res.status(401).send({"status":-1,"error":"未购买"});
   }
 };
+exports.getUserPlan = async (req, res) => {
+  const phone = req.body.phone;
+  const user = await knex("users").where({"phone":phone}).then(s=>s[0]);
+  if(!user)  res.status(202).send({"error":"user not exsit"});
+
+  const outId = req.body.outId;
+  const order  = await knex("order").select().where({"userId":user.id,"status":"SUCCESS"}).orderBy("createTime","desc").then(s=>s[0]);
+  if(!order) res.status(202).send({"error":"order not exist"});
+
+  const planId = order.planId;
+  const plan  = await knex("plan").select().where({"id":planId}).then(s=>s[0]);
+  if(!plan) res.status(202).send({"error":"plan not exist"});
+  res.status(200).send(plan);
+
+
+}
+
+
+exports.getUserList = async (req, res) =>{
+  const phone = req.body.phone;
+  const user = await knex("users").where({"phone":phone,"type":"ADMIN"}).then(s=>s[0]);
+  if(!user)  res.status(202).send({"error":"user not admin"});
+  
+  let userList = await knex("users").select("id","phone","type","createTime").orderBy('createTime', 'desc');;
+  res.status(200).send(userList);
+}
+
+exports.getUserOrder = async (req, res) =>{
+  const phone = req.body.phone;
+  const user = await knex("users").where({"phone":phone,"type":"ADMIN"}).then(s=>s[0]);
+  if(!user)  res.status(202).send({"error":"user not admin"});
+  
+  const userList = await knex("order").select("order.id","users.phone","order.orderId","order.price","order.status","order.type","order.createTime")
+  .leftJoin('users', 'order.userId','users.id').orderBy('order.createTime', 'desc');
+
+  res.status(200).send(userList);
+}
+
+exports.getUserFlow = async (req, res) =>{
+  const phone = req.body.phone;
+  const user = await knex("users").where({"phone":phone,"type":"ADMIN"}).then(s=>s[0]);
+  if(!user)  res.status(202).send({"error":"user not admin"});
+  
+  const cashList = await knex("cashflow").select("cashflow.id","users.phone","cashflow.outId","cashflow.value","cashflow.status","cashflow.type","cashflow.createTime")
+  .leftJoin('users', 'cashflow.userId','users.id').orderBy('cashflow.createTime', 'desc');
+
+  res.status(200).send(cashList);
+}
+
+exports.setOrderSuccess = async (req, res) =>{
+  const phone = req.body.phone;
+  const orderId = req.body.orderId;
+  const user = await knex("users").where({"phone":phone,"type":"ADMIN"}).then(s=>s[0]);
+  if(!user)  res.status(202).send({"error":"user not admin"});
+  
+  await knex("order").update({"status":"SUCCESS"}).where({"id":orderId});
+  const order  = await knex("order").select().where({"id":orderId}).then(s=>s[0]);
+  if(!order) res.status(202).send({"error":"order not exist"});
+
+  await knex("cashflow").insert({
+    "outID":order.orderId,
+    "userId":order.userId,
+    "value":order.price,
+    "type":"CASH",
+    "status":"IN",
+    "createTime":Date.now()
+  });
+  res.status(200).send({"status":0});
+}
+

@@ -1,20 +1,16 @@
 const knex = require('../knex').knex;
-const tableName = 'order';
+const tableName = 'cashflow';
 
 const createTable = async () => {
   const exist = await knex.schema.hasTable(tableName);
   if(exist) { return; }
   return knex.schema.createTableIfNotExists(tableName, function(table) {
     table.increments('id').primary();
-    table.string('orderId');
-    table.string('title');
-    table.integer('userId');
-    table.string('phone');
-    table.integer('planId');
-    table.integer('qty');
-    table.integer('price');
-    table.string('status').defaultTo("WAIT");
-    table.string('type').defaultTo("IN");
+    table.string('outId');
+    table.string('userId');
+    table.bigInteger('value');
+    table.string('type').defaultTo("CASH");
+    table.string('status').defaultTo("IN");
     table.bigInteger('createTime');
   });
 };

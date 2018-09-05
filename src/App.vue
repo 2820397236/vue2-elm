@@ -25,14 +25,13 @@
 <style lang="scss">
   	@import './style/common';
   	body,#app{
-        display: -webkit-box;
         width:100%;
     }
     #app{
     }
   	.v-body{
   		width:100%;
-  		display: -webkit-box;
+  		padding-bottom:3rem;
   		/*background: rgb(16,18,60);*/
   		background: #fff!important;
   	}

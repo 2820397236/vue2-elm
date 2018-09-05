@@ -20,16 +20,16 @@ app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-
 app.listen(3000,"127.0.0.1");
-
 exports.app = app;
 exports.nexmo = nexmo;
 
 require('./db/users').createTable();
+require('./db/cashflow').createTable();
+require('./db/order').createTable();
 require('./db/verify').createTable();
 require('./db/plan').createTable();
-require('./db/order').createTable();
 require('./route');
+
+console.log('end');
 

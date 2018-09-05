@@ -7,9 +7,9 @@ import FastClick from 'fastclick'
 import Vue2Filters from 'vue2-filters'
 // import {getJsConfig} from './service/getData'
 // import {getStore, setStore, removeStore} from 'src/config/mUtils'
-// import moment from 'moment/min/moment.min'
-// import 'moment/locale/zh-cn'
-import weixin from 'weixin-js-sdk'
+import moment from 'moment/min/moment.min'
+import 'moment/locale/zh-cn'
+// import weixin from 'weixin-js-sdk'
 import './config/rem'
 
 if ('addEventListener' in document) {
@@ -20,7 +20,7 @@ if ('addEventListener' in document) {
 
 Vue.use(Vue2Filters)
 Vue.use(VueRouter)
-Vue.use(weixin)
+// Vue.use(weixin)
 Vue.filter('dateTime', function (value,format) {
     return moment(value).format(format || 'YYYY年MM月DD日');
 });

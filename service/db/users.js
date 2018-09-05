@@ -11,6 +11,7 @@ const createTable = async () => {
     table.string('phone');
     table.string('verify');
     table.string('requestId');
+    table.string('type').defaultTo("NORMAL");;
     table.integer('money').defaultTo(0);
     table.bigInteger('createTime');
     table.bigInteger('loginTime');

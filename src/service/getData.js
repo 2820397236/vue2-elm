@@ -322,6 +322,31 @@ export const getUserFinance = (phone) => fetch('/api/v1/getUserFinance',{
 	phone
 })
 
+export const getUserPlan = (phone) => fetch('/api/v1/getUserPlan',{
+	phone
+})
+
+export const getUserList = (phone) => fetch('/api/v2/getUserList',{
+	phone
+})
+
+export const getUserOrder = (phone) => fetch('/api/v2/getUserOrder',{
+	phone
+})
+
+export const getUserFlow = (phone) => fetch('/api/v2/getUserFlow',{
+	phone
+})
+
+
+
+export const setAdminOrderSuccess = (phone,orderId) => fetch('/api/v2/setOrderSuccess',{
+	phone,
+	orderId
+})
+
+
+
 
 export const verifyCode = (phone,code,openId) => fetch('/v1/user/verifyCode', {
 	phone: phone,
