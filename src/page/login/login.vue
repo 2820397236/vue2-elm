@@ -48,7 +48,7 @@
             </section> -->
         </form>
         <div class="login_container"  @click="verifyLogin()">
-            注册
+            登录
         </div>
 
         <!--  <p class="login_tips">
