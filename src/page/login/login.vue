@@ -50,7 +50,7 @@
             </section> -->
         </form>
         <div class="login_container"  @click="verifyLogin()">
-            登录
+            注册
         </div>
 
         <!--  <p class="login_tips">
@@ -230,12 +230,12 @@
                     this.errorMsg = '请填写手机';
                     return;
                 }
-                if(this.password =="") {
+                // if(this.password =="") {
                     
-                    this.showAlert=true;
-                    this.errorMsg = '请填写登录密码';
-                    return;
-                }
+                //     this.showAlert=true;
+                //     this.errorMsg = '请填写登录密码';
+                //     return;
+                // }
                 if(this.verify =="") {
                     
                     this.showAlert=true;
@@ -243,7 +243,7 @@
                     return;
                 }
 
-                let verifyRes = await verify(this.phone,this.verify,this.password);
+                let verifyRes = await verify(this.phone,this.verify);
 
                 if(verifyRes.status == -1){
                     this.showAlert = true;
@@ -251,7 +251,7 @@
                     this.verify = "";
 
                 }else if(verifyRes.status == 0){
-                    
+
                     this.verify = "";
                     setStore('user',{phone:this.phone});
                     this.$router.push({path:'/analytics'});

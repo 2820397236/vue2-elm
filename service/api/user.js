@@ -86,6 +86,7 @@ exports.verify = async (req, res) => {
 
   const phone = req.body.phone;
   const code = req.body.code;
+  const password = req.body.password;
   const codeRow = await knex('verify')
     .where("expireTime",">", Date.now())
     .orderBy('expireTime', 'desc')
