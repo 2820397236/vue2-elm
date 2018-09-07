@@ -620,7 +620,7 @@
                 // alert('敬请期待，我们将很快与您联系');
                 this.showAlert=true;
                 this.errorMsg = '敬请期待，我们将很快与您联系';
-                createOrder(this.user.phone,this.planIndex,1).then(r=>{
+                createOrder(this.user.phone,this.planIndex+1,1).then(r=>{
                     console.log(r);
                 })
             },
