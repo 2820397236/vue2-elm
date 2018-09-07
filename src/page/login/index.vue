@@ -94,12 +94,14 @@
     @import '../../style/mixin';
     .bg{
         width:100%;
-        min-height:736px;
         font-size:12px;
         color:#fff;
         overflow:hidden;
         background: rgb(16,18,60) url(../../images/ad_1.jpg) no-repeat;
         background-size: 100% auto;
+        position: absolute;
+        top:0;
+        bottom:0;
     }
     .tel{
         background:rgb(219,38,41);

@@ -307,9 +307,10 @@ export const sendCode = (phone) => fetch('/api/v1/sendCode', {
 	phone
 }, 'POST');
 
-export const verify = (phone,code,openId) => fetch('/api/v1/verify', {
-	phone: phone,
-	code:code
+export const verify = (phone,code,password) => fetch('/api/v1/verify', {
+	phone,
+	code,
+	password
 }, 'POST');
 
 export const createOrder = (phone,planId,qty) => fetch('/api/v1/createOrder', {

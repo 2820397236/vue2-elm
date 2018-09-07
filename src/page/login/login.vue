@@ -17,6 +17,8 @@
             <section class="input_container">
                 <input type="text" placeholder="手机号码:" v-model="phone" class="btline">
                 <!-- <input type="text" placeholder="请填写推荐码(非必填)" v-model="inviteCode"> -->
+
+                <input type="text" placeholder="密码  :" v-model="password" class="btline">
                 <div>
                     <input type="text" placeholder="验证码:" v-model="verify">
                     <a class="code_button" v-if="!lock" @click="getVerifyCode()">获取验证码</a>
@@ -82,6 +84,7 @@
                 showPassword: false, // 是否显示密码
                 inviteCode:'',
                 phone: '', //电话号码
+                password:'',
                 verify:'',
                 validate_token: null, //获取短信时返回的验证值，登录时需要
                 computedTime: 0, //倒数记时
@@ -221,7 +224,26 @@
             },
 
             async verifyLogin(){
-                let verifyRes = await verify(this.phone,this.verify);
+                if(this.phone =="") {
+                    
+                    this.showAlert=true;
+                    this.errorMsg = '请填写手机';
+                    return;
+                }
+                if(this.password =="") {
+                    
+                    this.showAlert=true;
+                    this.errorMsg = '请填写登录密码';
+                    return;
+                }
+                if(this.verify =="") {
+                    
+                    this.showAlert=true;
+                    this.errorMsg = '请填写验证码';
+                    return;
+                }
+
+                let verifyRes = await verify(this.phone,this.verify,this.password);
 
                 if(verifyRes.status == -1){
                     this.showAlert = true;
@@ -229,8 +251,7 @@
                     this.verify = "";
 
                 }else if(verifyRes.status == 0){
-                    // this.showAlert = true;
-                    // this.errorMsg = "敬请期待，我们将很快与您联系";
+                    
                     this.verify = "";
                     setStore('user',{phone:this.phone});
                     this.$router.push({path:'/analytics'});
@@ -294,10 +315,14 @@
     }
     
     .loginContainer{
+        overflow:hidden;
         width:100%;
-        height:768px;
+        height:100%;
         background:url(../../images/bg.jpg);
         background-size:100% auto;
+        position: absolute;
+        top:0;
+        bottom:0;
         p, span, input{
             
         }

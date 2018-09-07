@@ -59,7 +59,7 @@
 
         <button class="btn_buy">
             <div class="btn_flex draw" @click="alert()">
-            <i></i>转出</div>
+            <i></i>挂单</div>
             <div class="btn_flex deposit" @click="alert()">
             <i></i>转入</div>
         </button>

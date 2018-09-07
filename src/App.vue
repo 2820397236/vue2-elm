@@ -24,14 +24,10 @@
 
 <style lang="scss">
   	@import './style/common';
-  	body,#app{
-        width:100%;
-    }
-    #app{
-    }
   	.v-body{
   		width:100%;
-  		min-height: 736px;
+  		min-height: 100%;
+  		margin:0;
   		/*background: rgb(16,18,60);*/
   		background: #fff!important;
   	}
