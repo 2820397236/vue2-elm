@@ -17,8 +17,6 @@
             <section class="input_container">
                 <input type="text" placeholder="手机号码:" v-model="phone" class="btline">
                 <!-- <input type="text" placeholder="请填写推荐码(非必填)" v-model="inviteCode"> -->
-
-                <input type="text" placeholder="密码  :" v-model="password" class="btline">
                 <div>
                     <input type="text" placeholder="验证码:" v-model="verify">
                     <a class="code_button" v-if="!lock" @click="getVerifyCode()">获取验证码</a>
