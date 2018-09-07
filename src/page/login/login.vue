@@ -99,6 +99,7 @@
         },
         created(){
             // this.getCaptchaCode();
+            this.initData();
         },
         mounted(){
             this.initData();
@@ -135,7 +136,7 @@
                 // console.log("verifyCode Get Openid:" + this.weixin.openId);
 
                 if(getStore('user') != undefined){
-                    // this.$router.push({path:'/analytics'});
+                    this.$router.push({path:'/analytics'});
                 }
             },
 
