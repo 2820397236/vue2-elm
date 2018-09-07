@@ -97,7 +97,7 @@
         font-size:12px;
         color:#fff;
         overflow:hidden;
-        background: rgb(16,18,60) url(../../images/ad_1.jpg) no-repeat;
+        background: rgb(16,18,60) url(../../images/ad_2.jpg) no-repeat;
         background-size: 100% auto;
         position: absolute;
         top:0;
