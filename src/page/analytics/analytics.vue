@@ -196,10 +196,10 @@
         </section>
         
         <button class="btn_buy">
-            <div class="btn_flex draw" @click="alert()">
+            <div class="btn_flex draw" @click="alertSell(planIndex)">
             <i></i>挂单</div>
             <div class="btn_flex deposit"  @click="alert(planIndex)">
-            <i></i>转入</div>
+            <i></i>买入</div>
         </button> 
             
        <foot-guide></foot-guide>
@@ -223,7 +223,16 @@
         </div>
         </transition> -->
         
-        <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="errorMsg"></alert-tip>
+        <!-- <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="errorMsg"></alert-tip> -->
+        <alert-tip v-if="showAlert" @closeTip="showAlert = false" 
+            :alertText="alertText" 
+            :alertSubText="alertSubText" 
+            :alertTime="alertTime" 
+            :alertImg="alertImg"
+            :alertFunc="alertFunc"
+            :confirmBtn="confirmBtn"
+            :format="format"
+        ></alert-tip>
     </div>
 </template>
 
@@ -232,7 +241,8 @@
     import {createOrder,getAnalyzeRate,getMyStore,getRateAnalytics,getStoreRate,getSubscribeList} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import headTop from '../../components/header/head'
-    import alertTip from 'src/components/common/alertTip'
+    import alertTip from 'src/components/common/alertStore'
+    // import alertConfirm from 'src/components/common/alertStore'
     import loading from 'src/components/common/loading'
     // import {loadMore} from 'src/components/common/mixin'
     // import BScroll from 'better-scroll'
@@ -393,7 +403,7 @@
                             splitLine: {
                                 show: false
                             },
-                             data: ['8/30', '8/31', '9/1', '9/2', '9/3', '9/4', '9/5', '9/6', '9/7', '9/8']
+                             data: ['9/6', '9/7', '9/8', '9/9', '9/10', '9/11', '9/12', '9/13', '9/14', '9/15']
                         }
                     ],
                     yAxis : [
@@ -618,11 +628,52 @@
             },
             alert(planIndex){
                 // alert('敬请期待，我们将很快与您联系');
-                this.showAlert=true;
-                this.errorMsg = '敬请期待，我们将很快与您联系';
-                createOrder(this.user.phone,this.planIndex+1,1).then(r=>{
-                    console.log(r);
-                })
+                // this.showAlert=true;
+                // this.errorMsg = '敬请期待，我们将很快与您联系';
+                // createOrder(this.user.phone,this.planIndex+1,1).then(r=>{
+                //     console.log(r);
+                // })
+            
+                this.showAlert = true;
+                this.alertText = order.phone;
+
+                this.alertSubText = '是否确认该用户买入￥'+ this.planList[planIndex].min +'？';
+                this.alertTime = new Date();
+                this.alertImg = 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJLt9GVR0GqQkjqicrIqibicqaoOFSAQ0u6HFoLcEMwKPdBLzD2mgicCQyuC650UM3pYYrHIia7ib5qvEiaQ/132';
+
+                this.confirmBtn = "确认";
+                this.format = 'YYYY年MM月DD日';
+                let _this = this;
+                this.alertFunc = ()=>{
+                    createOrder(this.user.phone,this.planIndex+1,1).then(r=>{
+                        console.log(r);
+                        _this.showAlert = false;
+                    })
+                }
+            },
+
+            alertSell(planIndex){
+                // alert('敬请期待，我们将很快与您联系');
+                // this.showAlert=true;
+                // this.errorMsg = '敬请期待，我们将很快与您联系';
+                // createOrder(this.user.phone,this.planIndex+1,1).then(r=>{
+                //     console.log(r);
+                // })
+            
+                this.showAlert = true;
+                this.alertText = order.phone;
+
+                this.alertSubText = '敬请期待';
+                this.alertTime = new Date();
+                this.alertImg = 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJLt9GVR0GqQkjqicrIqibicqaoOFSAQ0u6HFoLcEMwKPdBLzD2mgicCQyuC650UM3pYYrHIia7ib5qvEiaQ/132';
+
+                this.confirmBtn = "确认";
+                this.format = 'YYYY年MM月DD日';
+                this.alertFunc = ()=>{
+                    createOrder(this.user.phone,this.planIndex+1,1).then(r=>{
+                        console.log(r);
+                    })
+                }
             },
             openCalendar(){
                 this.calendar2.show = true;

@@ -57,12 +57,12 @@
             </div>
         </section>
 
-        <button class="btn_buy">
+        <!-- <button class="btn_buy">
             <div class="btn_flex draw" @click="alert()">
             <i></i>挂单</div>
             <div class="btn_flex deposit" @click="alert()">
-            <i></i>转入</div>
-        </button>
+            <i></i>买入</div>
+        </button> -->
 
         <foot-guide></foot-guide>
 
