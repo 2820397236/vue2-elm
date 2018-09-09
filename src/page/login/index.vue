@@ -1,8 +1,8 @@
 <template>
     <div class="bg">
-        <router-link class="tel" :to="{path:'/login'}" tag="a">
+        <a class="tel" @click="goToSystem()">
             稳定回报，点击抢购
-        </router-link>
+        </a>
         <div class="text">
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上海紫絮家纺股份有限公司回报社会，为祖国承担责任、给更多股东的未来拥有一席之地、留下更多资产，特别制定股权激励政策。
         </div>
@@ -43,6 +43,14 @@
             ...mapMutations([
                 'RECORD_USERINFO'
             ]),
+            goToSystem(){
+                if(getStore('user') != undefined){
+                    this.$router.push({path:'/analytics'});
+                }else{
+                    this.$router.push({path:'/login'});
+
+                }
+            },
             async initData(){
 
                 //DEBUG MODE
@@ -110,7 +118,7 @@
         text-align:center;
         line-height: 250%;
         border-radius: 4px; 
-        margin:480px auto 0 auto;
+        margin:400px auto 0 auto;
         border:1px solid #fff;
         color:#fff;
         text-decoration: none;

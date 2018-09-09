@@ -1,7 +1,10 @@
 <template>
   	<div style="width:100%;">
-       <section class="head_tips">我的</section>
-
+        <header id="head_top">
+            <section class="title_head ellipsis">
+                <span class="title_text">我的</span>
+            </section>
+        </header>
         <section class="main_container">
             <div class="title_profile"></div>
             <section v-if="user">
@@ -11,7 +14,7 @@
         </section>
 
         <section>
-            <div class="wallet" v-if="wallet">
+            <div class="wallet" v-if="wallet && plan">
                 <h2>我的钱包(元)</h2>
                 <h2>{{wallet.getTotalMoney | currency('')}}</h2>
                 <div class="wallet_other">
@@ -223,6 +226,48 @@ export default {
 
 <style lang="scss" scoped>
     @import '../../style/mixin';
+    #head_top{
+        background-color: #fff;
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        @include wh(100%, auto);
+    }
+    .title_head{
+        color: #fff;
+        text-align: left;
+        line-height: 0.8rem;
+        padding: .6rem .5rem .4rem;
+        border-bottom:0.025rem solid #e5e5e5;
+        display: flex;
+        justify-content: center;
+        img{
+            @include wh(2rem, 2rem);
+            vertical-align:middle;
+            display: inline-block;
+            border-radius: .4rem;
+            margin-right:.4rem;
+        }
+        .title_content{
+            flex:1;
+        }
+        .title_text{
+            @include sc(0.7rem, #343640);
+            vertical-align:middle;
+        }
+        .title_time{
+            @include sc(0.55rem, #595F79);
+            padding-top:.5rem;
+            display: block;
+            /*font-weight: bold;*/
+        }
+        .head_link_button{
+            @include sc(0.65rem, #007BE6);
+            padding-top: 1.05rem;
+            font-weight: bold;
+        }
+    }
     .head_logo{
         left: 0.4rem;
         font-weight: 400;

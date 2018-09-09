@@ -1,24 +1,21 @@
  <template>
     <div>
-        <header id='head_top'>
-            <section class="head_goback" @click="goBack()">
-                返回
-            </section>
-
-            <section >
-                <ul class="rate_navi">
-                    <li :class="{ active : listType == 'user' }" @click="setRatingType('user')">
-                        <span>用户 {{rateCount.countHigh}}</span>
-                    </li>
-                    <li :class="{ active : listType == 'order' }" @click="setRatingType('order')">
-                        <span>订单 {{rateCount.countMid}}</span>
-                    </li>
-                    <li :class="{ active : listType == 'flow' }" @click="setRatingType('flow')">
-                        <span>流水 {{rateCount.countLow}}</span>
-                    </li>
-                </ul>
+        <header id="head_top">
+            <section class="title_head ellipsis">
+                <span class="title_text">管理员</span>
             </section>
         </header>
+        <ul class="rate_navi">
+            <li :class="{ active : listType == 'user' }" @click="setRatingType('user')">
+                <span>用户 {{rateCount.countHigh}}</span>
+            </li>
+            <li :class="{ active : listType == 'order' }" @click="setRatingType('order')">
+                <span>订单 {{rateCount.countMid}}</span>
+            </li>
+            <li :class="{ active : listType == 'flow' }" @click="setRatingType('flow')">
+                <span>流水 {{rateCount.countLow}}</span>
+            </li>
+        </ul>
 
         <section  class="shop_container main_container">
             <section class="shoplist_container">
@@ -29,11 +26,13 @@
                                 <div class="rate_head">
                                     <section class="user_profile">
                                         <div class="rate_img" :class="{ green : item.ratingStar ==50,red : item.ratingStar <30,yellow : item.ratingStar ==30}">
-                                            <img src="http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJLt9GVR0GqQkjqicrIqibicqaoOFSAQ0u6HFoLcEMwKPdBLzD2mgicCQyuC650UM3pYYrHIia7ib5qvEiaQ/132">
+                                           <!-- <img src="http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJLt9GVR0GqQkjqicrIqibicqaoOFSAQ0u6HFoLcEMwKPdBLzD2mgicCQyuC650UM3pYYrHIia7ib5qvEiaQ/132"> -->
+                                            <div class="img"></div>
+
                                         </div>
                                         <div class="rate_username">
                                                 {{item.phone}} <br/>
-                                                <span class="rate_time">{{item.createTime | dateTime}}</span><br/>
+                                                <span class="rate_time">{{item.createTime | dateTime('YYYY/MM/DD hh:mm:ss')}}</span><br/>
                                                 <span class="rate_tag" v-if="item.status =='WAIT'">待确认</span>
                                                 <span class="rate_tag green" v-if="item.status !='WAIT'">已确认</span>
                                          </div>
@@ -60,11 +59,13 @@
                                 <div class="rate_head">
                                     <section class="user_profile">
                                         <div class="rate_img" :class="{ green : item.ratingStar ==50,red : item.ratingStar <30,yellow : item.ratingStar ==30}">
-                                            <img src="http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJLt9GVR0GqQkjqicrIqibicqaoOFSAQ0u6HFoLcEMwKPdBLzD2mgicCQyuC650UM3pYYrHIia7ib5qvEiaQ/132">
+                                            <!-- <img src="http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJLt9GVR0GqQkjqicrIqibicqaoOFSAQ0u6HFoLcEMwKPdBLzD2mgicCQyuC650UM3pYYrHIia7ib5qvEiaQ/132"> -->
+                                            <div class="img"></div>
+
                                         </div>
                                         <div class="rate_username">
                                                 {{item.phone}} <br/>
-                                                <span class="rate_time">注册时间：{{item.createTime | dateTime}}</span><br/>
+                                                <span class="rate_time">注册时间：{{item.createTime | dateTime('YYYY/MM/DD hh:mm:ss')}}</span><br/>
                                                 <span class="rate_tag" v-if="item.type =='ADMIN'">管理员</span>
                                          </div>
                                     </section>
@@ -84,11 +85,12 @@
                                 <div class="rate_head">
                                     <section class="user_profile">
                                         <div class="rate_img" :class="{ green : item.ratingStar ==50,red : item.ratingStar <30,yellow : item.ratingStar ==30}">
-                                            <img src="http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJLt9GVR0GqQkjqicrIqibicqaoOFSAQ0u6HFoLcEMwKPdBLzD2mgicCQyuC650UM3pYYrHIia7ib5qvEiaQ/132">
+                                            <!-- <img src="http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJLt9GVR0GqQkjqicrIqibicqaoOFSAQ0u6HFoLcEMwKPdBLzD2mgicCQyuC650UM3pYYrHIia7ib5qvEiaQ/132"> -->
+                                            <div class="img"></div>
                                         </div>
                                         <div class="rate_username">
                                                 {{item.phone}} <br/>
-                                                <span class="rate_time">{{item.createTime | dateTime}}</span><br/>
+                                                <span class="rate_time">{{item.createTime | dateTime('YYYY/MM/DD hh:mm:ss')}}</span><br/>
                                                 <span class="rate_tag" v-if="item.status =='WAIT'">待确认</span>
                                                 <span class="rate_tag green" v-if="item.type =='CASH'">现金</span>
                                          </div>
@@ -269,6 +271,7 @@
         top: 0;
         @include wh(100%, auto);
         border-bottom:0.025rem solid #e5e5e5;
+        text-align: center;
     }
     .head_goback{
         left: 0.4rem;
@@ -312,7 +315,7 @@
         padding: .6rem .5rem .4rem;
         border-bottom:0.025rem solid #e5e5e5;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         img{
             @include wh(2rem, 2rem);
             vertical-align:middle;
@@ -326,7 +329,6 @@
         .title_text{
             @include sc(0.7rem, #343640);
             vertical-align:middle;
-            font-weight: bold;
         }
         .title_time{
             @include sc(0.55rem, #595F79);
@@ -396,11 +398,15 @@
             border-radius: .7rem;
             border-top-left-radius:0;
             border-top-right-radius:0;
+            width:100%;
+            position:fixed;
+            top:1.85rem;
+            z-index:100;
+            border-bottom:0.125rem solid #ddd;
             li{
                 flex:1;
                 text-align: center;
                 line-height: 1.5rem;
-                padding-top:.5rem;
                 span{
                     display:inline-block;
                     vertical-align:middle;
@@ -446,7 +452,7 @@
             }
         }
     .main_container{
-        padding-top:5.2rem;
+        padding-top:2rem;
         width:100%;
     }
 
@@ -499,7 +505,14 @@
                             margin-right: .4rem;
                             width:100%;
                             .rate_img{
-                                
+                                .img{
+
+                                    border-radius: 2rem;
+                                    @include wh(2rem, 2rem);
+                                    display: block;
+                                    background:url(../../images/account.png) center center;
+                                    background-size:100% auto;
+                                }
                                 &::after{
                                     margin-left:1.6rem;
                                     margin-top:-2rem;

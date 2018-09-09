@@ -1,6 +1,10 @@
  <template>
     <div style="width:100%;">
-        <section class="head_tips">紫金池市场</section>
+        <header id="head_top">
+            <section class="title_head ellipsis">
+                <span class="title_text">紫金池市场</span>
+            </section>
+        </header>
         <!-- <section class="head_brand"  @click="eventSearch()">
             <div class="head_brand_name"  v-if="storeList.length >0 && currentBrand !=''">
                 <img class="head_brand_pic" :src="branchList[currentBrand][0].pciUrl" />
@@ -38,7 +42,7 @@
        <section>
           <div class="plan_item">
             <div class="plan_prev" @click="changePlanPrev()"><</div>
-            <div class="plan_next" @click="changePlanNext   ()">></div>
+            <div class="plan_next" @click="changePlanNext()">></div>
 
             <div class="plan_name">{{planList[planIndex].title}}</div>
             <div class="plan_subname">{{planList[planIndex].subtitle}}</div>
@@ -60,7 +64,7 @@
                 <div class="desc_content">
                     <div>
                         <div class="desc_title" style="color: #db666e;">{{planList[planIndex].rate}}%</div>
-                        <div class="desc_subtitle">每日稀释股权</div>
+                        <div class="desc_subtitle">每日释放股权</div>
                     </div>
                     <div>
                         <div class="desc_title">只涨不跌</div>
@@ -637,7 +641,7 @@
                 this.showAlert = true;
                 this.alertText = order.phone;
 
-                this.alertSubText = '是否确认该用户买入￥'+ this.planList[planIndex].min +'？';
+                this.alertSubText = '是否确认买入￥'+ this.planList[planIndex].min +'？';
                 this.alertTime = new Date();
                 this.alertImg = 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJLt9GVR0GqQkjqicrIqibicqaoOFSAQ0u6HFoLcEMwKPdBLzD2mgicCQyuC650UM3pYYrHIia7ib5qvEiaQ/132';
 
@@ -987,12 +991,12 @@
             position:absolute;
             top:40%;
             left:8px;
-            background:#ddd;
+            background:#aaa;
             color:#fff;
             border-radius: 1.2rem;
             width:1.2rem;
             height:1.2rem;
-            font-size: .8rem;
+            font-size: .6rem;
             line-height:1.2rem;
             padding-left:.3rem;
         }
@@ -1000,20 +1004,22 @@
             position:absolute;
             top:40%;
             right:8px;
-            background:#ddd;
+            background:#aaa;
             color:#fff;
             border-radius: 1.2rem;
             width:1.2rem;
             height:1.2rem;
-            font-size: .8rem;
+            font-size: .6rem;
             line-height:1.2rem;
-            padding-left:.3rem;
+            padding-left:.4rem;
         }
         div{
             color:#aaa;
         }
         .plan_name{
             text-align: center;
+            font-size: 1.1rem;
+            color:#aaa;
         }
         .plan_subname{
             text-align: center;
@@ -1038,7 +1044,6 @@
         left: 0;
         top: 0;
         @include wh(100%, 1.95rem);
-        border-bottom:0.025rem solid #e5e5e5;
     }
     .head_goback{
         left: 0.4rem;
@@ -1054,6 +1059,40 @@
         background-color: #fff;
         text-align: center;
 
+    }
+    .title_head{
+        color: #fff;
+        text-align: left;
+        line-height: 0.8rem;
+        padding: .6rem .5rem .4rem;
+        border-bottom:0.025rem solid #e5e5e5;
+        display: flex;
+        justify-content: center;
+        img{
+            @include wh(2rem, 2rem);
+            vertical-align:middle;
+            display: inline-block;
+            border-radius: .4rem;
+            margin-right:.4rem;
+        }
+        .title_content{
+            flex:1;
+        }
+        .title_text{
+            @include sc(0.7rem, #343640);
+            vertical-align:middle;
+        }
+        .title_time{
+            @include sc(0.55rem, #595F79);
+            padding-top:.5rem;
+            display: block;
+            /*font-weight: bold;*/
+        }
+        .head_link_button{
+            @include sc(0.65rem, #007BE6);
+            padding-top: 1.05rem;
+            font-weight: bold;
+        }
     }
 
 
@@ -1099,101 +1138,12 @@
     .main_container{
         
     }
-    .calendar-dialog{
-        width:90%;
-    }
-    .calendar-button{
-        border-bottom-left-radius: .4rem;
-        border-bottom-right-radius: .4rem;
-        background-color: #fff;
-        display: flex;
-        justify-content: space-between;
-        span{
-            @include sc(.65rem, #24253D);
-            display: inline-block;
-            padding: .2rem 1rem .8rem;
-            &:last-child{
-                color:#007BE6;
-            }
-        }
-    }
-    .bg-gray{
-        background-color: rgba(0,0,0,0.5);
-        position: fixed;
-        top:0;
-        right: 0;
-        left: 0;
-        bottom:0;
-        height: 100%;
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .shop_container{
-        display: flex;
-        flex-direction: column;
-        margin-bottom:90px;
-        background:#fff;
-        
-        .set_brand_default_button{
-            position: fixed;
-            left:10%;
-            bottom:.6rem;
-            @include wh(80%, 2rem);
-            @include sc(.65rem, #fff);
-            padding: .6rem .6rem;
-            background-color:rgba(255,198,4,1);
-            margin:0 auto 1rem;
-            text-align: center;
-            border-radius: 1rem;
-        }
-       
-    }
-    .goback{
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 2rem;
-        z-index: 11;
-        padding-top: 0.2rem;
-        padding-left: 0.2rem;
-    }
-    .search_submit{
-        width:90%;
-        margin: .6rem 0;
-        padding: .4rem 0;
-        border-radius: 0.125rem;
-        background-color: #ffd101;
-        box-shadow: 0px 3px 5px rgba(255,120,0,.5);
-        @include sc(0.7rem, #292929);
-        font-weight: normal;
-        text-align: center;
 
-        span{
-            color:#111;
-            display: inline-block;
-            vertical-align:middle;
-            font-size:0.65rem;
-        }
-        .icon_style{
-            width: .8rem;
-            height:.8rem;
-            font-size:0.8rem;
-            display: inline-block;
-            vertical-align:middle;
-            margin-right:.2rem;
-            fill:#111;
-            use{
-                fill:#111;
-            }
-        }
-    }
+   
     .chart_container{
         background-color: #fff;
         width: 100%;
-        height: 206px;
+        height: 156px;
         margin-top:1rem;
         padding-bottom:.4rem;
     }
@@ -1205,51 +1155,5 @@
     }
 
     
-
-</style>
-
-
-<style lang="scss">
-    #myDate{
-        position: fixed!important;
-        top:-10rem;
-    }
-    .vue-datepicker .vue-datepicker-panels{
-        position: fixed!important;
-        top: 4rem!important;
-        width: 90%!important;
-        left: 5%!important;
-        z-index:1111!important;
-    }
-    .vue-datepicker .vue-datepicker-panels::after{
-        
-    }
-    .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb thead, .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb2 thead{
-        background-color:#fff!important;
-        color:#FFC400!important;
-        
-        th{
-            font-weight: bold!important;
-        }
-    }
-
-    .vue-datepicker .vue-datepicker-panel .vue-datepicker-month span{
-        float: left!important;
-        display: block!important;
-        width: 78%!important;
-    }
-
-    .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb, .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb2{
-        width:100%!important;
-    }
-    .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb tbody tr td.z-existed.z-on span, .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb2 tbody tr td.z-existed.z-on span{
-        background-color: #F9BE2A!important;
-    }
-    .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb tbody tr td.z-existed span, .vue-datepicker .vue-datepicker-panel .vue-datepicker-tb2 tbody tr td.z-existed span{
-        width:1.9rem!important;
-        height: 1.9rem!important;
-        line-height: 1.9rem!important;
-        border-radius: 1.9rem!important;
-    }
 
 </style>
