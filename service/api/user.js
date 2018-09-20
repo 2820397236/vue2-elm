@@ -293,7 +293,7 @@ exports.getUserTeam = async(req, res) =>{
 
     o.child = inviteKeyMap[o.inviteKey];
     
-    if(o.child.length > 0){
+    if(o.child && o.child.length > 0){
 
       o.child.map(p=>{
         p.child = inviteKeyMap[p.inviteKey];

@@ -49,8 +49,11 @@
                 </div>
             </section> -->
         </form>
-        <div class="login_container"  @click="verifyLogin()">
+        <div class="login_container"  @click="verifyLogin()" v-if="loginEnabled">
             注册
+        </div>
+        <div class="login_container" v-else>
+            等待...
         </div>
 
         <!--  <p class="login_tips">
@@ -97,6 +100,7 @@
                 showError: false, //显示提示组件
                 errorMsg: '', //提示的内容
                 showAlert:false,
+                loginEnabled:true,
                 weixin:null,
                 account:{
                     cname:'',
@@ -260,8 +264,9 @@
                     this.errorMsg = '请填写验证码';
                     return;
                 }
-
+                this.loginEnabled = false;
                 let verifyRes = await verify(this.account);
+                this.loginEnabled = true;
 
                 if(verifyRes.status == -1){
                     this.showAlert = true;
