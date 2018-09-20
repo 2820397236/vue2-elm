@@ -248,13 +248,17 @@ exports.getUserPlan = async (req, res) => {
 
   const outId = req.body.outId;
   const order  = await knex("order").select().where({"userId":user.id,"status":"SUCCESS"}).orderBy("createTime","desc").then(s=>s[0]);
-  if(!order) res.status(200).send({"status":-9,"error":"order not exist"});
-
-  const planId = order.planId;
-  const plan  = await knex("plan").select().where({"id":planId}).then(s=>s[0]);
-  if(!plan) res.status(200).send({"status":-9,"error":"plan not exist"});
+  if(!order) {
+    res.status(200).send({"status":-9,"error":"order not exist"});
+  }else{
+    const planId = order.planId;
+    const plan  = await knex("plan").select().where({"id":planId}).then(s=>s[0]);
+    if(!plan) res.status(200).send({"status":-9,"error":"plan not exist"});
+    res.status(200).send(plan);
+  }
   
-  res.status(200).send(plan);
+  
+  
 };
 
 exports.getUserTeam = async(req, res) =>{
