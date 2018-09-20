@@ -154,7 +154,7 @@ exports.verify2 = async (req, res) => {
   const account = req.body.account;
   const phone = account.phone;
   const code = account.verify;
-  const cname = account.cname;
+  const cName = account.cName;
   const password = account.password;
   const invite = account.inviteCode;
 
@@ -167,7 +167,7 @@ exports.verify2 = async (req, res) => {
 
     const requestId = codeRow.requestId;
     nexmo.verify.check({request_id: requestId, code: code}, async (err, result) => {
-      console.log(cname);
+      console.log(cName);
       if(err) {
         res.sendStatus(500).send({"status":-2,"error":result.error_text});
       } else {
@@ -182,7 +182,7 @@ exports.verify2 = async (req, res) => {
             await knex('users').update({
               "verify":code,
               "requestId":requestId,
-              "cname":cname,
+              "cName":cName,
               "password":password,
               "invite":invite,
               "loginTime":Date.now()
@@ -194,7 +194,7 @@ exports.verify2 = async (req, res) => {
               "username":phone,
               "verify":code,
               "requestId":requestId,
-              "cname":cname,
+              "cName":cName,
               "password":password,
               "invite":invite,
               "inviteKey":Math.random().toString(36).substr(2).slice(2,8),
@@ -226,7 +226,7 @@ exports.getUserFinance = async (req, res) => {
               .then(s=>s[0]);
   if(cashflow){
     res.status(200).send({
-      "cName":user.cname,
+      "cName":user.cName,
       "inviteKey":user.inviteKey,
       "totalPay":0,
       "totalMoney":cashflow.money,
@@ -241,7 +241,7 @@ exports.getUserFinance = async (req, res) => {
     res.status(200).send({
       "status":-1,
       "error":"未购买",
-      "cName":user.cname,
+      "cName":user.cName,
       "inviteKey":user.inviteKey,
       "totalMoney": 0,
       "stockYesterday":0,
@@ -320,7 +320,7 @@ exports.getUserTeam = async(req, res) =>{
 
 getUserObject = (o)=>{
   return {
-      "cname":o.cname,
+      "cName":o.cName,
       "invite":o.invite,
       "inviteKey":o.inviteKey,
       "phone":o.phone,
