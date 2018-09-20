@@ -40,6 +40,11 @@
             </section>
         </header> -->
        <section>
+          <div class="activities">
+            
+          </div>
+       </section>
+       <section>
           <div class="plan_item">
             <div class="plan_prev" @click="changePlanPrev()"><</div>
             <div class="plan_next" @click="changePlanNext()">></div>
@@ -59,7 +64,7 @@
             <section class="chart_container">
                 <IEcharts :option="bar" :height="100" theme="customer" @ready="onReady" @click="onClick"></IEcharts>
             </section>
-            <section class="desc_form">
+           <!--  <section class="desc_form">
                 <div class="desc_h2">优选计划</div>
                 <div class="desc_content">
                     <div>
@@ -71,7 +76,7 @@
                         <div class="desc_subtitle">30天定期 收益更好</div>
                     </div>
                 </div>
-            </section>
+            </section> -->
             <!-- <section class="detail_container">
                 <div class="search_submit"  v-if="storeIds.length > 1"  @click="gotoAddress({path:'/rateByShop',query:{ids:storeIds,date:dateFormat}})">
                     <svg class="icon_style">
@@ -996,7 +1001,7 @@
     }
     
     .plan_item{
-        width:300px;
+        width:280px;
         border:1px solid #ddd;
         margin:10px auto;
         box-shadow: 2px 2px 3px #888888;
@@ -1051,6 +1056,12 @@
                 color:#d56778;
             }
         }
+    }
+    .activities{
+        width:100%;
+        height:7rem;
+        background: url(../../images/activity.png) no-repeat center center;
+        background-size:100% auto;
     }
     #head_top{
         background-color: #0081ee;

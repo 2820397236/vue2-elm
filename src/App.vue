@@ -28,7 +28,7 @@
   		width:100%;
   		min-height: 100%;
   		margin:0;
-  		padding-top: 42px;
+  		padding-top: 41.5px;
   		margin-bottom::90px;
   		/*background: rgb(16,18,60);*/
   		background: #fff!important;

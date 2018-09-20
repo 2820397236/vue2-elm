@@ -225,7 +225,7 @@
                 :xlink:href="$route.path.indexOf('setting') >=0 ||
                $route.path.indexOf('shareTeam') >=0? '#myHomeActive' : '#myHome'"></use>
             </svg>
-            <span>我</span>
+            <span>我的</span>
         </section>
 
         <section v-if="user && (user.phone == '13788997536' || user.phone == '18516202415' || user.phone== '15093663999‬')" @click = "gotoAddress('/admin')" class="guide_item" :class="$route.path.indexOf('admin') !== -1? 'active' : ''">
