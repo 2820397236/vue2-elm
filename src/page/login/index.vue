@@ -45,9 +45,9 @@
             ]),
             goToSystem(){
                 if(getStore('user') != undefined){
-                    this.$router.push({path:'/analytics'});
-                }else{
                     this.$router.push({path:'/login'});
+                }else{
+                    this.$router.push({path:'/signin'});
 
                 }
             },
@@ -118,7 +118,7 @@
         text-align:center;
         line-height: 250%;
         border-radius: 4px; 
-        margin:400px auto 0 auto;
+        margin:450px auto 0 auto;
         border:1px solid #fff;
         color:#fff;
         text-decoration: none;

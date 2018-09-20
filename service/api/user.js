@@ -83,6 +83,19 @@ exports.sendCode = async (req, res) => {
   }
 };
 
+exports.login = async (req, res) =>{
+  const account = req.body.account;
+  const phone = account.phone;
+  const password = account.password;
+  const user = await knex('users').select().where({phone,password}).then(s=>s[0]);
+  console.log(user);
+  if(user){
+    res.status(200).send({"status":0,"data":{"phone":user.phone,"cName":user.cName}});
+  }else{
+    res.status(200).send({"status":-1});
+  }
+}
+
 exports.verify = async (req, res) => {
 
   const phone = req.body.phone;

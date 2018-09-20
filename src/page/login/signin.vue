@@ -15,8 +15,15 @@
        
         <form class="loginForm newStyle">
             <section class="input_container">
+                <input type="text" placeholder="姓名:" v-model="account.cname" class="btline">
                 <input type="text" placeholder="登录手机:" v-model="account.phone" class="btline">
-                <input type="text" placeholder="登录密码:" v-model="account.password" >
+                <input type="text" placeholder="登录密码:" v-model="account.password" class="btline">
+                <input type="text" placeholder="推荐码(非必填):" v-model="account.inviteCode" class="btline">
+                <div>
+                    <input type="text" placeholder="验证码:" v-model="account.verify">
+                    <a class="code_button" v-if="!lock" @click="getVerifyCode()">获取验证码</a>
+                    <a class="code_button" v-if="lock" >剩余{{second}}秒...</a>
+                </div>
             </section>
             <section>
                 <div class="policy"><!-- 登录并绑定即表示同意并了解<br/><span @click="goto('policy')">《蜜蜂点评用户协议》</span> --></div>
@@ -42,8 +49,8 @@
                 </div>
             </section> -->
         </form>
-        <div class="login_container"  @click="login()" v-if="loginEnabled">
-            登录
+        <div class="login_container"  @click="verifyLogin()" v-if="loginEnabled">
+            注册
         </div>
         <div class="login_container" v-else>
             等待...
@@ -67,7 +74,7 @@
     import {localapi, proapi, imgBaseUrl} from 'src/config/env'
     import {mapState, mapMutations} from 'vuex'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
-    import {verify, sendCode, verifyCode,login} from '../../service/getData'
+    import {verify, sendCode, verifyCode,mobileCode, accountLogin,getOpenId,getUserByOpenId} from '../../service/getData'
     import weixin from 'weixin-js-sdk'
 
     export default {
@@ -148,22 +155,22 @@
                 // }
             },
 
-            // login(){
-            //     console.log(this.phone,this.verify);
+            login(){
+                console.log(this.phone,this.verify);
 
-            //     if(!this.phone){
-            //         this.showAlert=true;
-            //         this.errorMsg = '手机号不能为空';
-            //         return;
-            //     }
+                if(!this.phone){
+                    this.showAlert=true;
+                    this.errorMsg = '手机号不能为空';
+                    return;
+                }
 
-            //     if(!this.verify){
-            //         this.showAlert=true;
-            //         this.errorMsg = '验证码不能为空';
-            //         return;
-            //     }
-            //     this.mobileLogin();
-            // },
+                if(!this.verify){
+                    this.showAlert=true;
+                    this.errorMsg = '验证码不能为空';
+                    return;
+                }
+                this.mobileLogin();
+            },
 
             getVerifyCode(){
 
@@ -228,40 +235,6 @@
                         this.lock = false;
                     }
                 },1000);
-            },
-
-            async login(){
-                 if(this.account.phone =="") {
-                    
-                    this.showAlert=true;
-                    this.errorMsg = '请填写手机';
-                    return;
-                }
-                if(this.account.password =="") {
-                    
-                    this.showAlert=true;
-                    this.errorMsg = '请填写登录密码';
-                    return;
-                }
-
-                this.loginEnabled = false;
-                login(this.account).then(o=>{
-
-                    this.loginEnabled = true;
-
-                    if(o.status == -1) {
-                        
-                        this.showAlert=true;
-                        this.errorMsg = '手机或者密码错误';
-                        return;
-                    }
-
-                    setStore('user',{phone:o.data.phone, cName:o.data.cName});
-                    this.$router.push({path:'/analytics'});
-                })
-                
-
-
             },
 
             async verifyLogin(){

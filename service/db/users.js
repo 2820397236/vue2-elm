@@ -8,7 +8,7 @@ const createTable = async () => {
     table.increments('id').primary();
     table.string('username');
     table.string('password');
-    table.string('cname');
+    table.string('cName');
     table.string('phone');
     table.string('invite');
     table.string('inviteKey');

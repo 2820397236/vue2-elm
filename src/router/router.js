@@ -14,6 +14,7 @@ const rateByType = r => require.ensure([], () => r(require('../page/rate/rateByT
 const rateByShop = r => require.ensure([], () => r(require('../page/rate/rateByShop')), 'rateByShop')
 const warning = r => require.ensure([], () => r(require('../page/rate/rateWarning')), 'rateWarning')
 const login = r => require.ensure([], () => r(require('../page/login/login')), 'login')
+const signin = r => require.ensure([], () => r(require('../page/login/signin')), 'signin')
 const policy = r => require.ensure([], () => r(require('../page/login/policy')), 'policy')
 const code = r => require.ensure([], () => r(require('../page/login/code')), 'code')
 // const profile = r => require.ensure([], () => r(require('../page/profile/profile')), 'profile')
@@ -191,6 +192,10 @@ export default [{
         {
             path: '/login',
             component: login
+        },
+        {
+            path: '/signin',
+            component: signin
         },
         {
             path: '/policy',

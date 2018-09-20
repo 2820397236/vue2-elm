@@ -310,6 +310,9 @@ export const sendCode = (phone) => fetch('/api/v1/sendCode', {
 export const verify = (account) => fetch('/api/v2/verify', {
 	account
 }, 'POST');
+export const login = (account) => fetch('/api/v1/login', {
+	account
+}, 'POST');
 
 export const createOrder = (phone,planId,qty) => fetch('/api/v1/createOrder', {
 	phone,
