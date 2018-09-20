@@ -336,7 +336,7 @@
                     {
                         "title":"计划B",
                         "subtitle":"安稳投",
-                        "desc":"收益稳定 赠送股权",
+                        "desc":"只涨不跌 赠送股权",
                         "min":10000,
                         "rate":0.15,
                         "stock":2300
@@ -344,7 +344,7 @@
                     {
                         "title":"计划C",
                         "subtitle":"安稳投",
-                        "desc":"收益稳定 赠送股权",
+                        "desc":"只涨不跌 赠送股权",
                         "min":20000,
                         "rate":0.18,
                         "stock":4650
@@ -352,7 +352,7 @@
                     {
                         "title":"计划D",
                         "subtitle":"安稳投",
-                        "desc":"收益稳定 赠送股权",
+                        "desc":"只涨不跌 赠送股权",
                         "min":30000,
                         "rate":0.22,
                         "stock":6900
@@ -360,7 +360,7 @@
                     {
                         "title":"计划E",
                         "subtitle":"安稳投",
-                        "desc":"收益稳定 赠送股权",
+                        "desc":"只涨不跌 赠送股权",
                         "min":50000,
                         "rate":0.40,
                         "stock":11600
@@ -1038,12 +1038,12 @@
         }
         .plan_name{
             text-align: center;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color:#aaa;
         }
         .plan_subname{
             text-align: center;
-            font-size: .8rem;
+            font-size: .6rem;
             margin-bottom:.4rem;
         }
         .plan_desc{
@@ -1054,6 +1054,7 @@
             text-align:center;
             span{
                 color:#d56778;
+                font-size: .8rem;
             }
         }
     }
