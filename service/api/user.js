@@ -212,20 +212,30 @@ exports.getUserFinance = async (req, res) => {
               .groupBy('userId')
               .then(s=>s[0]);
   if(cashflow){
-    res.status(200).send(
-        {
-            cName:user.cname,
-            totalPay:0,
-            totalMoney:cashflow.money,
-            stockYesterday:0,
-            stockSum:0,
-            stockTotal:0,
-            stockMoney:0,
-            balance:0,
-            createTime:cashflow.createTime
-        });
+    res.status(200).send({
+      "cName":user.cname,
+      "totalPay":0,
+      "totalMoney":cashflow.money,
+      "stockYesterday":0,
+      "stockSum":0,
+      "stockTotal":0,
+      "stockMoney":0,
+      "balance":0,
+      "createTime":cashflow.createTime
+    });
   }else{
-    res.status(200).send({"status":-1,"error":"未购买"});
+    res.status(200).send({
+      "cName":user.cname,
+      "status":-1,
+      "error":"未购买",
+      "totalMoney": 0,
+      "stockYesterday":0,
+      "stockSum":0,
+      "stockTotal":0,
+      "stockMoney":0,
+      "balance":0,
+      "createTime":Date.now()
+    });
   }
 };
 
