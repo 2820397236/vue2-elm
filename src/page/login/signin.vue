@@ -15,7 +15,7 @@
        
         <form class="loginForm newStyle">
             <section class="input_container">
-                <input type="text" placeholder="姓名:" v-model="account.cname" class="btline">
+                <input type="text" placeholder="姓名:" v-model="account.cName" class="btline">
                 <input type="text" placeholder="登录手机:" v-model="account.phone" class="btline">
                 <input type="text" placeholder="登录密码:" v-model="account.password" class="btline">
                 <input type="text" placeholder="推荐码(非必填):" v-model="account.inviteCode" class="btline">
@@ -86,7 +86,7 @@
                 loginWay: false, //登录方式，默认短信登录
                 showPassword: false, // 是否显示密码
                 inviteCode:'',
-                cname:'',
+                cName:'',
                 phone: '', //电话号码
                 password:'',
                 verify:'',
@@ -103,7 +103,7 @@
                 loginEnabled:true,
                 weixin:null,
                 account:{
-                    cname:'',
+                    cName:'',
                     phone: '', //电话号码
                     password:'',
                     inviteCode:'',
@@ -238,7 +238,7 @@
             },
 
             async verifyLogin(){
-                if(this.account.cname =="") {
+                if(this.account.cName =="") {
                     
                     this.showAlert=true;
                     this.errorMsg = '请填写姓名';
