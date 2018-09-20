@@ -45,7 +45,7 @@
             ]),
             goToSystem(){
                 if(getStore('user') != undefined){
-                    this.$router.push({path:'/login'});
+                    this.$router.push({path:'/signin'});
                 }else{
                     this.$router.push({path:'/signin'});
 
