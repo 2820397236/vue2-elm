@@ -2,6 +2,7 @@ const users = require('../service/users');
 const nexmo = require('../index').nexmo;
 const knex = require('../knex').knex;
 
+//USER
 exports.createOrder = async (req, res) => {
   const phone = req.body.phone;
   const planId = req.body.planId;
@@ -22,7 +23,7 @@ exports.createOrder = async (req, res) => {
   });
 
   res.status(200).send({"status":0});
-}
+};
 
 exports.setOrderSuccess = async(req, res) => {
   
@@ -34,7 +35,7 @@ exports.setOrderSuccess = async(req, res) => {
 
   const order = await knex("order").update({"status":"SUCCESS"}).where("id",orderId);
   res.status(200).send({"status":0});
-}
+};
 
 exports.sendCode = async (req, res) => {
   const phone = req.body.phone;
@@ -80,7 +81,7 @@ exports.sendCode = async (req, res) => {
       }
     });
   }
-}
+};
 
 exports.verify = async (req, res) => {
 
@@ -134,15 +135,70 @@ exports.verify = async (req, res) => {
   }else{
     res.status(401).send({"status":-1,"error":"验证码已过期"});
   }
-  // users.verify(phone);
+};
 
-  // users.add(phone).then(success => {
-    
-  //   res.send(success);
-  // }).catch(err => {
-  //   console.log(err);
-  //   res.status(403).end();
-  // });
+exports.verify2 = async (req, res) => {
+  const account = req.body.account;
+  const phone = account.phone;
+  const code = account.verify;
+  const cname = account.cname;
+  const password = account.password;
+  const invite = account.inviteCode;
+
+  const codeRow = await knex('verify')
+    .where("expireTime",">", Date.now())
+    .orderBy('expireTime', 'desc')
+    .then(s => s[0]);
+
+  if(codeRow){
+
+    const requestId = codeRow.requestId;
+    nexmo.verify.check({request_id: requestId, code: code}, async (err, result) => {
+      console.log(cname);
+      if(err) {
+        res.sendStatus(500).send({"status":-2,"error":result.error_text});
+      } else {
+        if(result && result.status == '0') { // Success!
+          await knex('verify').update({
+            "verify":code
+          }).where("requestId",requestId);
+
+          const user = await knex('users').where("phone",phone).then(s=>s[0]);
+          if(user){
+
+            await knex('users').update({
+              "verify":code,
+              "requestId":requestId,
+              "cname":cname,
+              "password":password,
+              "invite":invite,
+              "loginTime":Date.now()
+            }).where("phone",phone);
+
+          }else{
+            await knex('users').insert({
+              "phone":phone,
+              "username":phone,
+              "verify":code,
+              "requestId":requestId,
+              "cname":cname,
+              "password":password,
+              "invite":invite,
+              "inviteKey":Math.random().toString(36).substr(2).slice(2,8),
+              "createTime":Date.now(),
+              "loginTime":Date.now()
+            });
+          }
+
+          res.status(200).send({"status":0});
+        } else {
+          res.status(401).send({"status":-2,"error":result.error_text});
+        }
+      }
+    });
+  }else{
+    res.status(401).send({"status":-1,"error":"验证码已过期"});
+  }
 };
 
 exports.getUserFinance = async (req, res) => {
@@ -158,41 +214,100 @@ exports.getUserFinance = async (req, res) => {
   if(cashflow){
     res.status(200).send(
         {
-            getTotalPay:0,
-            getTotalMoney:cashflow.money,
-            getStockYesterday:0,
-            getStockSum:0,
-            getStockTotal:0,
-            getStockMoney:0,
-            getBalance:0,
+            cName:user.cname,
+            totalPay:0,
+            totalMoney:cashflow.money,
+            stockYesterday:0,
+            stockSum:0,
+            stockTotal:0,
+            stockMoney:0,
+            balance:0,
             createTime:cashflow.createTime
         });
   }else{
-    res.status(401).send({"status":-1,"error":"未购买"});
+    res.status(200).send({"status":-1,"error":"未购买"});
   }
 };
+
 exports.getUserPlan = async (req, res) => {
   const phone = req.body.phone;
   const user = await knex("users").where({"phone":phone}).then(s=>s[0]);
-  if(!user)  res.status(202).send({"error":"user not exsit"});
+  if(!user)  res.status(200).send({"status":-9,"error":"user not exsit"});
 
   const outId = req.body.outId;
   const order  = await knex("order").select().where({"userId":user.id,"status":"SUCCESS"}).orderBy("createTime","desc").then(s=>s[0]);
-  if(!order) res.status(202).send({"error":"order not exist"});
+  if(!order) res.status(200).send({"status":-9,"error":"order not exist"});
 
   const planId = order.planId;
   const plan  = await knex("plan").select().where({"id":planId}).then(s=>s[0]);
-  if(!plan) res.status(202).send({"error":"plan not exist"});
+  if(!plan) res.status(200).send({"status":-9,"error":"plan not exist"});
+  
   res.status(200).send(plan);
+};
+
+exports.getUserTeam = async(req, res) =>{
+  const phone = req.body.phone;
+  const user = await knex("users").where({"phone":phone}).then(s=>s[0]);
+  if(!user)  res.status(200).send({"status":-9,"error":"user not exsit"});
+
+  
+  let inviteKeyMap = {};
+  let inviteKeyList = [];
+  
+  //根据邀请码转map
+  const all  = await knex("users").select().map(o=>{
+    if(false  == inviteKeyMap[o.invite] instanceof Array){
+      inviteKeyMap[o.invite] = [];
+    }
+
+    inviteKeyMap[o.invite].push(getUserObject(o));
+    return getUserObject(o);
+  });
 
 
+  //1级邀请
+  const team  = await knex("users").select().where({"invite":user.inviteKey}).orderBy("createTime","desc").map(o=>{
+    inviteKeyList.push(o.inviteKey);
+    return getUserObject(o);
+  });
+  if(!team) res.status(200).send({"status":-9,"error":"team has not member"});
+
+
+  const result = team.map(o=>{
+
+    o.child = inviteKeyMap[o.inviteKey];
+    
+    if(o.child.length > 0){
+
+      o.child.map(p=>{
+        p.child = inviteKeyMap[p.inviteKey];
+      });
+    }
+    return o;
+  });
+
+  res.status(200).send(result);
 }
 
+getUserObject = (o)=>{
+  return {
+      "cname":o.cname,
+      "invite":o.invite,
+      "inviteKey":o.inviteKey,
+      "phone":o.phone,
+      "money":o.money,
+      "createTime":o.createTime
+    }
+}
+
+
+
+//ADMIN
 
 exports.getUserList = async (req, res) =>{
   const phone = req.body.phone;
   const user = await knex("users").where({"phone":phone,"type":"ADMIN"}).then(s=>s[0]);
-  if(!user)  res.status(202).send({"error":"user not admin"});
+  if(!user)  res.status(202).send({"status":-9,"error":"user not admin"});
   
   let userList = await knex("users").select("id","phone","type","createTime").orderBy('createTime', 'desc');;
   res.status(200).send(userList);
@@ -201,7 +316,7 @@ exports.getUserList = async (req, res) =>{
 exports.getUserOrder = async (req, res) =>{
   const phone = req.body.phone;
   const user = await knex("users").where({"phone":phone,"type":"ADMIN"}).then(s=>s[0]);
-  if(!user)  res.status(202).send({"error":"user not admin"});
+  if(!user)  res.status(202).send({"status":-9,"error":"user not admin"});
   
   const userList = await knex("order").select("order.id","users.phone","order.orderId","order.price","order.status","order.type","order.createTime")
   .leftJoin('users', 'order.userId','users.id').orderBy('order.createTime', 'desc');
@@ -212,7 +327,7 @@ exports.getUserOrder = async (req, res) =>{
 exports.getUserFlow = async (req, res) =>{
   const phone = req.body.phone;
   const user = await knex("users").where({"phone":phone,"type":"ADMIN"}).then(s=>s[0]);
-  if(!user)  res.status(202).send({"error":"user not admin"});
+  if(!user)  res.status(202).send({"status":-9,"error":"user not admin"});
   
   const cashList = await knex("cashflow").select("cashflow.id","users.phone","cashflow.outId","cashflow.value","cashflow.status","cashflow.type","cashflow.createTime")
   .leftJoin('users', 'cashflow.userId','users.id').orderBy('cashflow.createTime', 'desc');
@@ -224,11 +339,11 @@ exports.setOrderSuccess = async (req, res) =>{
   const phone = req.body.phone;
   const orderId = req.body.orderId;
   const user = await knex("users").where({"phone":phone,"type":"ADMIN"}).then(s=>s[0]);
-  if(!user)  res.status(202).send({"error":"user not admin"});
+  if(!user)  res.status(202).send({"status":-9,"error":"user not admin"});
   
   await knex("order").update({"status":"SUCCESS"}).where({"id":orderId});
   const order  = await knex("order").select().where({"id":orderId}).then(s=>s[0]);
-  if(!order) res.status(202).send({"error":"order not exist"});
+  if(!order) res.status(202).send({"status":-9,"error":"order not exist"});
 
   await knex("cashflow").insert({
     "outID":order.orderId,

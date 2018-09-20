@@ -29,7 +29,7 @@
   		min-height: 100%;
   		margin:0;
   		padding-top: 42px;
-  		margin-bottom::130px;
+  		margin-bottom::90px;
   		/*background: rgb(16,18,60);*/
   		background: #fff!important;
   	}

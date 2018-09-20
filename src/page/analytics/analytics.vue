@@ -199,9 +199,9 @@
             </section> -->
         </section>
         
-        <button class="btn_buy">
-            <div class="btn_flex draw" @click="alertSell(planIndex)">
-            <i></i>挂单</div>
+        <button class="btn_buy" v-if="wallet && wallet.getTotalMoney ==0">
+            <!-- <div class="btn_flex draw" @click="alertSell(planIndex)">
+            <i></i>挂单</div> -->
             <div class="btn_flex deposit"  @click="alert(planIndex)">
             <i></i>买入</div>
         </button> 
@@ -242,7 +242,7 @@
 
 <script>
     import {mapState, mapMutations} from 'vuex'
-    import {createOrder,getAnalyzeRate,getMyStore,getRateAnalytics,getStoreRate,getSubscribeList} from 'src/service/getData'
+    import {getUserFinance,createOrder} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import headTop from '../../components/header/head'
     import alertTip from 'src/components/common/alertStore'
@@ -268,6 +268,7 @@
     export default {
         data(){
             return{
+                wallet:null,
                 calendar2:{
                     show:false,
                     range:true,
@@ -500,8 +501,8 @@
             // });
 
             this.initData();
-            this.windowHeight = window.innerHeight;
-            this.windowWidth = window.innerWidth;
+            
+            this.getUserInfo();
         },
         beforeDestroy(){
             // this.foodScroll.removeEventListener('scroll', )
@@ -525,6 +526,19 @@
             ...mapMutations([
                
             ]),
+            getUserInfo(){
+                getUserFinance(this.user.phone).then( o=>{
+                    console.log(o);
+                    if(o.status && o.status != 0){
+                        this.wallet ={
+                            getTotalMoney:0
+                        };
+                    }else{
+                        this.wallet = o;
+                    }
+                    
+                })
+            },
             changePlanPrev(flag){
                 this.planIndex --;
                 if(this.planIndex < 0){
@@ -652,6 +666,7 @@
                     createOrder(this.user.phone,this.planIndex+1,1).then(r=>{
                         console.log(r);
                         _this.showAlert = false;
+                        this.getUserInfo();
                     })
                 }
             },
@@ -1038,12 +1053,12 @@
         }
     }
     #head_top{
-        background-color: #fff;
+        background-color: #0081ee;
         position: fixed;
         z-index: 100;
         left: 0;
         top: 0;
-        @include wh(100%, 1.95rem);
+        @include wh(100%, auto);
     }
     .head_goback{
         left: 0.4rem;
@@ -1064,8 +1079,7 @@
         color: #fff;
         text-align: left;
         line-height: 0.8rem;
-        padding: .6rem .5rem .4rem;
-        border-bottom:0.025rem solid #e5e5e5;
+        padding: .5rem .5rem .5rem;
         display: flex;
         justify-content: center;
         img{
@@ -1079,7 +1093,7 @@
             flex:1;
         }
         .title_text{
-            @include sc(0.7rem, #343640);
+            @include sc(0.7rem, #fff);
             vertical-align:middle;
         }
         .title_time{

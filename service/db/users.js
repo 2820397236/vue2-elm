@@ -8,10 +8,13 @@ const createTable = async () => {
     table.increments('id').primary();
     table.string('username');
     table.string('password');
+    table.string('cname');
     table.string('phone');
+    table.string('invite');
+    table.string('inviteKey');
     table.string('verify');
     table.string('requestId');
-    table.string('type').defaultTo("NORMAL");;
+    table.string('type').defaultTo("NORMAL");
     table.integer('money').defaultTo(0);
     table.bigInteger('createTime');
     table.bigInteger('loginTime');

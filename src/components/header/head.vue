@@ -4,7 +4,7 @@
         <slot name='search'></slot>
         <section class="head_goback" v-if="goBack" @click="$router.go(-1)">
             <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" version="1.1">
-                <polyline points="12,18 4,9 12,0" style="fill:none;stroke:rgb(200,200,200);stroke-width:2"/>
+                <polyline points="12,18 4,9 12,0" style="fill:none;stroke:rgb(255,255,255);stroke-width:2"/>
             </svg> 
         </section>
         <router-link :to="userInfo? '/profile':'/login'" v-if='signinUp' class="head_login">
@@ -33,7 +33,7 @@
         },
         mounted(){
             //获取用户信息
-            this.getUserInfo();
+            // this.getUserInfo();
 
         },
         props: ['signinUp', 'headTitle', 'goBack'],
@@ -56,21 +56,24 @@
     @import '../../style/mixin';
 
     #head_top{
-        background-color: #fff;
+        background-color: #0081ee;
         position: fixed;
         z-index: 100;
         left: 0;
         top: 0;
-        @include wh(100%, 1.95rem);
-        border-bottom:0.025rem solid #e5e5e5;
+        @include wh(100%, 1.8rem);
     }
     .head_goback{
         left: 0.4rem;
-        @include wh(1.95rem, 1.95rem);
-        @include sc(0.6rem, #666);
-        line-height: 1.95rem;
+        @include wh(1.95rem, 1.785rem);
+        @include sc(0.6rem, #fff);
+        line-height: 1.70rem;
         margin-left: .4rem;
         padding-top: .5rem;
+        svg{
+
+        fill:#fff;
+        }
     }
     .head_login{
         right: 0.55rem;
@@ -91,7 +94,7 @@
         text-align: center;
         line-height: 0.8rem;
         .title_text{
-            @include sc(0.8rem, #666);
+            @include sc(0.7rem, #fff);
             text-align: center;
             /*font-weight: bold;*/
         }

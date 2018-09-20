@@ -307,9 +307,8 @@ export const sendCode = (phone) => fetch('/api/v1/sendCode', {
 	phone
 }, 'POST');
 
-export const verify = (phone,code) => fetch('/api/v1/verify', {
-	phone,
-	code
+export const verify = (account) => fetch('/api/v2/verify', {
+	account
 }, 'POST');
 
 export const createOrder = (phone,planId,qty) => fetch('/api/v1/createOrder', {
@@ -323,6 +322,10 @@ export const getUserFinance = (phone) => fetch('/api/v1/getUserFinance',{
 })
 
 export const getUserPlan = (phone) => fetch('/api/v1/getUserPlan',{
+	phone
+})
+
+export const getUserTeam = (phone) => fetch('/api/v1/getUserTeam',{
 	phone
 })
 

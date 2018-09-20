@@ -15,10 +15,12 @@
        
         <form class="loginForm newStyle">
             <section class="input_container">
-                <input type="text" placeholder="手机号码:" v-model="phone" class="btline">
-                <!-- <input type="text" placeholder="请填写推荐码(非必填)" v-model="inviteCode"> -->
+                <input type="text" placeholder="姓名:" v-model="account.cname" class="btline">
+                <input type="text" placeholder="登录手机:" v-model="account.phone" class="btline">
+                <input type="text" placeholder="登录密码:" v-model="account.password" class="btline">
+                <input type="text" placeholder="推荐码(非必填):" v-model="account.inviteCode" class="btline">
                 <div>
-                    <input type="text" placeholder="验证码:" v-model="verify">
+                    <input type="text" placeholder="验证码:" v-model="account.verify">
                     <a class="code_button" v-if="!lock" @click="getVerifyCode()">获取验证码</a>
                     <a class="code_button" v-if="lock" >剩余{{second}}秒...</a>
                 </div>
@@ -48,7 +50,7 @@
             </section> -->
         </form>
         <div class="login_container"  @click="verifyLogin()">
-            登录
+            注册
         </div>
 
         <!--  <p class="login_tips">
@@ -81,6 +83,7 @@
                 loginWay: false, //登录方式，默认短信登录
                 showPassword: false, // 是否显示密码
                 inviteCode:'',
+                cname:'',
                 phone: '', //电话号码
                 password:'',
                 verify:'',
@@ -95,6 +98,14 @@
                 errorMsg: '', //提示的内容
                 showAlert:false,
                 weixin:null,
+                account:{
+                    cname:'',
+                    phone: '', //电话号码
+                    password:'',
+                    inviteCode:'',
+                    verify:''
+
+                }
             }
         },
         created(){
@@ -111,7 +122,7 @@
         computed: {
             //判断手机号码
             rightPhoneNumber: function (){
-                return /^1\d{10}$/gi.test(this.phone)
+                return /^1\d{10}$/gi.test(this.account.phone)
             }
         },
         methods: {
@@ -198,7 +209,7 @@
 
             async sendCode(){
                 this.lock = true;
-                this.codeRes = await sendCode(this.phone);
+                this.codeRes = await sendCode(this.account.phone);
                 
                 if(this.codeRes.status < 0){
                     this.showAlert=true;
@@ -223,26 +234,34 @@
             },
 
             async verifyLogin(){
-                if(this.phone =="") {
+                if(this.account.cname =="") {
+                    
+                    this.showAlert=true;
+                    this.errorMsg = '请填写姓名';
+                    return;
+                }
+
+                if(this.account.phone =="") {
                     
                     this.showAlert=true;
                     this.errorMsg = '请填写手机';
                     return;
                 }
-                // if(this.password =="") {
+                if(this.account.password =="") {
                     
-                //     this.showAlert=true;
-                //     this.errorMsg = '请填写登录密码';
-                //     return;
-                // }
-                if(this.verify =="") {
+                    this.showAlert=true;
+                    this.errorMsg = '请填写登录密码';
+                    return;
+                }
+
+                if(this.account.verify =="") {
                     
                     this.showAlert=true;
                     this.errorMsg = '请填写验证码';
                     return;
                 }
 
-                let verifyRes = await verify(this.phone,this.verify);
+                let verifyRes = await verify(this.account);
 
                 if(verifyRes.status == -1){
                     this.showAlert = true;
@@ -252,7 +271,7 @@
                 }else if(verifyRes.status == 0){
 
                     this.verify = "";
-                    setStore('user',{phone:this.phone});
+                    setStore('user',{phone:this.account.phone, cName:this.account.cName});
                     this.$router.push({path:'/analytics'});
                 }
             },

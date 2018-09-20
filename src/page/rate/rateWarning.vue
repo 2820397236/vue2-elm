@@ -1,20 +1,25 @@
  <template>
     <div>
+        <header id="head_top">
+            <section class="title_head ellipsis">
+                <span class="title_text">市场</span>
+            </section>
+        </header>
         <!-- <header id='head_top'>
-            <section class="title_head ellipsis"  @click="setRatingType('high')">
+            <section class="title_head ellipsis"  @click="setRatingType('sell')">
                 
                 <span class="title_text">餐厅评论监控预警</span>
             </section>
 
-            <section class="head_option" :class="{red:warningType == 'high',yellow:warningType == 'mid', green:warningType == 'low'}"  @click="clickRateType()">
-                <span>预警 {{rateType}}</span>
+            <section class="head_option" :class="{red:warningType == 'sell',yellow:warningType == 'buy', green:warningType == 'low'}"  @click="clickRateType()">
+                <span>预警 {{listType}}</span>
                 <svg class="icon_style">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#warning"></use>
                 </svg>
             </section>
         </header> -->
         <section class="description_header">
-            <div>历史预警</div>
+            <div>&nbsp;</div>
             <div class="description_top">
                <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
                     <img :src="user.profileImg" @click="signout">
@@ -22,8 +27,8 @@
                 <!-- <section class="description_right">
                     <h4 class="description_title ellipsis">您已订阅19家门店</h4>
                 </section> -->
-                <section class="head_option" :class="{red:warningType == 'high',yellow:warningType == 'mid', green:warningType == 'low'}"  @click="clickRateType()">
-                <span>预警 {{rateType}}</span>
+                <section class="head_option" :class="{red:warningType == 'sell',yellow:warningType == 'buy', green:warningType == 'low'}"  @click="clickRateType()">
+                <span>{{listType}}</span>
                 <svg class="icon_style">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#warning"></use>
                 </svg>
@@ -74,19 +79,16 @@
             
         </section>
         <loading v-show="showLoading"></loading>
-      <!--   <foot-guide></foot-guide> -->
+        <foot-guide></foot-guide>
 
 
         <section class="shop_container main_container bg-gray" v-if="showRateType" @click="goBack()">
             <ul class="rate_navi">
-                <li class="green" :class="{active:warningType == 'high'}" @click="setRatingType('high')">
-                    <span>预警等级：高 <br/>有任何负面情绪都将作为预警推送</span>
+                <li class="green" :class="{active:warningType == 'sell'}" @click="setRatingType('sell')">
+                    <span>卖单市场 <br/>有任何负面情绪都将作为预警推送</span>
                 </li>
-                <li class="yellow" :class="{active:warningType == 'mid'}" @click="setRatingType('mid')">
-                    <span>预警等级：中 <br/>有负面评论，会根据规则将部分个人情感因素负面排除</span>
-                </li>
-                <li class="red" :class="{active:warningType == 'low'}" @click="setRatingType('low')">
-                    <span>预警等级：低 <br/>只有重复的负面评论，才会作为预警推送</span>
+                <li class="yellow" :class="{active:warningType == 'buy'}" @click="setRatingType('buy')">
+                    <span>买单市场 <br/>有负面评论，会根据规则将部分个人情感因素负面排除</span>
                 </li>
             </ul>
         </section>
@@ -105,8 +107,8 @@
     export default {
         data(){
             return{
-               showLoading: true,
-               warningType: 'high',
+               showLoading: false ,
+               warningType: 'sell',
                showRateType: false,
                rateListOrigin:[],
                rateList:[],
@@ -115,7 +117,7 @@
                storeName:'',
                storeImg:'',
                store:null,
-               rateType:'高',
+               listType:'买单市场',
             }
         },
         mounted(){
@@ -214,30 +216,23 @@
             setRatingType(type){
                 this.warningType = type;
                 switch(type){
-                    case 'low':
+                    case 'sell':
                     this.rateList = this.rateListOrigin.filter(item=>{
                         return item.ratingStar <= 10
                     });
-                    this.rateType = '低';
+                    this.listType = '卖单市场';
                     break;
 
-                    case 'mid':
+                    case 'buy':
                     this.rateList = this.rateListOrigin.filter(item=>{
                         return item.ratingStar <= 20
                     });
-                    this.rateType = '中';
-                    break;
-
-                    case 'high':
-                    this.rateList = this.rateListOrigin.filter(item=>{
-                        return item.ratingStar <= 30
-                    });
-                    this.rateType = '高';
+                    this.listType = '买单市场';
                     break;
 
                     default:
                     this.rateList = this.rateListOrigin;
-                    this.rateType = '高';
+                    this.listType = '高';
                     break;
                 }
             },
@@ -249,13 +244,12 @@
 <style lang="scss" scoped>
     @import 'src/style/mixin';
     #head_top{
-        background-color: #fff;
+        background-color: #0081ee;
         position: fixed;
         z-index: 100;
         left: 0;
         top: 0;
-        @include wh(100%, 1.95rem);
-        border-bottom:0.025rem solid #e5e5e5;
+        @include wh(100%, auto);
     }
     .head_goback{
         left: 0.4rem;
@@ -303,25 +297,40 @@
         }
     }
     .title_head{
-        @include center;
-        width: 50%;
         color: #fff;
-        text-align: center;
+        text-align: left;
         line-height: 0.8rem;
+        padding: .5rem .5rem .5rem;
+        display: flex;
+        justify-content: center;
         img{
-            @include wh(1rem, 1rem);
+            @include wh(2rem, 2rem);
             vertical-align:middle;
             display: inline-block;
+            border-radius: .4rem;
+            margin-right:.4rem;
+        }
+        .title_content{
+            flex:1;
         }
         .title_text{
-            @include sc(0.6rem, #666);
-            text-align: center;
+            @include sc(0.7rem, #fff);
             vertical-align:middle;
+        }
+        .title_time{
+            @include sc(0.55rem, #595F79);
+            padding-top:.5rem;
+            display: block;
             /*font-weight: bold;*/
+        }
+        .head_link_button{
+            @include sc(0.65rem, #007BE6);
+            padding-top: 1.05rem;
+            font-weight: bold;
         }
     }
     .main_container{
-        padding-top:2.4rem;
+        padding-top:4.3rem;
         padding-bottom:1.95rem;
     }
     .description_header{

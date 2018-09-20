@@ -264,14 +264,12 @@
 <style lang="scss" scoped>
     @import 'src/style/mixin';
     #head_top{
-        background-color: #fff;
+        background-color: #0081ee;
         position: fixed;
         z-index: 100;
         left: 0;
         top: 0;
         @include wh(100%, auto);
-        border-bottom:0.025rem solid #e5e5e5;
-        text-align: center;
     }
     .head_goback{
         left: 0.4rem;
@@ -280,40 +278,12 @@
         line-height: 1.95rem;
         margin-left: .4rem;
     }
-    .head_login{
-        right: 0.55rem;
-        @include ct;
-        background:#ff9501;
-        border-radius: .2rem;
-        line-height: .6rem;
-        padding:.2rem .2rem .2rem .3rem;
-        .login_span{
-            color: #666;
-        }
-        .user_avatar{
-            fill: #666;
-            @include wh(.8rem, .8rem);
-        }
-        span{
-            @include sc(0.5rem, #fff);
-            line-height: 0.5rem;
-            vertical-align:middle;
-        }
-        .icon_style{
-            @include wh(.6rem, .6rem);
-            vertical-align:middle;
-            use{
-                @include wh(.6rem, .6rem);
-                fill:#fff;
-            }
-        }
-    }
+   
     .title_head{
         color: #fff;
         text-align: left;
         line-height: 0.8rem;
-        padding: .6rem .5rem .4rem;
-        border-bottom:0.025rem solid #e5e5e5;
+        padding: .5rem .5rem .5rem;
         display: flex;
         justify-content: center;
         img{
@@ -327,7 +297,7 @@
             flex:1;
         }
         .title_text{
-            @include sc(0.7rem, #343640);
+            @include sc(0.7rem, #fff);
             vertical-align:middle;
         }
         .title_time{
@@ -400,7 +370,7 @@
             border-top-right-radius:0;
             width:100%;
             position:fixed;
-            top:1.85rem;
+            top:1.75rem;
             z-index:100;
             border-bottom:0.125rem solid #ddd;
             li{
