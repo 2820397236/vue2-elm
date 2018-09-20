@@ -51,7 +51,7 @@
                 </div>
             </div> -->
             
-            <div class="wallet" v-if="plan">
+            <div class="wallet" v-if="plan && plan.price>0">
                 <h2>昨日释放(股)</h2>
                 <h2>{{plan.equity * 1 *  plan.rate /10000}}</h2>
                 <div class="wallet_other">
@@ -71,7 +71,7 @@
             </div>
             <div class="wallet" v-else>
                 <h2>昨日释放(股)</h2>
-                <h1>0</h1>
+                <h2>0</h2>
                 <div class="wallet_other">
                     <div class="wallet_flex">
                         累计释放(股)<br/>
@@ -193,7 +193,7 @@
                         </svg>
                                             </div>
                     <h4>我的邀请码</h4>
-                    <h4 class="right">wang</h4>
+                    <h4 class="right" v-if="user">{{user.inviteKey}}</h4>
                     <i class="ico-arrow">
                        
                     </i>
@@ -236,12 +236,9 @@ import loading from 'src/components/common/loading'
 export default {
     data(){
         return{
-
+            plan:null,
             user: null,
             wallet: null,
-            plan:{
-                totalMoney: 0
-            },
             days:0,
             city: '',
             hotcity: [],     //热门城市列表
@@ -274,6 +271,7 @@ export default {
             console.log(o);
             this.wallet = o;
             this.user.cName = o.cName ;
+            this.user.inviteKey = o.inviteKey;
             this.days = parseInt((new Date().getTime() - this.wallet.createTime) / 1000 / 60 / 60 / 24);
             console.log(this.days);
         })

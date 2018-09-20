@@ -214,6 +214,7 @@ exports.getUserFinance = async (req, res) => {
   if(cashflow){
     res.status(200).send({
       "cName":user.cname,
+      "inviteKey":user.inviteKey,
       "totalPay":0,
       "totalMoney":cashflow.money,
       "stockYesterday":0,
@@ -225,9 +226,10 @@ exports.getUserFinance = async (req, res) => {
     });
   }else{
     res.status(200).send({
-      "cName":user.cname,
       "status":-1,
       "error":"未购买",
+      "cName":user.cname,
+      "inviteKey":user.inviteKey,
       "totalMoney": 0,
       "stockYesterday":0,
       "stockSum":0,
