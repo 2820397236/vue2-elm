@@ -14,7 +14,8 @@
                         <span ><i class="red">{{t.money * 0.1|currency('+')}} 元</i></span> </div>
                         <div class="flex">
                             
-                            <span class="text-min">我的股权收益:<i> +200</i> 股</span>
+                            <span class="text-min" v-if="t.money > 0">我的股权收益:<i> +200</i> 股</span>
+                            <span class="text-min" v-else>我的股权收益:<i> +0</i> 股</span>
                         </div>
                         <div>
                             <!-- <span class="team-time">于 {{t.createTime | dateTime('MM-DD hh:mm')}} 加入 我 的团队</span> -->
@@ -34,7 +35,8 @@
                         <span ><i class="red">{{tc.money *0.1|currency('+')}} 元</i></span> </div>
                         <div class="flex">
                             
-                            <span class="text-min">我的股权收益:<i> +500</i> 股</span>
+                            <span class="text-min" v-if="tc.money > 0">我的股权收益:<i> +500</i> 股</span>
+                            <span class="text-min" v-else>我的股权收益:<i> +0</i> 股</span>
                         </div>
                         <div>
                             <!-- <span class="team-time">于 {{t.createTime | dateTime('MM-DD hh:mm')}} 加入 {{t.cName}} 的团队</span> -->
@@ -53,7 +55,8 @@
                             <span ><i class="red">{{tcc.money *0.2|currency('+')}} 元</i></span> </div>
                             <div class="flex">
                                 
-                                <span class="text-min">我的股权收益:<i>+1000</i> 股</span>
+                                <span class="text-min" v-if="tcc.money > 0">我的股权收益:<i>+1000</i> 股</span>
+                                <span class="text-min" v-else>我的股权收益:<i>+0</i> 股</span>
                             </div>
                             <div>
                                 <!-- <span class="team-time">于 {{tcc.createTime | dateTime('MM-DD hh:mm')}} 加入 {{tc.cName}} 的团队</span> -->

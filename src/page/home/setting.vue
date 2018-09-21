@@ -101,7 +101,7 @@
                     </svg>
                                         </div>
                 <h4>{{days}}天共持有(股)</h4>
-                <h4 class="right" v-if="plan">{{plan.equity * days *  plan.rate /10000 + 200 * first.length + 500 * second.length + 1000 * third.length}} </h4>
+                <h4 class="right" v-if="plan">{{plan.equity * days *  plan.rate /10000 + firstEquity + secondEquity + thirdEquity}} </h4>
                 <h4 class="right" v-else>0</h4>
                 <i class="ico-arrow">
                    
@@ -113,15 +113,15 @@
                 <div class="wallet_other">
                     <div class="wallet_flex">
                         1级收益(股)<br/>
-                        <span v-if="first">{{200 * first.length}}</span>
+                        <span v-if="first">{{firstEquity}}</span>
                     </div>
                     <div class="wallet_flex">
                         2级收益(股)<br/>
-                        <span v-if="second">{{500 * second.length}}</span>
+                        <span v-if="second">{{secondEquity}}</span>
                     </div>
                     <div class="wallet_flex">
                         3级收益(股)<br/>
-                        <span v-if="third">{{1000 * third.length}}</span>
+                        <span v-if="third">{{thirdEquity}}</span>
                     </div>
                 </div>
             </div>
@@ -233,6 +233,9 @@ export default {
             first:[],
             second:[],
             third:[],
+            firstEquity:0,
+            secondEquity:0,
+            thirdEquity:0,
             teamMoney:0,
             teamTotal:0
         }
@@ -285,18 +288,27 @@ export default {
             })
             console.log(this.first,this.second,this.third);
             this.first.map(x=>{
-                this.teamTotal +=x.money;
-                this.teamMoney +=x.money *0.1;
+                if(x.money > 0){
+                    this.teamTotal +=x.money;
+                    this.teamMoney +=x.money *0.1;
+                    this.firstEquity +=200;
+                }
             })
 
             this.second.map(x=>{
-                this.teamTotal +=x.money;
-                this.teamMoney +=x.money *0.1;
+                if(x.money > 0){
+                    this.teamTotal +=x.money;
+                    this.teamMoney +=x.money *0.1;
+                    this.secondEquity +=500;
+                }
             })
 
             this.third.map(x=>{
-                this.teamTotal +=x.money;
-                this.teamMoney +=x.money *0.2;
+                if(x.money > 0){
+                    this.teamTotal +=x.money;
+                    this.teamMoney +=x.money *0.2;
+                    this.secondEquity +=1000;
+                }
             })
         })
 
