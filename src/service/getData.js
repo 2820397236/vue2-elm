@@ -328,6 +328,10 @@ export const getUserPlan = (phone) => fetch('/api/v1/getUserPlan',{
 	phone
 })
 
+export const getPlanList = (phone) => fetch('/api/v1/getPlanList',{
+	phone
+})
+
 export const getUserTeam = (phone) => fetch('/api/v1/getUserTeam',{
 	phone
 })

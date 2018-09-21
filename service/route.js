@@ -8,6 +8,7 @@ app.post('/api/v1/login', users.login);
 app.post('/api/v1/createOrder', users.createOrder);
 app.post('/api/v1/getUserFinance', users.getUserFinance);
 app.post('/api/v1/getUserPlan', users.getUserPlan);
+app.post('/api/v1/getPlanList', users.getPlanList);
 app.post('/api/v1/getUserTeam', users.getUserTeam);
 
 app.post('/api/v2/getUserList', users.getUserList);

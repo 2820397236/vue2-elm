@@ -7,13 +7,13 @@
         </header>
         <ul class="rate_navi">
             <li :class="{ active : listType == 'user' }" @click="setRatingType('user')">
-                <span>用户 {{rateCount.countHigh}}</span>
+                <span>用户管理 {{rateCount.countHigh}}</span>
             </li>
             <li :class="{ active : listType == 'order' }" @click="setRatingType('order')">
-                <span>订单 {{rateCount.countMid}}</span>
+                <span>处理订单 {{rateCount.countMid}}</span>
             </li>
             <li :class="{ active : listType == 'flow' }" @click="setRatingType('flow')">
-                <span>流水 {{rateCount.countLow}}</span>
+                <span>查看入账 {{rateCount.countLow}}</span>
             </li>
         </ul>
 
@@ -31,7 +31,7 @@
 
                                         </div>
                                         <div class="rate_username">
-                                                {{item.phone}} <br/>
+                                                {{item.cName}} <span class="rate_tel">{{item.phone}}</span> <br/>
                                                 <span class="rate_time">{{item.createTime | dateTime('YYYY/MM/DD hh:mm:ss')}}</span><br/>
                                                 <span class="rate_tag" v-if="item.status =='WAIT'">待确认</span>
                                                 <span class="rate_tag green" v-if="item.status !='WAIT'">已确认</span>
@@ -64,9 +64,11 @@
 
                                         </div>
                                         <div class="rate_username">
-                                                {{item.phone}} <br/>
+                                                {{item.cName}} [{{item.inviteKey}}] <span class="rate_tel">{{item.phone}}</span> <br/>
                                                 <span class="rate_time">注册时间：{{item.createTime | dateTime('YYYY/MM/DD hh:mm:ss')}}</span><br/>
                                                 <span class="rate_tag" v-if="item.type =='ADMIN'">管理员</span>
+                                                <span class="rate_tag green" v-else>用户</span>
+                                                <span class="rate_tag">被【{{item.invite}}】邀请</span>
                                          </div>
                                     </section>
                                 </div>
@@ -79,7 +81,7 @@
                 </ul>
 
                 <ul v-if="listType == 'flow'" >
-                    <li v-for="(item,index) in flowList" :key="index" @click="setOrderSuccess(item)">
+                    <li v-for="(item,index) in flowList" :key="index">
                         <section class="menu_detail_list">
                             <div class="menu_detail_link">
                                 <div class="rate_head">
@@ -89,7 +91,7 @@
                                             <div class="img"></div>
                                         </div>
                                         <div class="rate_username">
-                                                {{item.phone}} <br/>
+                                                {{item.cName}} <span class="rate_tel">{{item.phone}}</span> <br/>
                                                 <span class="rate_time">{{item.createTime | dateTime('YYYY/MM/DD hh:mm:ss')}}</span><br/>
                                                 <span class="rate_tag" v-if="item.status =='WAIT'">待确认</span>
                                                 <span class="rate_tag green" v-if="item.type =='CASH'">现金</span>
@@ -451,7 +453,7 @@
             overflow: hidden;
             padding: 0rem .6rem 0rem .8rem ;
             .rate_time{
-                @include sc(.6rem, #999);
+                @include sc(.5rem, #999);
                 line-height: 1rem;
                 text-align: center;
             }
@@ -476,25 +478,14 @@
                             width:100%;
                             .rate_img{
                                 .img{
-
-                                    border-radius: 2rem;
+                                    margin-top:.2rem;
+                                    border-radius: .2rem;
                                     @include wh(2rem, 2rem);
                                     display: block;
                                     background:url(../../images/account.png) center center;
                                     background-size:100% auto;
                                 }
-                                &::after{
-                                    margin-left:1.6rem;
-                                    margin-top:-2rem;
-                                    display:block;
-                                    content:'某';
-                                    @include sc(.8rem, #fff);
-                                    @include wh(2rem, 2rem);
-                                    text-align: center;
-                                    line-height: 2rem;
-                                    border-radius: 1rem;
-                                    background-color: #66d8b4;
-                                }
+                                
 
                                 &.green{
                                     &::after{
@@ -525,8 +516,10 @@
                             .rate_username{
                                 @include sc(.6rem, #333);
                                 margin-left: .5rem;
-                                padding-top: .2rem;
                                 flex:1;
+                                .rate_tel{
+                                    @include sc(.5rem, #bababa);
+                                }
                                 .rate_address{
                                     @include sc(.5rem, #bababa);
                                 }
@@ -555,7 +548,7 @@
                             .order_price{
                                 @include sc(.8rem, #333);
                                 .order_price_tag{
-                                    @include sc(.6rem, rgba(255,139,103,1));
+                                    @include sc(.5rem, rgba(255,139,103,1));
                                 }
                             }
                         }

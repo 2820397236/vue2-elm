@@ -52,7 +52,7 @@
             <div class="plan_name">{{planList[planIndex].title}}</div>
             <div class="plan_subname">{{planList[planIndex].subtitle}}</div>
             <div class="plan_money">
-                <span>￥{{planList[planIndex].min}}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>送{{planList[planIndex].stock}}股</span>
+                <span>投{{planList[planIndex].price}}元</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>送{{planList[planIndex].equity}}股</span>
             </div>
             <div class="plan_desc">{{planList[planIndex].desc}}</div>
           </div>
@@ -247,7 +247,7 @@
 
 <script>
     import {mapState, mapMutations} from 'vuex'
-    import {getUserFinance,createOrder} from 'src/service/getData'
+    import {getPlanList,getUserFinance,createOrder} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import headTop from '../../components/header/head'
     import alertTip from 'src/components/common/alertStore'
@@ -274,7 +274,9 @@
     export default {
         data(){
             return{
-                wallet:null,
+                wallet:{
+                    getTotalMoney:0
+                },
                 calendar2:{
                     show:false,
                     range:true,
@@ -330,41 +332,41 @@
                         "title":"计划A",
                         "subtitle":"安稳投",
                         "desc":"起步低 收益稳定",
-                        "min":5000,
+                        "price":5000,
                         "rate":0.12,
-                        "stock":0
+                        "equity":0
                     },
                     {
                         "title":"计划B",
                         "subtitle":"安稳投",
                         "desc":"只涨不跌 赠送股权",
-                        "min":10000,
+                        "price":10000,
                         "rate":0.15,
-                        "stock":2300
+                        "equity":2300
                     },
                     {
                         "title":"计划C",
                         "subtitle":"安稳投",
                         "desc":"只涨不跌 赠送股权",
-                        "min":20000,
+                        "price":20000,
                         "rate":0.18,
-                        "stock":4650
+                        "equity":4650
                     },
                     {
                         "title":"计划D",
                         "subtitle":"安稳投",
                         "desc":"只涨不跌 赠送股权",
-                        "min":30000,
+                        "price":30000,
                         "rate":0.22,
-                        "stock":6900
+                        "equity":6900
                     },
                     {
                         "title":"计划E",
                         "subtitle":"安稳投",
                         "desc":"只涨不跌 赠送股权",
-                        "min":50000,
+                        "price":50000,
                         "rate":0.40,
-                        "stock":11600
+                        "equity":11600
                     }
                 ],
                 bar: {
@@ -574,13 +576,17 @@
             getUserInfo(){
                 getUserFinance(this.user.phone).then( o=>{
                     console.log(o);
+
                     if(o.status && o.status != 0){
-                        this.wallet ={
-                            getTotalMoney:0
-                        };
-                    }else{
-                        this.wallet = o;
+                        return;
                     }
+
+                    this.wallet = o.data;
+                    this.user.cName = o.data.cName ;
+                    this.user.invite = o.data.invite;
+                    this.user.inviteKey = o.data.inviteKey;
+                    setStore("user",this.user);
+                    
                     
                 })
             },
@@ -679,12 +685,16 @@
 
                 //隐藏加载动画
                 this.hideLoading();
+
                 if(getStore('user') == undefined){
                     this.$router.push('/');
                 }
 
                 this.user = JSON.parse(getStore('user') || {});
-                this.user.realName = "先生/女士";
+
+                getPlanList(this.user.phone).then(o=>{
+                    this.planList = o.data;
+                });
             },
             closeTip(){
                 this.showAlert = false;
@@ -700,7 +710,7 @@
                 this.showAlert = true;
                 this.alertText = order.phone;
 
-                this.alertSubText = '是否确认买入￥'+ this.planList[planIndex].min +'？';
+                this.alertSubText = '是否确认买入￥'+ this.planList[planIndex].price +'？';
                 this.alertTime = new Date();
                 this.alertImg = 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJLt9GVR0GqQkjqicrIqibicqaoOFSAQ0u6HFoLcEMwKPdBLzD2mgicCQyuC650UM3pYYrHIia7ib5qvEiaQ/132';
 

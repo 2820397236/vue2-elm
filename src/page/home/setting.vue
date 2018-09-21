@@ -11,8 +11,8 @@
             </div>
             <section v-if="user" >
                 <div class="title_msg2">个人总资产 (元)</div>
-                <div class="title_msg" v-if="plan && teamMoney">{{ (plan.price *1 + teamMoney *1) | currency('')}}  </div>
-                <div class="title_msg" v-if="plan == null">{{ ( teamMoney *1) | currency('')}} </div>
+                <div class="title_msg" v-if="plan">{{ (plan.price  + teamMoney ) | currency('')}}  </div>
+                <div class="title_msg" v-else>{{ 0 | currency('')}}  </div>
             
             </section>
         </section>
@@ -247,12 +247,16 @@ export default {
         this.user = JSON.parse(getStore('user') || {});
 
         getUserFinance(this.user.phone).then( o=>{
+            
             console.log(o);
-            this.wallet = o;
-            this.user.cName = o.cName ;
-            this.user.inviteKey = o.inviteKey;
+
+            this.wallet = o.data;
+            this.user.cName = o.data.cName ;
+            this.user.invite = o.data.invite;
+            this.user.inviteKey = o.data.inviteKey;
             this.days = parseInt((new Date().getTime() - this.wallet.createTime) / 1000 / 60 / 60 / 24);
-            console.log(this.days);
+
+            setStore("user",this.user);
         })
 
 

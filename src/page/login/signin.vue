@@ -19,7 +19,8 @@
                 <input type="text" placeholder="登录手机:" v-model="account.phone" class="btline disabled" v-if="this.$route.query.type == 'bind'" disabled="">
                 <input type="text" placeholder="登录手机:" v-model="account.phone" class="btline" v-else>
                 <input type="text" placeholder="登录密码:" v-model="account.password" class="btline">
-                <input type="text" placeholder="推荐码(非必填):" v-model="account.inviteCode" class="btline">
+                <input type="text" placeholder="推荐码(非必填):" v-model="account.inviteCode" class="btline" v-if="this.$route.query.type == 'bind'" disabled="">
+                <input type="text" placeholder="推荐码(非必填):" v-model="account.inviteCode" class="btline" v-else>
                 <div>
                     <input type="text" placeholder="验证码:" v-model="account.verify">
                     <a class="code_button" v-if="!lock" @click="getVerifyCode()">获取验证码</a>
@@ -54,7 +55,7 @@
             注册
         </div>
         <div class="login_container"  @click="verifyLogin()" v-if="loginEnabled && this.$route.query.type == 'bind'">
-            绑定
+            保存
         </div>
         <div class="login_container" v-if="! loginEnabled">
             等待...
@@ -143,6 +144,8 @@
                 if(getStore('user') != undefined){
                     let user =   JSON.parse(getStore('user'));
                     this.account.phone = user.phone;
+                    this.account.cName = user.cName;
+                    this.account.inviteCode = user.invite;
                 }
                 // localStorage.clear();
 
