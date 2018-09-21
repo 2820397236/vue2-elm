@@ -210,6 +210,12 @@
             <div class="btn_flex deposit"  @click="alert(planIndex)">
             <i></i>买入</div>
         </button> 
+        <button class="btn_buy" v-else>
+            <!-- <div class="btn_flex draw" @click="alertSell(planIndex)">
+            <i></i>挂单</div> -->
+            <div class="btn_flex disable">
+            <i></i>已加入 {{wallet.totalMoney}}元 计划</div>
+        </button> 
             
        <foot-guide></foot-guide>
        
@@ -334,7 +340,7 @@
                         "desc":"起步低 收益稳定",
                         "price":5000,
                         "rate":0.12,
-                        "equity":0
+                        "equity":1000
                     },
                     {
                         "title":"计划B",
@@ -1025,6 +1031,10 @@
             span{
                 
             }
+        }
+        .disable{
+             background:#f7f7f7;
+             color:#999;
         }
     }
     .desc_form{
