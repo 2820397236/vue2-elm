@@ -16,7 +16,8 @@
         <form class="loginForm newStyle">
             <section class="input_container">
                 <input type="text" placeholder="姓名:" v-model="account.cName" class="btline">
-                <input type="text" placeholder="登录手机:" v-model="account.phone" class="btline">
+                <input type="text" placeholder="登录手机:" v-model="account.phone" class="btline disabled" v-if="this.$route.query.type == 'bind'" disabled="">
+                <input type="text" placeholder="登录手机:" v-model="account.phone" class="btline" v-else>
                 <input type="text" placeholder="登录密码:" v-model="account.password" class="btline">
                 <input type="text" placeholder="推荐码(非必填):" v-model="account.inviteCode" class="btline">
                 <div>
@@ -49,10 +50,13 @@
                 </div>
             </section> -->
         </form>
-        <div class="login_container"  @click="verifyLogin()" v-if="loginEnabled">
+        <div class="login_container"  @click="verifyLogin()" v-if="loginEnabled && this.$route.query.type != 'bind'">
             注册
         </div>
-        <div class="login_container" v-else>
+        <div class="login_container"  @click="verifyLogin()" v-if="loginEnabled && this.$route.query.type == 'bind'">
+            绑定
+        </div>
+        <div class="login_container" v-if="! loginEnabled">
             等待...
         </div>
 
@@ -117,7 +121,6 @@
             this.initData();
         },
         mounted(){
-            this.initData();
         },
         components: {
             headTop,
@@ -135,7 +138,12 @@
             ]),
 
             async initData(){
-                
+                console.log();
+
+                if(getStore('user') != undefined){
+                    let user =   JSON.parse(getStore('user'));
+                    this.account.phone = user.phone;
+                }
                 // localStorage.clear();
 
                 // setStore('user','{"id":25,"username":"13788997536","password":"7536","phoneNo":"13788997536","realName":"X","profileImg":"http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJLt9GVR0GqQkjqicrIqibicqaoOFSAQ0u6HFoLcEMwKPdBLzD2mgicCQyumh5JniaH960U0shm17kkjaw/0","isCompany":null,"token":null,"openId":"o8LyKwwyUm6bNkOvHKzqLpu3-0Fg","accessToken":"6HL-hCRhS7aQyBp8bdXUK_1-MBP0CBbIQoOO5U590Jm86q5y1LY3Z5FuviAgHTSLVcdvourLsO_IcNLWf28aFw","city":"","country":"中国"}');
@@ -405,11 +413,13 @@
                 @include sc(.55rem, #fff);
                 background:none;
                 padding: .7rem 0 .7rem .7rem;
-                
                 text-align: left;
                 flex:1;
                 &.btline{
                     border-bottom:0.025rem solid #EBEFF3;
+                }
+                &.disabled{
+                    color:#999;
                 }
                 
             }

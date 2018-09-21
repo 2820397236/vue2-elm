@@ -265,6 +265,7 @@
     import 'vue-echarts-v3/node_modules/echarts/lib/component/dataZoom'
     import 'vue-echarts-v3/node_modules/echarts/lib/component/tooltip'
     import 'vue-echarts-v3/node_modules/echarts/lib/component/title'
+    import 'vue-echarts-v3/node_modules/echarts/lib/component/markPoint'
 
     import debounce from 'debounce'
     import theme from './theme.json'
@@ -435,6 +436,45 @@
                         start: 0,
                         end: 50
                     }],
+                    markPoint: {
+                label: {
+                    normal: {
+                        formatter: function (param) {
+                            return param != null ? Math.round(param.value) : '';
+                        }
+                    }
+                },
+                data: [
+                    {
+                        name: 'XX标点',
+                        coord: ['9/9', 1.8],
+                        value: 1,
+                        itemStyle: {
+                            normal: {color: 'rgb(41,60,85)'}
+                        }
+                    },
+                    {
+                        name: 'highest value',
+                        type: 'max',
+                        valueDim: 'highest'
+                    },
+                    {
+                        name: 'lowest value',
+                        type: 'min',
+                        valueDim: 'lowest'
+                    },
+                    {
+                        name: 'average value on close',
+                        type: 'average',
+                        valueDim: 'close'
+                    }
+                ],
+                tooltip: {
+                    formatter: function (param) {
+                        return param.name + '<br>' + (param.data.coord || '');
+                    }
+                }
+            },
                     series : [
                         // {
                         //     type:'line',
@@ -1048,7 +1088,7 @@
         }
         .plan_desc{
             text-align: center;
-            font-size: .8rem;
+            font-size: .6rem;
         }
         .plan_money{
             text-align:center;

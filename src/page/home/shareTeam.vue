@@ -14,11 +14,11 @@
                         <span ><i class="red">{{t.money * 0.1|currency('+')}} 元</i></span> </div>
                         <div class="flex">
                             
-                            <span class="text-min">股权收益:<i> +200</i> 股</span>
+                            <span class="text-min">我的股权收益:<i> +200</i> 股</span>
                         </div>
                         <div>
                             <!-- <span class="team-time">于 {{t.createTime | dateTime('MM-DD hh:mm')}} 加入 我 的团队</span> -->
-                            <span class="team-time">投资金额：{{t.money|currency('')}} 元</span>
+                            <span class="team-time">他的投资金额：{{t.money|currency('')}} 元</span>
                         </div>
                     </div>
                 </div>
@@ -34,11 +34,11 @@
                         <span ><i class="red">{{tc.money *0.1|currency('+')}} 元</i></span> </div>
                         <div class="flex">
                             
-                            <span class="text-min">股权收益:<i> +500</i> 股</span>
+                            <span class="text-min">我的股权收益:<i> +500</i> 股</span>
                         </div>
                         <div>
                             <!-- <span class="team-time">于 {{t.createTime | dateTime('MM-DD hh:mm')}} 加入 {{t.cName}} 的团队</span> -->
-                            <span class="team-time">投资金额：{{tc.money|currency('')}} 元</span>
+                            <span class="team-time">他的投资金额：{{tc.money|currency('')}} 元</span>
                         </div>
                     </div>
                 </div>
@@ -53,11 +53,11 @@
                             <span ><i class="red">{{tcc.money *0.2|currency('+')}} 元</i></span> </div>
                             <div class="flex">
                                 
-                                <span class="text-min">股权收益:<i>+1000</i> 股</span>
+                                <span class="text-min">我的股权收益:<i>+1000</i> 股</span>
                             </div>
                             <div>
                                 <!-- <span class="team-time">于 {{tcc.createTime | dateTime('MM-DD hh:mm')}} 加入 {{tc.cName}} 的团队</span> -->
-                                <span class="team-time">投资金额：{{tcc.money |currency('')}} 元</span>
+                                <span class="team-time">他的投资金额：{{tcc.money |currency('')}} 元</span>
                             </div>
                         </div>
                         
@@ -177,7 +177,7 @@
         }
         .childchild{
             border-bottom:0.0125rem solid #d7d7d7;
-            padding-left:2rem;
+            padding-left:1.8rem;
             display: flex;
             justify-content:space-between;
         }
@@ -247,6 +247,7 @@
             border-left:0.0125rem solid #999;
             border-bottom:0.0125rem solid #999;
             margin-top: .6rem;
+            margin-left: .1rem;
         }
         .ico-arrow{
             padding:.24rem .3rem;

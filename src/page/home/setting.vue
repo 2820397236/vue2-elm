@@ -6,51 +6,18 @@
             </section>
         </header>
         <section class="main_container" @click="checkPhoneNumber()">
-            <div class="title_profile"></div>
+            <div class="title_profile">
+                <i class="pop" v-if="user && user.cName ==''"></i>
+            </div>
             <section v-if="user" >
                 <div class="title_msg2">个人总资产 (元)</div>
                 <div class="title_msg" v-if="plan && teamMoney">{{ (plan.price *1 + teamMoney *1) | currency('')}}  </div>
+                <div class="title_msg" v-if="plan == null">{{ ( teamMoney *1) | currency('')}} </div>
             
             </section>
         </section>
 
         <section>
-            <!-- <div class="wallet" v-if="wallet && plan">
-                <h2>我的钱包(元)</h2>
-                <h2>{{wallet.totalMoney + plan.equity * days *  plan.rate /10000 * 4.3 | currency('')}}</h2>
-                <div class="wallet_other">
-                    <div class="wallet_flex">
-                        累计收益(元)<br/>
-                        {{plan.equity * days *  plan.rate /10000 * 4.3 | currency("")}}
-                    </div>
-                    <div class="wallet_flex">
-                        总投资(元)<br/>
-                        {{wallet.totalMoney | currency('')}}
-                    </div>
-                    <div class="wallet_flex">
-                        可用余额(元)<br/>
-                        {{wallet.balance}}
-                    </div>
-                </div>
-            </div>
-            <div class="wallet" v-else>
-                <h2>我的钱包(元)</h2>
-                <h2>{{0 | currency('')}}</h2>
-                <div class="wallet_other">
-                    <div class="wallet_flex">
-                        累计收益(元)<br/>
-                        {{0 | currency("")}}
-                    </div>
-                    <div class="wallet_flex">
-                        总投资(元)<br/>
-                        {{0 | currency('')}}
-                    </div>
-                    <div class="wallet_flex">
-                        可用余额(元)<br/>
-                        {{0 | currency('')}}
-                    </div>
-                </div>
-            </div> -->
 
             <div class="wallet" v-if="plan && plan.price>0">
                 <h2>昨日释放(股)</h2>
@@ -100,6 +67,7 @@
                                         </div>
                 <h4>股权计划</h4>
                 <h4 class="right" v-if="plan">{{plan.title}} {{plan.subtitle}} </h4>
+                <h4 class="right" v-else style="color:#df3d28" @click="goTo('analytics')"> 点击限时抢购 </h4>
                 <i class="ico-arrow">
                    
                 </i>
@@ -117,6 +85,7 @@
                                         </div>
                 <h4>初始投资(元)</h4>
                 <h4 class="right" v-if="plan">{{plan.price | currency('')}}</h4>
+                <h4 class="right" v-else>0.00</h4>
                 <i class="ico-arrow">
                    
                 </i>
@@ -131,8 +100,9 @@
                         </g>
                     </svg>
                                         </div>
-                <h4>累计{{days}}天共持有</h4>
-                <h4 class="right" v-if="plan">{{plan.equity * days *  plan.rate /10000 + 200 * first.length + 500 * second.length + 1000 * third.length}} 股</h4>
+                <h4>{{days}}天共持有(股)</h4>
+                <h4 class="right" v-if="plan">{{plan.equity * days *  plan.rate /10000 + 200 * first.length + 500 * second.length + 1000 * third.length}} </h4>
+                <h4 class="right" v-else>0</h4>
                 <i class="ico-arrow">
                    
                 </i>
@@ -257,15 +227,6 @@ export default {
             user: null,
             wallet: null,
             days:0,
-            city: '',
-            hotcity: [],     //热门城市列表
-            areaList:[],
-            areaMap:{},
-            guesscity:{},
-            groupcity: {},   //所有城市列表
-            inChina:[],
-            outChina:[],
-            cityList:[],
             showLoading:false,
             showAlert: false,
             teamList:[],
@@ -297,6 +258,7 @@ export default {
 
         getUserPlan(this.user.phone).then( o=>{
             console.log(o);
+            if(o && o.status < 1) return;
             this.plan = o;
         })
 
@@ -403,7 +365,7 @@ export default {
         },
 
         checkPhoneNumber(){
-            console.log(this.user.profileImg);
+            // if(this.user.cName !='') return;
 
             this.showAlert = true;
 
@@ -411,14 +373,14 @@ export default {
 
             this.alertSubText = '为确保安全请先绑定个人信息';
             this.alertTime = new Date();
-            this.alertImg = this.user.profileImg;
+            this.alertImg = 'http://zijinchi.linkersocks.com/favicon.ico';
 
             this.confirmBtn = "立刻绑定";
             this.format = 'YYYY年MM月DD日';
             this.alertFunc = ()=>{
-               console.log('localStorage.clear();')
-               localStorage.clear();
-               this.$router.push({path:'/signin',param:{type:"bind"}});
+               // console.log('localStorage.clear();')
+               // localStorage.clear();
+               this.$router.push({path:'/signin',query:{type:"bind"}});
             }
         },
     },
@@ -510,6 +472,16 @@ export default {
             border-radius: .4rem;
             background: #fff url(../../images/account.png) center center no-repeat;
             background-size:100% auto;
+            .pop{
+                display: block;
+                width:.45rem;
+                height:.45rem;
+                border-radius:.45rem;
+                background:red; 
+                float:right;
+                margin-top:-0.1rem;
+                margin-right:-0.1rem;
+            }
         }
         .title_msg{
             font-size: 1.3rem;
