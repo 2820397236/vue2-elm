@@ -61,7 +61,7 @@
             等待...
         </div>
 
-        <a class="signup" @click="goto('login')" v-if="this.$route.query.type != 'bind'">我的账号，点击登录</a>
+        <a class="signup" @click="goto('login')" v-if="this.$route.query.type != 'bind'">我有账号，点击登录</a>
 
         <!--  <p class="login_tips">
             <svg v-if="errorMsg != ''" class="icon_style">
