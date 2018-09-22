@@ -48,6 +48,7 @@
         <div class="login_container" v-else>
             等待...
         </div>
+        <a class="signup" @click="goto('signin')">没有账号，我要加入</a>
 
         <!--  <p class="login_tips">
             <svg v-if="errorMsg != ''" class="icon_style">
@@ -136,7 +137,7 @@
                 
                 if(getStore('user') != undefined){
                     let user =   JSON.parse(getStore('user'));
-                     this.account.phone = user.phone;
+                    this.account.phone = user.phone;
                 }
 // 
                 // this.weixin = JSON.parse(getStore('user'));
@@ -516,9 +517,11 @@
     .change_to_text{
         background-color: #4cd964;
     }
-    .to_forget{
-        float: right;
+    .signup{
+        /*float: right;*/
+        display: block;
         @include sc(.6rem, #3b95e9);
-        margin-right: .3rem;
+        text-align: center;
+        margin-top:.6rem;
     }
 </style>

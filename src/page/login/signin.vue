@@ -61,6 +61,8 @@
             等待...
         </div>
 
+        <a class="signup" @click="goto('signin')" v-if="this.$route.query.type != 'bind'">我的账号，点击登录</a>
+
         <!--  <p class="login_tips">
             <svg v-if="errorMsg != ''" class="icon_style">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#codeWarning"></use>
@@ -506,5 +508,12 @@
         float: right;
         @include sc(.6rem, #3b95e9);
         margin-right: .3rem;
+    }
+    .signup{
+        /*float: right;*/
+        display: block;
+        @include sc(.6rem, #3b95e9);
+        text-align: center;
+        margin-top:.6rem;
     }
 </style>
