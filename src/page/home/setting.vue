@@ -307,7 +307,7 @@ export default {
                 if(x.money > 0){
                     this.teamTotal +=x.money;
                     this.teamMoney +=x.money *0.2;
-                    this.secondEquity +=1000;
+                    this.thirdEquity +=1000;
                 }
             })
         })

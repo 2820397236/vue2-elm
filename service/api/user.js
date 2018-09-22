@@ -62,7 +62,7 @@ exports.sendCode = async (req, res) => {
     //     res.send(response);
     //   }
     // });
-    const brand = '资金池';
+    const brand = '紫金池';
     nexmo.verify.request({number: to, brand: brand}, async (err, result) => {
       if(err) {
         res.sendStatus(500);
