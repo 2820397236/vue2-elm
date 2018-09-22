@@ -107,9 +107,9 @@
                    
                 </i>
             </div>
-            <div class="wallet2" v-if="plan">
+            <div class="wallet2" v-if="teamTotal">
                 <h2>团队总投资(元)</h2>
-                <h1>&nbsp;{{teamTotal|currency('')}}</h1>
+                <h1 >&nbsp;{{teamTotal|currency('')}}</h1>
                 <div class="wallet_other">
                     <div class="wallet_flex">
                         1级收益(股)<br/>
