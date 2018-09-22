@@ -10,8 +10,8 @@
                 <i class="pop" v-if="user && user.cName ==''"></i>
             </div>
             <section v-if="user" >
-                <div class="title_msg2">个人总资产 (元)</div>
-                <div class="title_msg" v-if="plan">{{ (plan.price  + teamMoney ) | currency('')}}  </div>
+                <div class="title_msg2">个人总收益 (元)</div>
+                <div class="title_msg" v-if="teamMoney">{{ (teamMoney ) | currency('')}}  </div>
                 <div class="title_msg" v-else>{{ 0 | currency('')}}  </div>
             
             </section>
