@@ -279,6 +279,7 @@
             font-size: .6rem;
             padding:.2rem ;
             color:#fff;
+            background: #8296A9;
             i{
 
                 width:12px;

@@ -261,7 +261,7 @@ exports.getUserPlan = async (req, res) => {
   if(!user)  res.status(200).send({"status":-9,"error":"user not exsit"});
 
   const outId = req.body.outId;
-  const order  = await knex("order").select().where({"userId":user.id,"status":"SUCCESS"}).orderBy("createTime","desc").then(s=>s[0]);
+  const order  = await knex("order").select().where({"userId":user.id,"type":"CASH_DEPOSIT","status":"SUCCESS"}).orderBy("createTime","desc").then(s=>s[0]);
   if(!order) {
     res.status(200).send({"status":-9,"error":"order not exist"});
   }else{
@@ -373,7 +373,9 @@ exports.setOrderSuccess = async (req, res) =>{
  
   await knex("order").update({"status":"SUCCESS"}).where({"id":orderId});
   // await knex("order").where({"status":"WAIT","type":"CASH_DEPOSIT","userId":order.userId}).del();
-  await knex("users").update({"money":order.price}).where({"id":order.userId});
+  if(order.type == "CASH_DEPOSIT"){
+    await knex("users").update({"money":order.price}).where({"id":order.userId});
+  }
   await knex("cashflow").insert({
     "outID":order.orderId,
     "userId":order.userId,
