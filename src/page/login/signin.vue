@@ -384,7 +384,7 @@
     }
 
     .loginForm{
-        margin-top: 2.6rem;
+        margin-top: 2rem;
         margin-bottom: 1rem;
         text-align: center;
         &.newStyle{
