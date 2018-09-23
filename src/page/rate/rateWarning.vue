@@ -80,9 +80,9 @@
         </section>
         <section>
             <button class="btn_buy">
-            <div class="btn_flex"  @click="setRatingType('resting')" :class="{active:orderType == 'resting'}">
+            <div class="btn_flex"  @click="setRatingType('resting')" :class="{active:orderType == 'resting', disable:orderType == 'withdraw'}">
             股权挂单</div>
-            <div class="btn_flex"  @click="setRatingType('withdraw')" :class="{active:orderType == 'withdraw'}">
+            <div class="btn_flex"  @click="setRatingType('withdraw')" :class="{active:orderType == 'withdraw', disable:orderType == 'resting'}">
             奖励兑现</div>
         </button> 
         </section>
@@ -279,7 +279,6 @@
             font-size: .6rem;
             padding:.2rem ;
             color:#fff;
-            background: #8296A9;
             i{
 
                 width:12px;
@@ -300,8 +299,8 @@
             }
         }
         .disable{
-             background:#f7f7f7;
-             color:#999;
+            background: #8296A9;
+            color:#fff;
         }
     }
     #head_top{
