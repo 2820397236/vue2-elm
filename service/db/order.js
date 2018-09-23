@@ -9,12 +9,13 @@ const createTable = async () => {
     table.string('orderId');
     table.string('title');
     table.integer('userId');
+    table.integer('toUserId');
     table.string('phone');
     table.integer('planId');
     table.integer('qty');
     table.integer('price');
     table.string('status').defaultTo("WAIT");
-    table.string('type').defaultTo("IN");
+    table.string('type').defaultTo("CASH_DEPOSIT");
     table.bigInteger('createTime');
   });
 };

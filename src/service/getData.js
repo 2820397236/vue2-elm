@@ -320,6 +320,20 @@ export const createOrder = (phone,planId,qty) => fetch('/api/v1/createOrder', {
 	qty
 }, 'POST');
 
+export const createWithdrawOrder = (phone,value) => fetch('/api/v1/createWithdrawOrder',{
+	phone,
+	value
+});
+
+export const createRestingOrder = (phone,value) => fetch('/api/v1/createRestingOrder',{
+	phone,
+	value
+});
+
+export const getAllOrderList = (phone) => fetch('/api/v1/getAllOrderList',{
+	phone
+});
+
 export const getUserFinance = (phone) => fetch('/api/v1/getUserFinance',{
 	phone
 })

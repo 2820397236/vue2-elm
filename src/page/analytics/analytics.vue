@@ -2,7 +2,7 @@
     <div style="width:100%;">
         <header id="head_top">
             <section class="title_head ellipsis">
-                <span class="title_text">紫金池市场</span>
+                <span class="title_text">W资产市场</span>
             </section>
         </header>
         <!-- <section class="head_brand"  @click="eventSearch()">
@@ -204,7 +204,7 @@
             </section> -->
         </section>
         
-        <button class="btn_buy" v-if="wallet && wallet.getTotalMoney ==0">
+        <button class="btn_buy" v-if="wallet && wallet.totalMoney ==0">
             <!-- <div class="btn_flex draw" @click="alertSell(planIndex)">
             <i></i>挂单</div> -->
             <div class="btn_flex deposit"  @click="alert(planIndex)">

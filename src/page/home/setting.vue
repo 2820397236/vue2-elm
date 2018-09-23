@@ -2,7 +2,7 @@
   	<div style="width:100%;">
         <header id="head_top">
             <section class="title_head ellipsis">
-                <span class="title_text">我的</span>
+                <span class="title_text" v-if="user">{{user.cName}}</span>
             </section>
         </header>
         <section class="main_container" @click="checkPhoneNumber()">
@@ -11,9 +11,16 @@
             </div>
             <section v-if="user" >
                 <div class="title_msg2">个人总收益 (元)</div>
-                <div class="title_msg" v-if="teamMoney">{{ (teamMoney ) | currency('')}}  </div>
-                <div class="title_msg" v-else>{{ 0 | currency('')}}  </div>
-            
+                <div v-if="plan">
+                    <div class="title_msg" v-if="teamMoney">{{ (teamMoney ) | currency('')}} </div>
+                    <div class="title_msg" v-else>{{ 0 | currency('')}}  </div>
+                </div>
+                <div v-else>
+                    <div class="title_msg" v-if="teamMoney - 10000 > 0">{{ (teamMoney -10000) | currency('')}}  <span class="title_msg2" v-if>已扣除收益10,000元</span></div>
+                    <div class="title_msg" v-else> 0.00  <span class="title_msg2" v-if>空单：需扣除收益10,000元</span></div>
+                </div>
+                
+                
             </section>
         </section>
 
@@ -67,7 +74,7 @@
                                         </div>
                 <h4>股权计划</h4>
                 <h4 class="right" v-if="plan">{{plan.title}} {{plan.subtitle}} </h4>
-                <h4 class="right" v-else style="color:#df3d28" @click="goTo('analytics')"> 点击限时抢购 </h4>
+                <h4 class="right" v-else style="color:#df3d28" @click="goTo('analytics')"> 点击抢购 </h4>
                 <i class="ico-arrow">
                    
                 </i>
@@ -85,7 +92,7 @@
                                         </div>
                 <h4>初始投资(元)</h4>
                 <h4 class="right" v-if="plan">{{plan.price | currency('')}}</h4>
-                <h4 class="right" v-else>0.00</h4>
+                <h4 class="right" v-else><i>空单</i></h4>
                 <i class="ico-arrow">
                    
                 </i>
@@ -101,8 +108,13 @@
                     </svg>
                                         </div>
                 <h4>{{days}}天共持有(股)</h4>
-                <h4 class="right" v-if="plan">{{plan.equity * days *  plan.rate /10000 + firstEquity + secondEquity + thirdEquity}} </h4>
-                <h4 class="right" v-else>0</h4>
+                <h4 class="right" v-if="plan">
+                    <span >{{plan.equity * days *  plan.rate /10000 }} </span>
+                    +  {{ firstEquity + secondEquity + thirdEquity}} </h4>
+                <h4 class="right" v-else>
+                    <i v-if="teamMoney - 10000 < 0">收益满10,000元方可转让股权</i>
+                    <i v-else>{{ firstEquity + secondEquity + thirdEquity}}</i>
+                </h4>
                 <i class="ico-arrow">
                    
                 </i>
@@ -625,15 +637,18 @@ export default {
         .right{
             @include sc(.6rem,#333);
             padding:.5rem .3rem;
-            flex: 1;
+            flex: 2;
             text-align: right;
+            i{
+                color:#999;
+            }
 
         }
         .red{
             @include sc(.6rem,rgb(223,61,40));
         }
         .ico-team{
-            padding:.5rem .3rem;
+            padding:.6rem .3rem;
             width:28px;
             height:33px;
         }

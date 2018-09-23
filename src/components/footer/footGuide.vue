@@ -198,13 +198,13 @@
             <span>市场</span>
         </section>
 
-       <!--   <section @click = "gotoAddress({path: '/warning'})" class="guide_item" :class="$route.path.indexOf('warning') !== -1 ? 'active' : ''">
+         <section @click = "gotoAddress({path: '/warning'})" class="guide_item" :class="$route.path.indexOf('warning') !== -1 ? 'active' : ''">
             <svg class="icon_style">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('warning') !== -1? '#homeActive' : '#home'"></use>
             </svg>
             <span>交易</span>
         </section>
- -->
+
         <section @click = "gotoAddress('/setting')" class="guide_item" :class="$route.path.indexOf('setting') !== -1 ||
         $route.path.indexOf('shareTeam') !== -1? 'active' : ''">
             <svg class="icon_style">
@@ -212,7 +212,7 @@
                 :xlink:href="$route.path.indexOf('setting') >=0 ||
                $route.path.indexOf('shareTeam') >=0? '#myHomeActive' : '#myHome'"></use>
             </svg>
-            <span>我的</span>
+            <span>我</span>
         </section>
 
         <section v-if="user" @click = "gotoAddress('/admin')" class="guide_item" :class="$route.path.indexOf('admin') !== -1? 'active' : ''">

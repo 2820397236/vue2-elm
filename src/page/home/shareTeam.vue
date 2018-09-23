@@ -7,7 +7,7 @@
             <div class="button-section" v-for="(t,index) in teamList" :key="index">
                 <div class="child">
                     <div class="ico-team">
-                        <i class="team-porfile"></i>
+                        <i class="team-porfile">1级</i>
                     </div>
                     <div class="team-info">
                         <div class="flex justify"><span class="team-name">{{t.cName|| '未实名'}} ({{t.phone}}) </span>
@@ -28,7 +28,7 @@
                     <div class="ico-child">
                     </div>
                     <div class="ico-team">
-                        <i class="team-porfile"></i>
+                        <i class="team-porfile">2级</i>
                     </div>
                     <div class="team-info">
                         <div class="flex justify"><span class="team-name">{{tc.cName || '未实名'}} </span>
@@ -48,7 +48,7 @@
                         <div class="ico-child">
                         </div>
                         <div class="ico-team">
-                            <i class="team-porfile"></i>
+                            <i class="team-porfile">3级</i>
                         </div>
                         <div class="team-info">
                             <div class="flex justify"><span class="team-name">{{tcc.cName || '未实名'}} </span>
@@ -211,8 +211,11 @@
             display: block;
             width:2rem;
             height:2rem;
-            background: #d7d7d7;
             border-radius: 2rem;
+            @include sc(.8rem,#fff);
+            text-align:center;
+            line-height: 2rem;
+            background-color: #ff6d41;
         }
 
         .team-info{

@@ -2,16 +2,16 @@
     <div>
         <header id="head_top">
             <section class="title_head ellipsis">
-                <span class="title_text">市场</span>
+                <span class="title_text">交易</span>
             </section>
         </header>
         <!-- <header id='head_top'>
-            <section class="title_head ellipsis"  @click="setRatingType('sell')">
+            <section class="title_head ellipsis"  @click="setRatingType('resting')">
                 
                 <span class="title_text">餐厅评论监控预警</span>
             </section>
 
-            <section class="head_option" :class="{red:warningType == 'sell',yellow:warningType == 'buy', green:warningType == 'low'}"  @click="clickRateType()">
+            <section class="head_option" :class="{red:orderType == 'resting',yellow:orderType == 'withdraw', green:orderType == 'low'}"  @click="clickRateType()">
                 <span>预警 {{listType}}</span>
                 <svg class="icon_style">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#warning"></use>
@@ -19,7 +19,9 @@
             </section>
         </header> -->
         <section class="description_header">
-            <div>&nbsp;</div>
+            <div>
+                <input class="order_value" v-model="orderValue"/>
+            </div>
             <div class="description_top">
                <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
                     <img :src="user.profileImg" @click="signout">
@@ -27,8 +29,9 @@
                 <!-- <section class="description_right">
                     <h4 class="description_title ellipsis">您已订阅19家门店</h4>
                 </section> -->
-                <section class="head_option" :class="{red:warningType == 'sell',yellow:warningType == 'buy', green:warningType == 'low'}"  @click="clickRateType()">
-                <span>{{listType}}</span>
+                <section class="head_option green">
+                <span v-if="orderType == 'resting'"  @click="createRestingOrder()">我要挂单</span>
+                <span v-if="orderType == 'withdraw'" @click="createWithdrawOrder()">我要提现</span>
                 <svg class="icon_style">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#warning"></use>
                 </svg>
@@ -43,25 +46,22 @@
                     <polyline points="12,18 4,9 12,0" style="fill:none;stroke:rgb(255,255,255);stroke-width:3"/>
                 </svg>
             </nav> -->
-
             <section class="shoplist_container">
-                <ul v-if="rateList.length > 0">
-                    <li v-for="(item,index) in rateList" :key="index">
+                <ul>
+                    <li v-for="(item,index) in orderList" :key="index">
                         <!-- <div class="rate_time">{{item.ratingTime}}</div> -->
                         <section class="menu_detail_list">
                             <div class="menu_detail_link">
                                 <div class="rate_head">
                                     <section class="user_profile">
-                                        <div class="rate_img" :class="{ green : item.ratingStar ==50,red : item.ratingStar <30,yellow : item.ratingStar ==30}">
-                                            <img :src="item.pic" v-if="item.source == 'DP'">
-                                            <img :src="item.pic" v-if="item.source == 'ELE'">
+                                        <div class="rate_img" :class="{yellow:orderType == 'resting', green:orderType == 'withdraw'}">
+                                            &nbsp;
                                         </div>
                                         <div class="rate_username">
-                                                {{item.name}} {{item.addr}} <br/>
-                                                <span class="rate_address">{{item.rateDate | dateTime}}</span>
-                                                <!-- <span class="rate_tag">口味好</span>
-                                                <span class="rate_tag">环境很好</span>
-                                                <span class="rate_tag">服务好</span> -->
+                                                {{item.title}} <br/>
+                                                <span class="rate_address">{{item.createTime | dateTime('YYYY/MM/DD hh:mm:ss')}}</span>
+                                                <span class="rate_tag" v-if="item.status == 'WAIT'">等待中</span>
+                                                <span class="rate_tag green" v-if="item.status == 'SUCCESS'">已成功</span>
                                          </div>
                                     </section>
                                 </div>
@@ -78,28 +78,45 @@
             </section>
             
         </section>
+        <section>
+            <button class="btn_buy">
+            <div class="btn_flex"  @click="setRatingType('resting')" :class="{active:orderType == 'resting'}">
+            股权挂单</div>
+            <div class="btn_flex"  @click="setRatingType('withdraw')" :class="{active:orderType == 'withdraw'}">
+            奖励兑现</div>
+        </button> 
+        </section>
         <loading v-show="showLoading"></loading>
         <foot-guide></foot-guide>
+        <alert-tip v-if="showAlert" @closeTip="showAlert = false" 
+            :alertText="alertText" 
+            :alertSubText="alertSubText" 
+            :alertTime="alertTime" 
+            :alertImg="alertImg"
+            :alertFunc="alertFunc"
+            :confirmBtn="confirmBtn"
+            :format="format"
+        ></alert-tip>
 
-
-        <section class="shop_container main_container bg-gray" v-if="showRateType" @click="goBack()">
+        <!-- <section class="shop_container main_container bg-gray" v-if="showRateType" @click="goBack()">
             <ul class="rate_navi">
-                <li class="green" :class="{active:warningType == 'sell'}" @click="setRatingType('sell')">
-                    <span>卖单市场 <br/>有任何负面情绪都将作为预警推送</span>
+                <li class="green" :class="{active:orderType == 'resting'}" @click="setRatingType('resting')">
+                    <span>股权挂单 <br/>满100股即可挂单，等待市场其他用户买入</span>
                 </li>
-                <li class="yellow" :class="{active:warningType == 'buy'}" @click="setRatingType('buy')">
-                    <span>买单市场 <br/>有负面评论，会根据规则将部分个人情感因素负面排除</span>
+                <li class="yellow" :class="{active:orderType == 'withdraw'}" @click="setRatingType('withdraw')">
+                    <span>奖励提现 <br/>团队奖励可随时发起提现，每月三次结算。</span>
                 </li>
             </ul>
-        </section>
+        </section> -->
             
     </div>
 </template>
 
 <script>
     import headTop from 'src/components/header/head'
+    import alertTip from 'src/components/common/alertStore'
     import {mapState} from 'vuex'
-    import {getAlertRating,getMyStore} from 'src/service/getData'
+    import {createWithdrawOrder,createRestingOrder,getAllOrderList} from 'src/service/getData'
     import {getStore, setStore, removeStore} from 'src/config/mUtils'
     import footGuide from '../../components/footer/footGuide'
     import loading from 'src/components/common/loading'
@@ -108,16 +125,18 @@
         data(){
             return{
                showLoading: false ,
-               warningType: 'sell',
+               showAlert: false,
+               orderType: 'resting',
                showRateType: false,
-               rateListOrigin:[],
-               rateList:[],
+               orderData:null,
+               orderList:[],
                rateCount:{},
                storeList:{},
                storeName:'',
                storeImg:'',
                store:null,
-               listType:'买单市场',
+               listType:'resting',
+               orderValue:100,
             }
         },
         mounted(){
@@ -131,6 +150,7 @@
         components: {
             headTop,
             loading,
+            alertTip,
             footGuide
         },
         mixins:[],
@@ -155,87 +175,87 @@
                 }
                 this.user = JSON.parse(getStore('user'));
 
-                this.storeId = this.$route.query.storeId;
-                this.storeName = this.$route.query.storeName;
 
-
-                //获取我的门店
-                // let storeRes = await getMyStore(this.user.id);
-                // if(storeRes.status == 0){
-                //     // this.storeList = storeRes.stores;
-                //     // this.extra = storeRes.extra;
-                //     // for(var i=0; i<storeRes.stores.length;i++){
-                //     //     if( this.storeList[storeRes.stores[i].id] == undefined){
-                //     //         this.storeList[storeRes.stores[i].id] = storeRes.stores[i];
-                //     //     }
-                //     // }
-                // }
+                this.getOrderList();
                 
-                let _this = this;
-                let rateRes = await getAlertRating(this.user.openId, 31);
-                if(rateRes.status == 0){
-                    rateRes.rateList.map(o=>{
-                        if(o.source=='DP'){
-                            o.pic = o.pic;
-                        }else if(o.source=='ELE'){
-                            o.pic = "http://fuss10.elemecdn.com/"+ o.pic.substr(0,1)+"/"+ o.pic.substr(1,2) +"/"+ 
-                                o.pic.substr(3,o.pic.length - 1)+".jpeg?imageMogr2/thumbnail/60x60/format/webp/quality/85" ; 
-                        }
-                    })
-                    this.rateList = rateRes.rateList;
-                    this.rateListOrigin = rateRes.rateList;
-                }
-
-                // let resStore = await getStoreInfo([this.storeId]);
-                // if(resStore.status == 0){
-                //     this.store = resStore.stores[0];
-                //     this.storeImg = resStore.stores[0].defaultPic;
-                //     this.storeName = resStore.stores[0].name + "(" + resStore.stores[0].branchName + ")";
-                    
-                // }
-
-                // let resRate = await getStoreRate(this.user.id,this.storeId);
-                // if(resRate.status == 0){
-                //     if( resRate.rates.length == 0){
-                //         setTimeout(()=>{
-                //             this.initData();
-                //         },5000)
-                //     }
-
-                //     this.rateListOrigin = resRate.rates;
-                //     this.rateList = resRate.rates;
-                // }
-
-                // let resCount = await getRateCount([this.store.id]);
-                // if(resCount.status == 0){
-                //     this.rateCount = resCount.rates[0];
-                // }
+               
                 this.hideLoading();
             },
 
+            async getOrderList(){
+                await getAllOrderList(this.user.phone).then(o=>{
+                    console.log(this.orderType);
+                    this.orderData = o.data;
+                    if(this.orderType == 'resting'){
+                        this.orderList = o.data.resting;
+                    }else if(this.orderType == 'withdraw'){
+                        this.orderList = o.data.withdraw;
+                    }
+
+                })
+            },
+
             setRatingType(type){
-                this.warningType = type;
+                this.orderType = type;
                 switch(type){
-                    case 'sell':
-                    this.rateList = this.rateListOrigin.filter(item=>{
-                        return item.ratingStar <= 10
-                    });
-                    this.listType = '卖单市场';
+                    case 'resting':
+                    this.listType = '股权挂单';
+                    this.getOrderList();
                     break;
 
-                    case 'buy':
-                    this.rateList = this.rateListOrigin.filter(item=>{
-                        return item.ratingStar <= 20
-                    });
-                    this.listType = '买单市场';
+                    case 'withdraw':
+                    this.listType = '奖励提现';
+                    this.getOrderList();
                     break;
 
                     default:
-                    this.rateList = this.rateListOrigin;
-                    this.listType = '高';
+                    this.listType = '股权挂单';
                     break;
                 }
             },
+            createRestingOrder(){
+                // if(this.user.cName !='') return;
+
+                this.showAlert = true;
+
+                this.alertText = this.user.realName;
+
+                this.alertSubText = '是否挂单 ' + this.orderValue + " 手？";
+                this.alertTime = new Date();
+                this.alertImg = 'http://zijinchi.linkersocks.com/favicon.ico';
+
+                this.confirmBtn = "确定";
+                this.format = 'YYYY年MM月DD日';
+                this.alertFunc = ()=>{
+                   // console.log('localStorage.clear();')
+                   // localStorage.clear();
+                   createRestingOrder(this.user.phone,this.orderValue).then(o=>{
+                        this.showAlert = false;
+                        this.getOrderList();
+                   })
+                }
+            },
+
+            createWithdrawOrder(){
+                this.showAlert = true;
+
+                this.alertText = this.user.realName;
+
+                this.alertSubText = '是否提现 ' + this.orderValue + " 元？";
+                this.alertTime = new Date();
+                this.alertImg = 'http://zijinchi.linkersocks.com/favicon.ico';
+
+                this.confirmBtn = "确定";
+                this.format = 'YYYY年MM月DD日';
+                this.alertFunc = ()=>{
+                   // console.log('localStorage.clear();')
+                   // localStorage.clear();
+                   createWithdrawOrder(this.user.phone,this.orderValue).then(o=>{
+                        this.showAlert = false;
+                        this.getOrderList();
+                   })
+                }
+            }
 
         }
     }
@@ -243,6 +263,46 @@
     
 <style lang="scss" scoped>
     @import 'src/style/mixin';
+    .order_value{
+        border:0.0125rem solid #d7d7d7;
+        padding:.3rem;
+        width:11rem;
+    }
+    .btn_buy{
+        position: fixed;
+        bottom:2.15rem;
+        display: flex;
+        width:100%;
+        .btn_flex{
+            flex:1;
+            line-height: 250%;
+            font-size: .6rem;
+            padding:.2rem ;
+            color:#fff;
+            i{
+
+                width:12px;
+                height:18px;
+                display: inline-block;
+                margin-right:10px;
+                vertical-align:sub;
+            }
+        }
+        .active{
+            background:#249ef5;
+            i{
+                background: url(../../images/ico-out.png) no-repeat center center;
+                background-size:100% auto;
+            }
+            span{
+                
+            }
+        }
+        .disable{
+             background:#f7f7f7;
+             color:#999;
+        }
+    }
     #head_top{
         background-color: #0081ee;
         position: fixed;
@@ -330,14 +390,14 @@
         }
     }
     .main_container{
-        padding-top:4.3rem;
+        padding-top:2.3rem;
         padding-bottom:1.95rem;
     }
     .description_header{
             position: fixed;
             z-index: 10;
-            background-color: rgba(255,255,255,1);
-            padding: 0.8rem 0.8rem 0.6rem 0.8rem;
+            background-color: #0081ee;
+            padding: 0.4rem 0.8rem 0.4rem 0.8rem;
             width: 100%;
             overflow: hidden;
             .description_top{
@@ -562,8 +622,7 @@
                             .rate_img{
 
                                 &::after{
-                                    margin-left:1.6rem;
-                                    margin-top:-2rem;
+                                    margin-top:-1.4rem;
                                     display:block;
                                     content:'正';
                                     @include sc(.8rem, #fff);
@@ -577,21 +636,21 @@
                                 &.green{
                                     &::after{
                                         background-color: #66d8b4;
-                                        content:'正';
+                                        content:'提';
 
                                     }
                                 }
                                 &.yellow{
                                     &::after{
                                         background-color: #ffd819;
-                                        content:'中';
+                                        content:'挂';
                                     }
                                     
                                 }
                                 &.red{
                                     &::after{
                                         background-color: #ff6d41;
-                                        content:'负';
+                                        content:'挂';
                                     }
                                 }
                             }
@@ -611,6 +670,9 @@
                                     background-color:rgba(255,139,103,1);
                                     @include sc(.5rem, #fff);
                                     padding: .1rem;
+                                    &.green{
+                                        background-color:#88ce41;
+                                    }
                                 }
                             }
                         }

@@ -13,7 +13,7 @@
                 <span>处理订单 {{rateCount.countMid}}</span>
             </li>
             <li :class="{ active : listType == 'flow' }" @click="setRatingType('flow')">
-                <span>查看入账 {{rateCount.countLow}}</span>
+                <span>查看报表 {{rateCount.countLow}}</span>
             </li>
         </ul>
 
@@ -38,10 +38,14 @@
                                          </div>
                                          <div class="order_price">
 
-                                                <span class="order_price_tag" v-if="item.type =='IN'">存入</span>
-                                                <span class="order_price_tag" v-if="item.type =='OUT'">取出</span>
+                                                <span class="order_price_tag" v-if="item.type =='CASH_DEPOSIT'">存入</span>
+                                                <span class="order_price_tag" v-if="item.type =='ORDER_RESTING'">挂单</span>
+                                                <span class="order_price_tag" v-if="item.type =='CASH_WITHDRAW'">提现</span>
                                                 <br/>
-                                                ￥{{item.price}}</div>
+                                                {{item.price}}
+                                                <span v-if="item.type =='ORDER_RESTING'" class="gray">手</span>
+                                                <span v-if="item.type =='CASH_DEPOSIT' || item.type =='CASH_WITHDRAW'" class="gray">元</span>
+                                                </div>
                                     </section>
                                 </div>
                                 <section class="rate_desc">
@@ -98,10 +102,15 @@
                                          </div>
                                          <div class="order_price">
 
-                                                <span class="order_price_tag" v-if="item.status =='IN'">入账</span>
-                                                <span class="order_price_tag" v-if="item.status =='OUT'">出账</span>
+
+                                                <span class="order_price_tag" v-if="item.type =='CASH_DEPOSIT'">收入</span>
+                                                <span class="order_price_tag" v-if="item.type =='ORDER_RESTING'">挂出</span>
+                                                <span class="order_price_tag" v-if="item.type =='CASH_WITHDRAW'">支出</span>
                                                 <br/>
-                                                ￥{{item.value}}</div>
+                                                {{item.value}}
+                                                <span v-if="item.type =='ORDER_RESTING'" class="gray">手</span>
+                                                <span v-if="item.type =='CASH_DEPOSIT' || item.type =='CASH_WITHDRAW'" class="gray">元</span>
+                                                </div>
                                     </section>
                                 </div>
                                 <section class="rate_desc">
@@ -184,9 +193,9 @@
                 this.showAlert = true;
                 this.alertText = order.phone;
 
-                this.alertSubText = '是否确认该用户入账￥'+ order.price +'？';
+                this.alertSubText = '是否确认该笔交易￥'+ order.price +'？';
                 this.alertTime = new Date();
-                this.alertImg = 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJLt9GVR0GqQkjqicrIqibicqaoOFSAQ0u6HFoLcEMwKPdBLzD2mgicCQyuC650UM3pYYrHIia7ib5qvEiaQ/132';
+                this.alertImg = 'http://zijinchi.linkersocks.com/favicon.ico';
 
                 this.confirmBtn = "确认";
                 this.format = 'YYYY年MM月DD日';
@@ -547,7 +556,11 @@
                             }
                             .order_price{
                                 @include sc(.8rem, #333);
+                                .gray{
+                                    @include sc(.6rem, #999);
+                                }
                                 .order_price_tag{
+                                    float:right;
                                     @include sc(.5rem, rgba(255,139,103,1));
                                 }
                             }

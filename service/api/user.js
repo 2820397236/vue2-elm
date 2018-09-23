@@ -62,7 +62,7 @@ exports.sendCode = async (req, res) => {
     //     res.send(response);
     //   }
     // });
-    const brand = '紫金池';
+    const brand = 'W资产';
     nexmo.verify.request({number: to, brand: brand}, async (err, result) => {
       if(err) {
         res.sendStatus(500);
@@ -221,12 +221,14 @@ exports.getUserFinance = async (req, res) => {
 
   const cashflow = await knex('cashflow')
               .select(knex.raw('sum(value) as money, userId, createTime'))
-              .where({"userId":user.id})
+              .where({"userId":user.id,"type":"CASH_DEPOSIT"})
               .groupBy('userId')
               .then(s=>s[0]);
   let cashflowMoney = 0;
+  let cashflowTime = Date.now();
   if(cashflow){
     cashflowMoney = cashflow.money;
+    cashflowTime = cashflow.createTime;
   }
 
    res.status(200).send({
@@ -236,7 +238,7 @@ exports.getUserFinance = async (req, res) => {
       "invite":user.invite,
       "inviteKey":user.inviteKey,
       "totalMoney":cashflowMoney,
-      "createTime":cashflow.createTime
+      "createTime":cashflowTime
     }
   });
 };
@@ -344,7 +346,7 @@ exports.getUserOrder = async (req, res) =>{
   if(!user)  res.status(202).send({"status":-9,"error":"user not admin"});
   
   const userList = await knex("order").select("order.id","users.cName","users.phone","order.orderId","order.price","order.status","order.type","order.createTime")
-  .leftJoin('users', 'order.userId','users.id').orderBy('order.createTime', 'desc');
+  .leftJoin('users', 'order.userId','users.id').where("order.status","WAIT").orderBy('order.createTime', 'desc');
 
   res.status(200).send(userList);
 }
@@ -370,14 +372,14 @@ exports.setOrderSuccess = async (req, res) =>{
   if(!order) res.status(202).send({"status":-9,"error":"order not exist"});
  
   await knex("order").update({"status":"SUCCESS"}).where({"id":orderId});
-  await knex("order").where({"status":"WAIT","userId":order.userId}).del();
+  // await knex("order").where({"status":"WAIT","type":"CASH_DEPOSIT","userId":order.userId}).del();
   await knex("users").update({"money":order.price}).where({"id":order.userId});
   await knex("cashflow").insert({
     "outID":order.orderId,
     "userId":order.userId,
     "value":order.price,
-    "type":"CASH",
-    "status":"IN",
+    "type":order.type,
+    "status":"SUCCESS",
     "createTime":Date.now()
   });
   res.status(200).send({"status":0});

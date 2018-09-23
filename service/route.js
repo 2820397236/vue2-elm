@@ -1,11 +1,16 @@
 const app = require('./index').app;
 const users = require('./api/user');
+const orders = require('./api/order');
 
 app.post('/api/v1/sendCode', users.sendCode);
 app.post('/api/v1/verify', users.verify);
 app.post('/api/v2/verify', users.verify2);
 app.post('/api/v1/login', users.login);
 app.post('/api/v1/createOrder', users.createOrder);
+app.post('/api/v1/createWithdrawOrder', orders.createWithdrawOrder);
+app.post('/api/v1/createRestingOrder', orders.createRestingOrder);
+app.post('/api/v1/getAllOrderList', orders.getAllOrderList);
+
 app.post('/api/v1/getUserFinance', users.getUserFinance);
 app.post('/api/v1/getUserPlan', users.getUserPlan);
 app.post('/api/v1/getPlanList', users.getPlanList);
