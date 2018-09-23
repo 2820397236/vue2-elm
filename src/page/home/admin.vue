@@ -103,9 +103,9 @@
                                          <div class="order_price">
 
 
-                                                <span class="order_price_tag" v-if="item.type =='CASH_DEPOSIT'">收入</span>
+                                                <span class="order_price_tag" v-if="item.type =='CASH_DEPOSIT'">进</span>
                                                 <span class="order_price_tag" v-if="item.type =='ORDER_RESTING'">挂出</span>
-                                                <span class="order_price_tag" v-if="item.type =='CASH_WITHDRAW'">支出</span>
+                                                <span class="order_price_tag" v-if="item.type =='CASH_WITHDRAW'">出</span>
                                                 <br/>
                                                 {{item.value}}
                                                 <span v-if="item.type =='ORDER_RESTING'" class="gray">手</span>

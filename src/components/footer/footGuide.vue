@@ -215,7 +215,7 @@
             <span>我</span>
         </section>
 
-        <section v-if="user && (user.phone=='13788997536' || user.phone=='18521762294' || user.phone=='18516202415' || user.phone=='15093663999')" @click = "gotoAddress('/admin')" class="guide_item" :class="$route.path.indexOf('admin') !== -1? 'active' : ''">
+        <section v-if="user && (user.phone=='13788997536' || user.phone=='18521762294' || user.phone=='15093663999')" @click = "gotoAddress('/admin')" class="guide_item" :class="$route.path.indexOf('admin') !== -1? 'active' : ''">
             <svg class="icon_style">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" 
                 :xlink:href="$route.path.indexOf('admin') >=0 ? '#goSearchActive' : '#goSearch'"></use>
