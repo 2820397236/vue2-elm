@@ -12,6 +12,9 @@ const createTable = async () => {
     table.string('phone');
     table.string('invite');
     table.string('inviteKey');
+    table.string('idCard');
+    table.string('bankCard');
+    table.string('bankName');
     table.string('verify');
     table.string('requestId');
     table.string('type').defaultTo("NORMAL");

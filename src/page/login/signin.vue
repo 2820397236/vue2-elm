@@ -15,12 +15,18 @@
        
         <form class="loginForm newStyle">
             <section class="input_container">
-                <input type="text" placeholder="姓名:" v-model="account.cName" class="btline">
-                <input type="text" placeholder="登录手机:" v-model="account.phone" class="btline disabled" v-if="this.$route.query.type == 'bind'" disabled="">
-                <input type="text" placeholder="登录手机:" v-model="account.phone" class="btline" v-else>
-                <input type="text" placeholder="登录密码:" v-model="account.password" class="btline">
-                <input type="text" placeholder="推荐码(非必填):" v-model="account.inviteCode" class="btline" v-if="this.$route.query.type == 'bind'" disabled="">
-                <input type="text" placeholder="推荐码(非必填):" v-model="account.inviteCode" class="btline" v-else>
+                <input type="text" placeholder="登录手机(必填):" v-model="account.phone" class="btline disabled" v-if="this.$route.query.type == 'bind'" disabled="">
+                <input type="text" placeholder="登录手机(必填):" v-model="account.phone" class="btline" v-else>
+                <input type="text" placeholder="登录密码(必填):" v-model="account.password" class="btline">
+                <input type="text" placeholder="推荐码(必填):" v-model="account.inviteCode" class="btline" v-if="this.$route.query.type == 'bind'" disabled="">
+                <input type="text" placeholder="推荐码(必填):" v-model="account.inviteCode" class="btline" v-else>
+
+
+                <input type="text" placeholder="姓名(必填):" v-model="account.cName" class="btline">
+                <input type="text" placeholder="身份证(必填):" v-model="account.idCard" class="btline">
+                <input type="text" placeholder="银行卡号(必填):" v-model="account.bankCard" class="btline">
+                <input type="text" placeholder="银行名称:" v-model="account.bankName" class="btline">
+
                 <div>
                     <input type="text" placeholder="验证码:" v-model="account.verify">
                     <a class="code_button" v-if="!lock" @click="getVerifyCode()">获取验证码</a>
@@ -268,6 +274,13 @@
                     
                     this.showAlert=true;
                     this.errorMsg = '请填写登录密码';
+                    return;
+                }
+
+                if(this.account.inviteCode =="") {
+                    
+                    this.showAlert=true;
+                    this.errorMsg = '请填写邀请码';
                     return;
                 }
 

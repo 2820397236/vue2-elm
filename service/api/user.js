@@ -157,6 +157,9 @@ exports.verify2 = async (req, res) => {
   const cName = account.cName;
   const password = account.password;
   const invite = account.inviteCode;
+  const idCard = account.idCard;
+  const bankName = account.bankName;
+  const bankCard = account.bankCard;
 
   const codeRow = await knex('verify')
     .where("expireTime",">", Date.now())
