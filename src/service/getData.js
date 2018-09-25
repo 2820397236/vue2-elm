@@ -342,6 +342,14 @@ export const getUserPlan = (phone) => fetch('/api/v1/getUserPlan',{
 	phone
 })
 
+export const getUserInfo = (phone) => fetch('/api/v1/getUserInfo',{
+	phone
+})
+
+export const saveUserInfo = (info) => fetch('/api/v1/saveUserInfo',{
+	info
+})
+
 export const getPlanList = (phone) => fetch('/api/v1/getPlanList',{
 	phone
 })

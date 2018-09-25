@@ -13,6 +13,8 @@ const createTable = async () => {
     table.string('invite');
     table.string('inviteKey');
     table.string('idCard');
+    table.string('mainAddress');
+    table.string('mainReceiver')
     table.string('bankCard');
     table.string('bankName');
     table.string('verify');

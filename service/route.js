@@ -12,6 +12,8 @@ app.post('/api/v1/createRestingOrder', orders.createRestingOrder);
 app.post('/api/v1/getAllOrderList', orders.getAllOrderList);
 
 app.post('/api/v1/getUserFinance', users.getUserFinance);
+app.post('/api/v1/getUserInfo', users.getUserInfo);
+app.post('/api/v1/saveUserInfo', users.saveUserInfo);
 app.post('/api/v1/getUserPlan', users.getUserPlan);
 app.post('/api/v1/getPlanList', users.getPlanList);
 app.post('/api/v1/getUserTeam', users.getUserTeam);

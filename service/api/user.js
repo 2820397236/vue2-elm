@@ -223,6 +223,47 @@ exports.verify2 = async (req, res) => {
   }
 };
 
+exports.getUserInfo = async (req, res) =>{
+  const phone = req.body.phone;
+  const user = await knex("users").where({"phone":phone}).then(s=>s[0]);
+  if(!user)  res.status(202).send({"error":"user not exsit"});
+  
+  res.status(200).send({
+    "status":0,
+    "data":{
+      "cName":user.cName,
+      "phone":user.phone,
+      "invite":user.invite,
+      "inviteKey":user.inviteKey,
+      "idCard":user.idCard,
+      "bankName":user.bankName,
+      "bankCard":user.bankCard,
+      "mainAddress":user.mainAddress,
+      "mainReceiver":user.mainReceiver,
+    }
+  });
+
+}
+
+exports.saveUserInfo = async (req, res) =>{
+  const reqInfo = req.body.info;
+  const phone = reqInfo.phone;
+
+  const user = await knex("users").where({"phone":phone}).then(s=>s[0]);
+  if(!user)  res.status(202).send({"error":"user not exsit"});
+  
+  await knex("users").update({
+    "cName":reqInfo.cName,
+    "idCard":reqInfo.idCard,
+    "bankName":reqInfo.bankName,
+    "bankCard":reqInfo.bankCard,
+    "mainReceiver":reqInfo.mainReceiver,
+    "mainAddress":reqInfo.mainAddress
+  }).where({"phone":phone});
+
+  res.status(200).send({"status":0});
+}
+
 exports.getUserFinance = async (req, res) => {
   const phone = req.body.phone;
   const user = await knex("users").where({"phone":phone}).then(s=>s[0]);

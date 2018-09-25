@@ -183,6 +183,7 @@
             },
 
             async getOrderList(){
+                this.orderList = [];
                 await getAllOrderList(this.user.phone).then(o=>{
                     console.log(this.orderType);
                     this.orderData = o.data;

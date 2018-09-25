@@ -2,6 +2,9 @@ import App from '../App'
 
 const home = r => require.ensure([], () => r(require('../page/home/home')), 'home')
 const setting = r => require.ensure([], () => r(require('../page/home/setting')), 'setting')
+const shareTeam = r => require.ensure([], () => r(require('../page/home/shareTeam')), 'shareTeam')
+const profile = r => require.ensure([], () => r(require('../page/home/profile')), 'profile')
+
 const admin = r => require.ensure([], () => r(require('../page/home/admin')), 'admin')
 const index = r => require.ensure([], () => r(require('../page/login/index')), 'index')
 const city = r => require.ensure([], () => r(require('../page/city/city')), 'city')
@@ -60,7 +63,6 @@ const continueOrder = r => require.ensure([], () => r(require('../page/confirmOr
 const analytics = r => require.ensure([], () => r(require('../page/analytics/analytics')), 'analytics')
 const chooseBrand = r => require.ensure([], () => r(require('../page/home/chooseBrand')), 'chooseBrand')
 const defaultBrand = r => require.ensure([], () => r(require('../page/home/defaultBrand')), 'defaultBrand')
-const shareTeam = r => require.ensure([], () => r(require('../page/home/shareTeam')), 'shareTeam')
 const myOrder = r => require.ensure([], () => r(require('../page/confirmOrder/myOrder')), 'myOrder')
 const myOrderDetail = r => require.ensure([], () => r(require('../page/confirmOrder/myOrderDetail')), 'myOrderDetail')
 
@@ -91,8 +93,22 @@ export default [{
         },
         {
             path: '/setting',
-            component: setting
+            component: setting,
+            // meta: { keepAlive: true },
+            children: [{
+                path: 'shareTeam', //食品详情页
+                component: shareTeam,
+            },{
+                path: 'profile', //食品详情页
+                component: profile,
+            }]
         },
+        // {
+        //     path: '/shareTeam',
+        //     component: shareTeam,
+        //     meta: { keepAlive: true },
+            
+        // },
         //当前选择城市页
         {
             path: '/city/:cityid',
@@ -338,11 +354,6 @@ export default [{
         {
             path: '/defaultBrand',
             component: defaultBrand
-        },
-        {
-            path: '/shareTeam',
-            component: shareTeam,
-            meta: { keepAlive: true }
         },
         {
             path: '/myOrder',

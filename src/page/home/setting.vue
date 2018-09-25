@@ -5,11 +5,11 @@
                 <span class="title_text" v-if="user">{{user.cName}}</span>
             </section>
         </header>
-        <section class="main_container" @click="checkPhoneNumber()">
-            <div class="title_profile">
+        <section class="main_container">
+            <div class="title_profile" @click="confirmWindow()">
                 <i class="pop" v-if="user && user.cName ==''"></i>
             </div>
-            <section v-if="user" >
+            <section v-if="user" @click="confirmWindow()">
                 <div class="title_msg2">个人总收益 (元)</div>
                 <div v-if="plan">
                     <div class="title_msg" v-if="teamMoney">{{ (teamMoney ) | currency('')}} </div>
@@ -19,9 +19,20 @@
                     <div class="title_msg" v-if="teamMoney - 10000 > 0">{{ (teamMoney -10000) | currency('')}}  <span class="title_msg2" v-if>已扣除收益10,000元</span></div>
                     <div class="title_msg" v-else> 0.00  <span class="title_msg2" v-if>空单：需扣除收益10,000元</span></div>
                 </div>
-                
-                
             </section>
+            <router-link class="title_detail" to="/setting/profile">
+                账号设置
+                <i class="ico-arrow">
+                        <svg width="9px" height="14px" viewBox="0 0 9 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            
+                            <g id="Page-1" stroke="none" stroke-width="1" fill="#fff" fill-rule="evenodd">
+                                <g id="iPhone-X-Copy" transform="translate(-346.000000, -587.000000)" fill="#fff">
+                                    <polygon id="chevron_right---material" points="347.816 587.4 354.316 593.9 347.816 600.4 346.282 598.866 351.274 593.9 346.282 588.934"></polygon>
+                                </g>
+                            </g>
+                        </svg>
+                    </i>
+            </router-link>
         </section>
 
         <section>
@@ -157,9 +168,9 @@
             </div>
 
             <div>
-                <div class="button-section" @click="goTo('/shareTeam')">
+                <router-link class="button-section" to='/setting/shareTeam' tag="div">
                     <div class="ico-team">
-                        <svg width="28px" height="28px" viewBox="0 0 22 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <svg width="28px" height="28px" viewBox="0 0 22 33" version="1.1" xmlns="http://w   ww.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                 <g id="iPhone-8-Plus" transform="translate(-41.000000, -502.000000)" fill="#1882E6">
                                     <path d="M55.224,518.6 L54.096,513.776 L57.84,510.536 L52.92,510.104 L51,505.616 L49.08,510.152 L44.16,510.536 L47.904,513.776 L46.776,518.6 L51,516.056 L55.224,518.6 Z M51,502.616 C52.8240091,502.616 54.5119922,503.071995 56.064,503.984 C57.5680075,504.848004 58.7519957,506.031992 59.616,507.536 C60.5280046,509.088008 60.984,510.775991 60.984,512.6 C60.984,514.424009 60.5280046,516.111992 59.616,517.664 C58.7519957,519.168008 57.5680075,520.351996 56.064,521.216 C54.5119922,522.128005 52.8240091,522.584 51,522.584 C49.1759909,522.584 47.4880078,522.128005 45.936,521.216 C44.4319925,520.335996 43.2480043,519.144008 42.384,517.64 C41.4719954,516.087992 41.016,514.408009 41.016,512.6 C41.016,510.791991 41.4719954,509.112008 42.384,507.56 C43.2640044,506.055992 44.4559925,504.864004 45.96,503.984 C47.5120078,503.071995 49.191991,502.616 51,502.616 Z" id="stars---material-copy"></path>
@@ -168,7 +179,7 @@
                         </svg>
                     </div>
                     <h4>团队成员 ({{first.length + second.length + third.length}})</h4>
-                    <h4 class="right red">{{teamMoney|currency('+')}}</h4>
+                    <h4 class="right red"> +{{ firstEquity + secondEquity + thirdEquity}} 股</h4>
                     <i class="ico-arrow">
                         <svg width="9px" height="14px" viewBox="0 0 9 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             
@@ -179,7 +190,7 @@
                             </g>
                         </svg>
                     </i>
-                </div>
+                </router-link>
 
                 <div class="button-section">
                     <div class="ico-team">
@@ -211,7 +222,11 @@
         <foot-guide></foot-guide>
 
         <loading v-show="showLoading"></loading>
-        <!--  <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="errorMsg"></alert-tip> -->
+        
+        <transition name="router-slid" mode="out-in" >
+            <router-view v-on:profileUpdate="profileUpdate"></router-view>
+        </transition>
+
         <alert-tip v-if="showAlert" @closeTip="showAlert = false" 
             :alertText="alertText" 
             :alertSubText="alertSubText" 
@@ -360,6 +375,9 @@ export default {
     },
 
     methods:{
+        profileUpdate(user){
+            this.user = user;
+        },
         closeTip(){
             this.showAlert = false;
         },
@@ -392,7 +410,7 @@ export default {
             this.$router.push(path);
         },
 
-        checkPhoneNumber(){
+        confirmWindow(){
             // if(this.user.cName !='') return;
 
             this.showAlert = true;
@@ -509,6 +527,16 @@ export default {
                 float:right;
                 margin-top:-0.1rem;
                 margin-right:-0.1rem;
+            }
+        }
+        .title_detail{
+            flex:1;
+            text-align:right;
+            @include sc(0.5rem, #fff);
+            line-height: 2rem;
+            .ico-arrow{
+                display: inline-block;
+                vertical-align: sub;
             }
         }
         .title_msg{
@@ -658,5 +686,18 @@ export default {
             height:33px;
 
         }
+    }
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-active {
+        opacity: 0;
+    }
+    .router-slid-enter-active, .router-slid-leave-active {
+        transition: all .4s;
+    }
+    .router-slid-enter, .router-slid-leave-active {
+        transform: translate3d(2rem, 0, 0);
+        opacity: 0;
     }
 </style>
