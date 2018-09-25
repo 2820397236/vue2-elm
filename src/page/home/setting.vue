@@ -5,11 +5,11 @@
                 <span class="title_text" v-if="user">{{user.cName}}</span>
             </section>
         </header>
-        <section class="main_container">
-            <div class="title_profile" @click="confirmWindow()">
+        <router-link class="main_container" to="/setting/profile">
+            <div class="title_profile">
                 <i class="pop" v-if="user && user.cName ==''"></i>
             </div>
-            <section v-if="user" @click="confirmWindow()">
+            <section v-if="user">
                 <div class="title_msg2">个人总收益 (元)</div>
                 <div v-if="plan">
                     <div class="title_msg" v-if="teamMoney">{{ (teamMoney ) | currency('')}} </div>
@@ -20,7 +20,7 @@
                     <div class="title_msg" v-else> 0.00  <span class="title_msg2" v-if>空单：需扣除收益10,000元</span></div>
                 </div>
             </section>
-            <router-link class="title_detail" to="/setting/profile">
+            <section class="title_detail">
                 账号设置
                 <i class="ico-arrow">
                         <svg width="9px" height="14px" viewBox="0 0 9 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -32,8 +32,8 @@
                             </g>
                         </svg>
                     </i>
-            </router-link>
-        </section>
+            </section>
+        </router-link>
 
         <section>
 

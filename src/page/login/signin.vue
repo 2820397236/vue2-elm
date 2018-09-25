@@ -22,10 +22,10 @@
                 <input type="text" placeholder="推荐码(必填):" v-model="account.inviteCode" class="btline" v-else>
 
 
-                <input type="text" placeholder="姓名(必填):" v-model="account.cName" class="btline">
-                <input type="text" placeholder="身份证(必填):" v-model="account.idCard" class="btline">
+               <!--  <input type="text" placeholder="姓名(必填):" v-model="account.cName" class="btline"> -->
+                <!-- <input type="text" placeholder="身份证(必填):" v-model="account.idCard" class="btline">
                 <input type="text" placeholder="银行卡号(必填):" v-model="account.bankCard" class="btline">
-                <input type="text" placeholder="银行名称:" v-model="account.bankName" class="btline">
+                <input type="text" placeholder="银行名称:" v-model="account.bankName" class="btline"> -->
 
                 <div>
                     <input type="text" placeholder="验证码:" v-model="account.verify">
@@ -151,9 +151,9 @@
 
                 if(getStore('user') != undefined){
                     let user =   JSON.parse(getStore('user'));
-                    this.account.phone = user.phone;
-                    this.account.cName = user.cName;
-                    this.account.inviteCode = user.invite;
+                    // this.account.phone = user.phone;
+                    // this.account.cName = user.cName;
+                    // this.account.inviteCode = user.invite;
                 }
                 // localStorage.clear();
 
@@ -257,13 +257,7 @@
             },
 
             async verifyLogin(){
-                if(this.account.cName =="") {
-                    
-                    this.showAlert=true;
-                    this.errorMsg = '请填写姓名';
-                    return;
-                }
-
+               
                 if(this.account.phone =="") {
                     
                     this.showAlert=true;
@@ -290,6 +284,14 @@
                     this.errorMsg = '请填写验证码';
                     return;
                 }
+
+                // if(this.account.cName =="") {
+                    
+                //     this.showAlert=true;
+                //     this.errorMsg = '请填写姓名';
+                //     return;
+                // }
+                
                 this.loginEnabled = false;
                 let verifyRes = await verify(this.account);
                 this.loginEnabled = true;
@@ -302,7 +304,7 @@
                 }else if(verifyRes.status == 0){
 
                     this.verify = "";
-                    setStore('user',{phone:this.account.phone, cName:this.account.cName});
+                    setStore('user',{phone:this.account.phone});
                     this.$router.push({path:'/analytics'});
                 }
             },
