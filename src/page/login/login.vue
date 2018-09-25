@@ -16,7 +16,7 @@
         <form class="loginForm newStyle">
             <section class="input_container">
                 <input type="text" placeholder="登录手机:" v-model="account.phone" class="btline">
-                <input type="text" placeholder="登录密码:" v-model="account.password" >
+                <input type="password" placeholder="登录密码:" v-model="account.password" >
             </section>
             <section>
                 <div class="policy"><!-- 登录并绑定即表示同意并了解<br/><span @click="goto('policy')">《蜜蜂点评用户协议》</span> --></div>

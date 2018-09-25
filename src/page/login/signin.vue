@@ -17,7 +17,7 @@
             <section class="input_container">
                 <input type="text" placeholder="登录手机(必填):" v-model="account.phone" class="btline disabled" v-if="this.$route.query.type == 'bind'" disabled="">
                 <input type="text" placeholder="登录手机(必填):" v-model="account.phone" class="btline" v-else>
-                <input type="text" placeholder="登录密码(必填):" v-model="account.password" class="btline">
+                <input type="password" placeholder="登录密码(必填):" v-model="account.password" class="btline">
                 <input type="text" placeholder="推荐码(必填):" v-model="account.inviteCode" class="btline" v-if="this.$route.query.type == 'bind'" disabled="">
                 <input type="text" placeholder="推荐码(必填):" v-model="account.inviteCode" class="btline" v-else>
 
