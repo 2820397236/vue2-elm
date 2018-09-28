@@ -97,8 +97,7 @@
                                         <div class="rate_username">
                                                 {{item.cName}} <span class="rate_tel">{{item.phone}}</span> <br/>
                                                 <span class="rate_time">{{item.createTime | dateTime('YYYY/MM/DD hh:mm:ss')}}</span><br/>
-                                                <span class="rate_tag" v-if="item.status =='WAIT'">待确认</span>
-                                                <span class="rate_tag green" v-if="item.type =='CASH'">现金</span>
+                                                <span class="rate_tag" v-if="item.admin">操作员:{{item.admin}}</span>
                                          </div>
                                          <div class="order_price">
 

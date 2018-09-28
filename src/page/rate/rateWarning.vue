@@ -20,7 +20,9 @@
         </header> -->
         <section class="description_header">
             <div>
-                <input class="order_value" v-model="orderValue"/>
+                <input class="order_value" v-model="orderValue"/> 
+                <span v-if="orderType == 'resting'" class="order_unit">手</span>
+                <span v-if="orderType == 'withdraw'" class="order_unit">元</span>
             </div>
             <div class="description_top">
                <!--  <section class="description_left" style="border-radius: 10rem;overflow: hidden;">
@@ -30,13 +32,9 @@
                     <h4 class="description_title ellipsis">您已订阅19家门店</h4>
                 </section> -->
                 <section class="head_option green">
-                <span v-if="orderType == 'resting'"  @click="createRestingOrder()">我要挂单</span>
-                <span v-if="orderType == 'withdraw'" @click="createWithdrawOrder()">我要提现</span>
-                <svg class="icon_style">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#warning"></use>
-                </svg>
-            </section>
-
+                    <span v-if="orderType == 'resting'"  @click="createRestingOrder()">挂单</span>
+                    <span v-if="orderType == 'withdraw'" @click="createWithdrawOrder()">提现</span>
+                </section>
             </div>
 
         </section>
@@ -267,7 +265,10 @@
     .order_value{
         border:0.0125rem solid #d7d7d7;
         padding:.3rem;
-        width:11rem;
+        width:10rem;
+    }
+    .order_unit{
+        @include sc(0.6rem, #fff);
     }
     .btn_buy{
         position: fixed;
@@ -320,12 +321,12 @@
         margin-left: .4rem;
     }
     .head_option{
-        @include sc(0.5rem, #fff);
+        @include sc(0.6rem, #fff);
         @include ct;
         right: 0.35rem;
         line-height: 1rem;
-        padding:0 .2rem;
-        border-radius: .2rem;
+        padding:.115rem .4rem;
+        border-radius: .1rem;
         .login_span{
             color: #666;
         }

@@ -14,6 +14,7 @@ const createTable = async () => {
     table.integer('planId');
     table.integer('qty');
     table.integer('price');
+    table.string('remarks');
     table.string('status').defaultTo("WAIT");
     table.string('type').defaultTo("CASH_DEPOSIT");
     table.bigInteger('createTime');

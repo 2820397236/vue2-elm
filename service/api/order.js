@@ -69,7 +69,7 @@ exports.createOrder = async (req, res) => {
   await knex("order").insert({
     "orderId":Math.random().toString(36).substring(2),
     "userId": user.id,
-    "title":"资金池股权计划",
+    "title":"W资产股权计划",
     "planId":plan.id,
     "price": plan.price * qty,
     "status": "WAIT",

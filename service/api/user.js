@@ -15,7 +15,7 @@ exports.createOrder = async (req, res) => {
   await knex("order").insert({
     "orderId":Math.random().toString(36).substring(2),
     "userId": user.id,
-    "title":"资金池股权计划",
+    "title":"W资产股权计划",
     "planId":plan.id,
     "price": plan.price * qty,
     "status": "WAIT",
@@ -90,6 +90,7 @@ exports.login = async (req, res) =>{
   const user = await knex('users').select().where({phone,password}).then(s=>s[0]);
   console.log(user);
   if(user){
+    await knex('users').update({"loginTime":Date.now()}).where({phone});
     res.status(200).send({"status":0,"data":{"phone":user.phone,"cName":user.cName}});
   }else{
     res.status(200).send({"status":-1});
@@ -195,6 +196,8 @@ exports.verify2 = async (req, res) => {
             }).where("phone",phone);
 
           }else{
+            const count = await knex('users').count('id');
+            const inviteId = 5000+count;
             await knex('users').insert({
               "phone":phone,
               "username":phone,
@@ -206,7 +209,7 @@ exports.verify2 = async (req, res) => {
               "bankName":bankName,
               "password":password,
               "invite":invite,
-              "inviteKey":Math.random().toString(36).substr(2).slice(2,8),
+              "inviteKey": "W"+ inviteId,
               "createTime":Date.now(),
               "loginTime":Date.now()
             });
@@ -383,31 +386,53 @@ getUserObject = (o)=>{
 
 exports.getUserList = async (req, res) =>{
   const phone = req.body.phone;
+  const page = req.body.pageIndex || 1;
+  const size = req.body.pageSize || 100;
+
   const user = await knex("users").where({"phone":phone,"type":"ADMIN"}).then(s=>s[0]);
   if(!user)  res.status(202).send({"status":-9,"error":"user not admin"});
   
-  let userList = await knex("users").select("id","cName","phone","type","invite","inviteKey","createTime").orderBy('createTime', 'desc');;
+
+  let userList = await knex("users").select().orderBy('createTime', 'desc')
+    .limit(size) .offset((page - 1) * size) ;
   res.status(200).send(userList);
 }
 
 exports.getUserOrder = async (req, res) =>{
   const phone = req.body.phone;
+  const page = req.body.pageIndex || 1;
+  const size = req.body.pageSize || 100;
+  const status = req.body.status || 'WAIT';
+
   const user = await knex("users").where({"phone":phone,"type":"ADMIN"}).then(s=>s[0]);
   if(!user)  res.status(202).send({"status":-9,"error":"user not admin"});
   
-  const userList = await knex("order").select("order.id","users.cName","users.phone","order.orderId","order.price","order.status","order.type","order.createTime")
-  .leftJoin('users', 'order.userId','users.id').where("order.status","WAIT").orderBy('order.createTime', 'desc');
+  let userList = {};
+
+  if(status == "ALL"){
+     userList= await knex("order").select("order.id","users.cName","users.phone","order.orderId","order.price","order.status","order.type","order.remarks","order.createTime")
+    .leftJoin('users', 'order.userId','users.id').orderBy('order.createTime', 'desc')  
+    .limit(size) .offset((page - 1) * size) ;
+  }else{
+     userList = await knex("order").select("order.id","users.cName","users.phone","order.orderId","order.price","order.status","order.type","order.remarks","order.createTime")
+    .leftJoin('users', 'order.userId','users.id').where("order.status",status).orderBy('order.createTime', 'desc')  
+    .limit(size) .offset((page - 1) * size) ;
+  }
 
   res.status(200).send(userList);
 }
 
 exports.getUserFlow = async (req, res) =>{
   const phone = req.body.phone;
+  const page = req.body.pageIndex || 1;
+  const size = req.body.pageSize || 100;
+
   const user = await knex("users").where({"phone":phone,"type":"ADMIN"}).then(s=>s[0]);
   if(!user)  res.status(202).send({"status":-9,"error":"user not admin"});
   
-  const cashList = await knex("cashflow").select("cashflow.id","users.cName","users.phone","cashflow.outId","cashflow.value","cashflow.status","cashflow.type","cashflow.createTime")
-  .leftJoin('users', 'cashflow.userId','users.id').orderBy('cashflow.createTime', 'desc');
+  const cashList = await knex("cashflow").select("cashflow.id","users.cName","users.phone","cashflow.outId","cashflow.admin","cashflow.value","cashflow.status","cashflow.type","cashflow.createTime")
+  .leftJoin('users', 'cashflow.userId','users.id').orderBy('cashflow.createTime', 'desc')
+  .offset((page - 1) * size);
 
   res.status(200).send(cashList);
 }
@@ -429,6 +454,7 @@ exports.setOrderSuccess = async (req, res) =>{
   await knex("cashflow").insert({
     "outID":order.orderId,
     "userId":order.userId,
+    "admin":phone,
     "value":order.price,
     "type":order.type,
     "status":"SUCCESS",

@@ -7,6 +7,7 @@ const createTable = async () => {
   return knex.schema.createTableIfNotExists(tableName, function(table) {
     table.increments('id').primary();
     table.string('outId');
+    table.string('admin');
     table.integer('userId');
     table.bigInteger('value');
     table.string('type').defaultTo("CASH");

@@ -2,7 +2,7 @@
   	<div style="width:100%;">
         <header id="head_top">
             <section class="title_head ellipsis">
-                <span class="title_text" v-if="user">{{user.cName}}</span>
+                <span class="title_text" v-if="user">&nbsp;{{user.cName}}</span>
             </section>
         </header>
         <router-link class="main_container" to="/setting/profile">
@@ -73,7 +73,7 @@
                     </div>
                 </div>
             </div>
-            <div class="button-section" >
+            <!-- <div class="button-section" >
                 <div class="ico-team">
                     <svg width="28px" height="28px" viewBox="0 0 22 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -89,8 +89,24 @@
                 <i class="ico-arrow">
                    
                 </i>
-            </div>
-
+            </div> -->
+            <div class="button-section">
+                    <div class="ico-team">
+                        <svg width="28px" height="28px" viewBox="0 0 22 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <g id="iPhone-8-Plus" transform="translate(-41.000000, -502.000000)" fill="#1882E6">
+                                    <path d="M55.224,518.6 L54.096,513.776 L57.84,510.536 L52.92,510.104 L51,505.616 L49.08,510.152 L44.16,510.536 L47.904,513.776 L46.776,518.6 L51,516.056 L55.224,518.6 Z M51,502.616 C52.8240091,502.616 54.5119922,503.071995 56.064,503.984 C57.5680075,504.848004 58.7519957,506.031992 59.616,507.536 C60.5280046,509.088008 60.984,510.775991 60.984,512.6 C60.984,514.424009 60.5280046,516.111992 59.616,517.664 C58.7519957,519.168008 57.5680075,520.351996 56.064,521.216 C54.5119922,522.128005 52.8240091,522.584 51,522.584 C49.1759909,522.584 47.4880078,522.128005 45.936,521.216 C44.4319925,520.335996 43.2480043,519.144008 42.384,517.64 C41.4719954,516.087992 41.016,514.408009 41.016,512.6 C41.016,510.791991 41.4719954,509.112008 42.384,507.56 C43.2640044,506.055992 44.4559925,504.864004 45.96,503.984 C47.5120078,503.071995 49.191991,502.616 51,502.616 Z" id="stars---material-copy"></path>
+                                </g>
+                            </g>
+                        </svg>
+                                            </div>
+                    <h4>我的邀请码</h4>
+                    <h4 class="right" v-if="user">{{user.inviteKey}}</h4>
+                    <i class="ico-arrow">
+                       
+                    </i>
+                </div>
+                
             <div class="button-section">
                 <div class="ico-team">
                     <svg width="28px" height="28px" viewBox="0 0 22 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -192,22 +208,6 @@
                     </i>
                 </router-link>
 
-                <div class="button-section">
-                    <div class="ico-team">
-                        <svg width="28px" height="28px" viewBox="0 0 22 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                <g id="iPhone-8-Plus" transform="translate(-41.000000, -502.000000)" fill="#1882E6">
-                                    <path d="M55.224,518.6 L54.096,513.776 L57.84,510.536 L52.92,510.104 L51,505.616 L49.08,510.152 L44.16,510.536 L47.904,513.776 L46.776,518.6 L51,516.056 L55.224,518.6 Z M51,502.616 C52.8240091,502.616 54.5119922,503.071995 56.064,503.984 C57.5680075,504.848004 58.7519957,506.031992 59.616,507.536 C60.5280046,509.088008 60.984,510.775991 60.984,512.6 C60.984,514.424009 60.5280046,516.111992 59.616,517.664 C58.7519957,519.168008 57.5680075,520.351996 56.064,521.216 C54.5119922,522.128005 52.8240091,522.584 51,522.584 C49.1759909,522.584 47.4880078,522.128005 45.936,521.216 C44.4319925,520.335996 43.2480043,519.144008 42.384,517.64 C41.4719954,516.087992 41.016,514.408009 41.016,512.6 C41.016,510.791991 41.4719954,509.112008 42.384,507.56 C43.2640044,506.055992 44.4559925,504.864004 45.96,503.984 C47.5120078,503.071995 49.191991,502.616 51,502.616 Z" id="stars---material-copy"></path>
-                                </g>
-                            </g>
-                        </svg>
-                                            </div>
-                    <h4>我的邀请码</h4>
-                    <h4 class="right" v-if="user">{{user.inviteKey}}</h4>
-                    <i class="ico-arrow">
-                       
-                    </i>
-                </div>
                 
             </div>
         </section>
